@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.common;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -31,4 +32,8 @@ public class CreateDragonsPlus {
     }
 
     public void setup(final FMLCommonSetupEvent event) {}
+
+    public static ResourceLocation asResource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(ID, path);
+    }
 }
