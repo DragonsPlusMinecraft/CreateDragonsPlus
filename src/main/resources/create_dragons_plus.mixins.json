@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "plus.dragons.createdragonsplus.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "create_dragons_plus.refmap.json",
+  "mixins": [
+    "OpenEndFluidHandlerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
