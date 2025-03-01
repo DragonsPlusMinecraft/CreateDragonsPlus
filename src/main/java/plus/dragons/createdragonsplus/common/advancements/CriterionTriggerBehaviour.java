@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.common.CreateDragonsPlus;
+import plus.dragons.createdragonsplus.util.ErrorMessages;
 
 public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
     public static final BehaviourType<CriterionTriggerBehaviour> TYPE =
@@ -105,7 +106,7 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
         DATA_CODEC.encode(this.data, NbtOps.INSTANCE, builder);
         builder.build(new CompoundTag())
                 .resultOrPartial(error -> LOGGER.error(
-                        "Error encoding behavior data [" + getType().getName() + "] for " + blockEntity + ": " + error))
+                        "Error encoding behavior data [" + getType().getName() + "] for " + ErrorMessages.blockEntity(blockEntity) + ": " + error))
                 .ifPresent(nbt -> nbtIn.put(getType().getName(), nbt));
     }
 
