@@ -26,7 +26,6 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.CriterionValidator;
@@ -37,21 +36,10 @@ import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.common.advancements.CriterionTriggerBehaviour;
-import plus.dragons.createdragonsplus.util.ErrorMessages;
 
-public abstract class BlockEntityBehaviourTrigger<T>
-        implements CriterionTrigger<BlockEntityBehaviourTrigger<T>>, CriterionTriggerInstance {
+public abstract class BlockEntityBehaviourTrigger<T> implements CriterionTrigger<BlockEntityBehaviourTrigger<T>>, CriterionTriggerInstance {
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static final Codec<BlockEntityBehaviourTrigger<?>> CODEC = BuiltInRegistries.TRIGGER_TYPES
-            .byNameCodec()
-            .comapFlatMap(
-                    trigger -> trigger instanceof BlockEntityBehaviourTrigger<?>
-                            ? DataResult.success((BlockEntityBehaviourTrigger<?>) trigger)
-                            : DataResult.error(() -> "Unsupported trigger type: "
-                                    + ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger)),
-                    Function.identity());
-    private final Map<PlayerAdvancements, Set<Listener<BlockEntityBehaviourTrigger<T>>>> listeners =
-            Maps.newIdentityHashMap();
+    private final Map<PlayerAdvancements, Set<Listener<BlockEntityBehaviourTrigger<T>>>> listeners = Maps.newIdentityHashMap();
     private final Codec<T> dataCodec;
 
     public BlockEntityBehaviourTrigger(Codec<T> dataCodec) {

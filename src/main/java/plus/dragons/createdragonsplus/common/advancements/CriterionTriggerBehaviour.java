@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.common.advancements;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.MapLike;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -30,6 +31,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -49,13 +51,21 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
             new BehaviourType<>(CreateDragonsPlus.asResource("criterion").toString());
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final MapCodec<UUID> OWNER_CODEC = UUIDUtil.CODEC.optionalFieldOf("owner", null);
+
+    public static final Codec<BlockEntityBehaviourTrigger<?>> TRIGGGER_CODEC = BuiltInRegistries.TRIGGER_TYPES
+            .byNameCodec()
+            .comapFlatMap(
+                    trigger -> trigger instanceof BlockEntityBehaviourTrigger<?>
+                               ? DataResult.success((BlockEntityBehaviourTrigger<?>) trigger)
+                               : DataResult.error(() -> "Unsupported trigger type: "
+                                                        + ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger)),
+                    Function.identity());
     private static final MapCodec<Map<BlockEntityBehaviourTrigger<?>, Object>> DATA_CODEC =
-            Codec.<BlockEntityBehaviourTrigger<?>, Object>dispatchedMap(
-                            BlockEntityBehaviourTrigger.CODEC, BlockEntityBehaviourTrigger::dataCodec)
+            Codec.<BlockEntityBehaviourTrigger<?>, Object>dispatchedMap(TRIGGGER_CODEC, BlockEntityBehaviourTrigger::dataCodec)
                     .optionalFieldOf("data")
-                    .xmap(
-                            optional -> optional.orElse(new IdentityHashMap<>()),
-                            map -> map.isEmpty() ? Optional.empty() : Optional.of(map));
+                    .xmap(optional -> optional.orElse(new IdentityHashMap<>()),
+                          map -> map.isEmpty() ? Optional.empty() : Optional.of(map)
+                    );
     protected @Nullable UUID owner;
     protected final Map<BlockEntityBehaviourTrigger<?>, Object> defaultData;
     protected Map<BlockEntityBehaviourTrigger<?>, Object> data;
@@ -83,8 +93,7 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
         this.setOwner(player.getUUID());
     }
 
-    @Nullable
-    public ServerPlayer getOwner() {
+    @Nullable public ServerPlayer getOwner() {
         if (this.owner == null) return null;
         Level level = this.getWorld();
         if (level.isClientSide) return null;
@@ -93,17 +102,16 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public <T> T getData(BlockEntityBehaviourTrigger<T> trigger) {
+    @Nullable public <T> T getData(BlockEntityBehaviourTrigger<T> trigger) {
         if (data.containsKey(trigger)) return (T) data.get(trigger);
         return (T) this.defaultData.get(trigger);
     }
 
     public <T> void setData(BlockEntityBehaviourTrigger<T> trigger, T data) {
         if (!this.defaultData.containsKey(trigger)) {
-            LOGGER.warn("Attempted to set data for unregistered trigger ["
-                    + ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger)
-                    + "]");
+            LOGGER.warn("Attempted to set data for unregistered trigger [" +
+                        ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger) +
+                        "]");
             return;
         }
         this.data.put(trigger, data);
@@ -123,8 +131,9 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
         OWNER_CODEC.encode(this.owner, NbtOps.INSTANCE, builder);
         DATA_CODEC.encode(this.data, NbtOps.INSTANCE, builder);
         builder.build(new CompoundTag())
-                .resultOrPartial(error -> LOGGER.error("Error encoding behavior data ["
-                        + getType().getName() + "] for " + ErrorMessages.blockEntity(blockEntity) + ": " + error))
+                .resultOrPartial(error -> LOGGER.error(
+                        "Error encoding behavior data [" + getType().getName() +
+                        "] for " + ErrorMessages.blockEntity(blockEntity) + ": " + error))
                 .ifPresent(nbt -> nbtIn.put(getType().getName(), nbt));
     }
 

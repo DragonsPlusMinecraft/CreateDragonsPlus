@@ -31,8 +31,7 @@ public class ErrorMessages {
         return registry.wrapAsHolder(entry).getRegisteredName();
     }
 
-    @Nullable
-    public static String level(@Nullable Level level) {
+    @Nullable public static String level(@Nullable Level level) {
         return level == null ? null : level.dimension().toString();
     }
 

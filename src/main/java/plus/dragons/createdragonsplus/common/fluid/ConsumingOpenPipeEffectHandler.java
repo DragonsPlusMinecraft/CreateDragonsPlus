@@ -35,15 +35,18 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
         int consumed = handler.consume(pipe.getWorld(), pipe.getAOE(), fluid.copy());
         if (consumed < 0) {
             throw new IllegalStateException(
-                    "Can not handle open pipe effect at %s %s, ".formatted(pipe.getWorld(), pipe.getPos())
-                            + "[%s] returned illegal negative consumed effect amount: %s"
-                                    .formatted(handler.getClass().getName(), consumed));
+                    "Can not handle open pipe effect at %s %s, "
+                            .formatted(pipe.getWorld(), pipe.getPos()) +
+                    "[%s] returned illegal negative consumed effect amount: %s"
+                            .formatted(handler.getClass().getName(), consumed));
         } else if (consumed > contained) {
             throw new IllegalStateException(
-                    "Can not handle open pipe effect at %s %s, ".formatted(pipe.getWorld(), pipe.getPos())
-                            + "[%s] returned illegal consumed effect amount: %s, "
-                                    .formatted(handler.getClass().getName(), consumed)
-                            + "exceeding contained effect amount: %s".formatted(contained));
+                    "Can not handle open pipe effect at %s %s, "
+                            .formatted(pipe.getWorld(), pipe.getPos()) +
+                    "[%s] returned illegal consumed effect amount: %s, "
+                            .formatted(handler.getClass().getName(), consumed) +
+                    "exceeding contained effect amount: %s"
+                            .formatted(contained));
         }
         return fluid.copyWithAmount(contained - consumed);
     }

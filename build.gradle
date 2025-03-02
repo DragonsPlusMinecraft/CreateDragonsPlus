@@ -130,7 +130,6 @@ spotless {
         importOrder()
         removeUnusedImports()
         formatAnnotations()
-        palantirJavaFormat()
         licenseHeaderFile "HEADER.txt"
     }
 }

@@ -39,7 +39,7 @@ public abstract class AccumulateTrigger<T> extends BlockEntityBehaviourTrigger<T
     }
 
     public static <T> AccumulateTrigger<T> of(Codec<T> codec, Predicate<T> predicate, BinaryOperator<T> accumulator) {
-        return new AccumulateTrigger<T>(codec) {
+        return new AccumulateTrigger<>(codec) {
             @Override
             public T apply(T a, T b) {
                 return accumulator.apply(a, b);
