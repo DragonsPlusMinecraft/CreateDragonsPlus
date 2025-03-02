@@ -93,8 +93,7 @@ public abstract class BlockEntityBehaviourTrigger<T>
     @Override
     public final void addPlayerListener(
             PlayerAdvancements advancements, Listener<BlockEntityBehaviourTrigger<T>> listener) {
-        if (listener.trigger() != this)
-            throw new IllegalStateException("Unsupported listener " + listener);
+        if (listener.trigger() != this) throw new IllegalStateException("Unsupported listener " + listener);
         // This trigger is designed to be primarily used by single unique advancement.
         // Thus expecting only 1 listener here by default.
         this.listeners

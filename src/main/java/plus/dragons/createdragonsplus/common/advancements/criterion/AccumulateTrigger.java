@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.common.advancements.criterion;
 
 import com.mojang.serialization.Codec;
@@ -8,18 +26,18 @@ import it.unimi.dsi.fastutil.floats.FloatBinaryOperator;
 import it.unimi.dsi.fastutil.floats.FloatPredicate;
 import it.unimi.dsi.fastutil.ints.IntBinaryOperator;
 import it.unimi.dsi.fastutil.ints.IntPredicate;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import net.minecraft.server.level.ServerPlayer;
 import plus.dragons.createdragonsplus.common.advancements.CriterionTriggerBehaviour;
 
-import java.util.function.BinaryOperator;
-import java.util.function.Predicate;
-
-public abstract class AccumulateTrigger<T> extends BlockEntityBehaviourTrigger<T> implements Predicate<T>, BinaryOperator<T> {
+public abstract class AccumulateTrigger<T> extends BlockEntityBehaviourTrigger<T>
+        implements Predicate<T>, BinaryOperator<T> {
 
     protected AccumulateTrigger(Codec<T> dataCodec) {
         super(dataCodec);
     }
-    
+
     public static <T> AccumulateTrigger<T> of(Codec<T> codec, Predicate<T> predicate, BinaryOperator<T> accumulator) {
         return new AccumulateTrigger<T>(codec) {
             @Override
@@ -132,8 +150,7 @@ public abstract class AccumulateTrigger<T> extends BlockEntityBehaviourTrigger<T
 
     public void accumulate(SmartBlockEntity blockEntity, T data) {
         var behaviour = blockEntity.getBehaviour(CriterionTriggerBehaviour.TYPE);
-        if (behaviour == null)
-            return;
+        if (behaviour == null) return;
         data = this.apply(behaviour.getData(this), data);
         behaviour.setData(this, data);
         if (this.test(data)) {

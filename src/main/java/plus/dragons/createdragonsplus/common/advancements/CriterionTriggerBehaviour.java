@@ -95,16 +95,15 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T> T getData(BlockEntityBehaviourTrigger<T> trigger) {
-        if (data.containsKey(trigger))
-            return (T) data.get(trigger);
+        if (data.containsKey(trigger)) return (T) data.get(trigger);
         return (T) this.defaultData.get(trigger);
     }
 
     public <T> void setData(BlockEntityBehaviourTrigger<T> trigger, T data) {
         if (!this.defaultData.containsKey(trigger)) {
-            LOGGER.warn("Attempted to set data for unregistered trigger [" +
-                        ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger) +
-                        "]");
+            LOGGER.warn("Attempted to set data for unregistered trigger ["
+                    + ErrorMessages.registry(BuiltInRegistries.TRIGGER_TYPES, trigger)
+                    + "]");
             return;
         }
         this.data.put(trigger, data);
@@ -124,8 +123,8 @@ public class CriterionTriggerBehaviour extends BlockEntityBehaviour {
         OWNER_CODEC.encode(this.owner, NbtOps.INSTANCE, builder);
         DATA_CODEC.encode(this.data, NbtOps.INSTANCE, builder);
         builder.build(new CompoundTag())
-                .resultOrPartial(error -> LOGGER.error(
-                        "Error encoding behavior data [" + getType().getName() + "] for " + ErrorMessages.blockEntity(blockEntity) + ": " + error))
+                .resultOrPartial(error -> LOGGER.error("Error encoding behavior data ["
+                        + getType().getName() + "] for " + ErrorMessages.blockEntity(blockEntity) + ": " + error))
                 .ifPresent(nbt -> nbtIn.put(getType().getName(), nbt));
     }
 
