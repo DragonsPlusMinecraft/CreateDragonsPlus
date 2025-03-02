@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.common.advancements;
+package plus.dragons.createdragonsplus.common.advancements.criterion;
 
 import com.google.common.collect.Maps;
 import com.mojang.logging.LogUtils;
@@ -36,6 +36,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
+import plus.dragons.createdragonsplus.common.advancements.CriterionTriggerBehaviour;
 import plus.dragons.createdragonsplus.util.ErrorMessages;
 
 public abstract class BlockEntityBehaviourTrigger<T>
@@ -51,10 +52,17 @@ public abstract class BlockEntityBehaviourTrigger<T>
                     Function.identity());
     private final Map<PlayerAdvancements, Set<Listener<BlockEntityBehaviourTrigger<T>>>> listeners =
             Maps.newIdentityHashMap();
+    private final Codec<T> dataCodec;
+
+    public BlockEntityBehaviourTrigger(Codec<T> dataCodec) {
+        this.dataCodec = dataCodec;
+    }
 
     protected abstract boolean test(ServerPlayer player, SmartBlockEntity blockEntity, T data);
 
-    public abstract Codec<T> dataCodec();
+    public final Codec<T> dataCodec() {
+        return this.dataCodec;
+    }
 
     @SuppressWarnings("unchecked")
     public final DataResult<Tag> serialize(Object data) {
@@ -65,16 +73,18 @@ public abstract class BlockEntityBehaviourTrigger<T>
         return this.dataCodec().parse(NbtOps.INSTANCE, nbt);
     }
 
-    public final void trigger(ServerPlayer player, SmartBlockEntity blockEntity) {
+    public final void trigger(SmartBlockEntity blockEntity) {
+        CriterionTriggerBehaviour behaviour = blockEntity.getBehaviour(CriterionTriggerBehaviour.TYPE);
+        if (behaviour == null) return;
+        ServerPlayer player = behaviour.getOwner();
+        if (player == null) return;
         PlayerAdvancements advancements = player.getAdvancements();
         var listeners = this.listeners.get(advancements);
         if (listeners == null) return;
-        CriterionTriggerBehaviour behaviour = blockEntity.getBehaviour(CriterionTriggerBehaviour.TYPE);
-        if (behaviour == null) return;
         T data = behaviour.getData(this);
         if (data == null) return;
-        for (var listener : listeners) {
-            if (listener.trigger().test(player, blockEntity, data)) {
+        if (this.test(player, blockEntity, data)) {
+            for (var listener : listeners) {
                 listener.run(advancements);
             }
         }
@@ -83,6 +93,8 @@ public abstract class BlockEntityBehaviourTrigger<T>
     @Override
     public final void addPlayerListener(
             PlayerAdvancements advancements, Listener<BlockEntityBehaviourTrigger<T>> listener) {
+        if (listener.trigger() != this)
+            throw new IllegalStateException("Unsupported listener " + listener);
         // This trigger is designed to be primarily used by single unique advancement.
         // Thus expecting only 1 listener here by default.
         this.listeners
@@ -115,7 +127,6 @@ public abstract class BlockEntityBehaviourTrigger<T>
     @Override
     public final void validate(CriterionValidator validator) {}
 
-    @SuppressWarnings("StringTemplateMigration")
     public final String toString() {
         return this.getClass().getSimpleName() + "[" + BuiltInRegistries.TRIGGER_TYPES.getId(this) + "]";
     }
