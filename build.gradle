@@ -13,7 +13,7 @@ version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = mod_archives_name
+    archivesName = mod_artifact_id
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -26,7 +26,7 @@ neoForge {
         minecraftVersion = project.parchment_minecraft_version
     }
 
-    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
@@ -51,6 +51,7 @@ neoForge {
                                     '--all',
                                     '--output', file('src/generated/resources/').getAbsolutePath(),
                                     '--existing', file('src/main/resources/').getAbsolutePath(),
+                                    '--existing', file('src/main/translations/').getAbsolutePath(),
                                     '--existing-mod', 'create'
         }
 
@@ -67,8 +68,6 @@ neoForge {
         }
     }
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
@@ -122,8 +121,18 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
     into "build/generated/sources/modMetadata"
 }
 
-sourceSets.main.resources.srcDir generateModMetadata
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+    srcDir generateModMetadata
+}
 neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(Jar) {
+    from "LICENSING.txt"
+    from "LICENSE.txt"
+    from "LICENSE-CREATE.txt"
+    exclude ".cache"
+}
 
 spotless {
     java {
@@ -134,15 +143,25 @@ spotless {
     }
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            artifactId = mod_artifact_id + "-" + minecraft_version
             from components.java
         }
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            name "dragons-plus"
+            url "https://maven.dragons.plus/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }

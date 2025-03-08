@@ -1,0 +1,20 @@
+{
+  "values": {
+    "#c:dyes/black": "black",
+    "#c:dyes/blue": "blue",
+    "#c:dyes/brown": "brown",
+    "#c:dyes/cyan": "cyan",
+    "#c:dyes/gray": "gray",
+    "#c:dyes/green": "green",
+    "#c:dyes/light_blue": "light_blue",
+    "#c:dyes/light_gray": "light_gray",
+    "#c:dyes/lime": "lime",
+    "#c:dyes/magenta": "magenta",
+    "#c:dyes/orange": "orange",
+    "#c:dyes/pink": "pink",
+    "#c:dyes/purple": "purple",
+    "#c:dyes/red": "red",
+    "#c:dyes/white": "white",
+    "#c:dyes/yellow": "yellow"
+  }
+}

@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
-    "OpenEndFluidHandlerMixin"
+    "OpenEndFluidHandlerMixin",
+    "accessor.ExistingFileHelperAccessor",
+    "accessor.FanProcessingAccessor"
   ],
   "client": [
   ],

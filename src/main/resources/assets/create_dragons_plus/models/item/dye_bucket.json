@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "create_dragons_plus:item/dye_bucket_overlay",
+    "layer1": "create_dragons_plus:item/dye_bucket"
+  }
+}

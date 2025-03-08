@@ -1,25 +1,43 @@
+## Welcome to **Create: Dragons Plus**
+A library mod for DragonsPlusMinecraft Create-addons.
 
-Installation information
-=======
+## Add Depenency
+```groovy
+repositories {
+    maven {
+        url "https://maven.dragons.plus/releases" // DragonsPlusMinecraft Maven
+    }
+}
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+dependencies {
+    implementation("plus.dragons.createdragonsplus:create-dragons-plus-${minecraft_version}:${create_dragons_plus_version}")
+}
+```
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+## Features
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+### Register
+- `CDPRegistrate`: Registrate with Create related builders and other advanced functions.
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+### Tag
+- `TagRegistry`: Instance based, easily seperate tags under different namespaces.
+  Supports datagen (including tag localization).
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+### Localization
+- `CDPRegistrate#registerBuiltinLocalization`: Merge builtin language files (under `lang/builtin`) to language provider.
+- `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()`
+  to datagen program arguments to use translated language files under `src/main/translations`.
+
+### Advancement
+- `CriterionStatBehaviour`: `BlockEntityBehaviour` for awarding owner player criterion and stats.
+- `BuiltinTrigger`: Criterion trigger for code triggered advancements.
+- `StatTrigger`: Criterion trigger for player stats
+
+### Gameplay
+- Dye Fluids and Bulk Coloring
+
+## Contribute
+Feel free to open a PR to either translate the mod or to add another feature! All help is appreciated!
+
+### If you want to help us to translate...
+Please use the language files in `src/generated` and submit to `src/main/translations`.

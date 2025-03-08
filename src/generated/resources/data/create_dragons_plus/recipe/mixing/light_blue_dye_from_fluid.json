@@ -1,0 +1,16 @@
+{
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "fluid_stack",
+      "amount": 250,
+      "fluid": "create_dragons_plus:light_blue_dye"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:light_blue_dye"
+    }
+  ]
+}

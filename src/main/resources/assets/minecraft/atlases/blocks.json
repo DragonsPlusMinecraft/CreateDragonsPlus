@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "create_dragons_plus:fluid/dye_still"
+    },
+    {
+      "type": "single",
+      "resource": "create_dragons_plus:fluid/dye_flow"
+    }
+  ]
+}
