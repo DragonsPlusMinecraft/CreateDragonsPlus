@@ -21,6 +21,8 @@ package plus.dragons.createdragonsplus.data;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
+import com.tterrag.registrate.providers.ProviderType;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -28,6 +30,9 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPSounds;
+import plus.dragons.createdragonsplus.integration.ponder.CDPPonderPlugin;
+
+import java.util.function.BiConsumer;
 
 @Mod(CDPCommon.ID)
 public class CDPData {
@@ -35,6 +40,10 @@ public class CDPData {
         if (!DatagenModLoader.isRunningDataGen())
             return;
         REGISTRATE.registerBuiltinLocalization("interface");
+        REGISTRATE.addDataGenerator(ProviderType.LANG, registrateLangProvider -> {
+            BiConsumer<String, String> langConsumer = registrateLangProvider::add;
+            providePonderLang(langConsumer);
+        });
         REGISTRATE.registerForeignLocalization();
         modBus.register(this);
     }
@@ -47,5 +56,10 @@ public class CDPData {
         var output = generator.getPackOutput();
         var existingFileHelper = event.getExistingFileHelper();
         generator.addProvider(client, new CDPSounds.DefinitionsProvider(output, existingFileHelper));
+    }
+
+    private static void providePonderLang(BiConsumer<String, String> consumer) {
+        PonderIndex.addPlugin(new CDPPonderPlugin());
+        PonderIndex.getLangAccess().provideLang(CDPCommon.ID, consumer);
     }
 }

@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.client;
 
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.util.FastColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,6 +27,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
+import plus.dragons.createdragonsplus.integration.ponder.CDPPonderPlugin;
 
 @Mod(CDPCommon.ID)
 public class CDPClient {
@@ -34,7 +36,9 @@ public class CDPClient {
     }
 
     @SubscribeEvent
-    public void setup(final FMLClientSetupEvent event) {}
+    public void setup(final FMLClientSetupEvent event) {
+        PonderIndex.addPlugin(new CDPPonderPlugin());
+    }
 
     @SubscribeEvent
     public void registerItemColors(final RegisterColorHandlersEvent.Item event) {
