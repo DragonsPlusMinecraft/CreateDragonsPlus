@@ -83,7 +83,7 @@ public class CriterionStatBehaviour extends BlockEntityBehaviour {
     protected @Nullable UUID owner;
     protected Object2IntMap<Stat<?>> statsCounter = new Object2IntOpenHashMap<>();
 
-    protected CriterionStatBehaviour(SmartBlockEntity be) {
+    public CriterionStatBehaviour(SmartBlockEntity be) {
         super(be);
     }
 
