@@ -50,7 +50,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.material.Fluid;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
-import plus.dragons.createdragonsplus.common.recipe.color.DyeColors;
+import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;

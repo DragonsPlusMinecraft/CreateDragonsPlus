@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.common.recipe.color;
+package plus.dragons.createdragonsplus.common.fluid.dye;
 
 import java.util.Arrays;
 import java.util.Comparator;

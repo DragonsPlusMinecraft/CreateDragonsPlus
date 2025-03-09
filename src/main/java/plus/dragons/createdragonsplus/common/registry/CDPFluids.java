@@ -58,7 +58,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidType;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeLiquidBlock;
-import plus.dragons.createdragonsplus.common.recipe.color.DyeColors;
+import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
