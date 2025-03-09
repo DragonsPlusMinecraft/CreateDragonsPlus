@@ -18,6 +18,8 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
+
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.api.event.PipeCollisionEvent;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
@@ -26,6 +28,9 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.FluidEntry;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -55,12 +60,6 @@ import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidType;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeLiquidBlock;
 import plus.dragons.createdragonsplus.common.recipe.color.DyeColors;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
-
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
-import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 public class CDPFluids {
     public static final CommonTags COMMON_TAGS = new CommonTags();

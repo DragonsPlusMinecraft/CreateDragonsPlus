@@ -22,6 +22,7 @@ package plus.dragons.createdragonsplus.data;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.tterrag.registrate.providers.ProviderType;
+import java.util.function.BiConsumer;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,8 +32,6 @@ import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPSounds;
 import plus.dragons.createdragonsplus.integration.ponder.CDPPonderPlugin;
-
-import java.util.function.BiConsumer;
 
 @Mod(CDPCommon.ID)
 public class CDPData {
