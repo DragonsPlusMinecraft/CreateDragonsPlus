@@ -37,6 +37,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -55,10 +56,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
+import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidType;
 import plus.dragons.createdragonsplus.common.fluid.dye.DyeLiquidBlock;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
@@ -90,6 +91,7 @@ public class CDPFluids {
     private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeColor color) {
         var stillTexture = REGISTRATE.asResource("fluid/dye_still");
         var flowingTexture = REGISTRATE.asResource("fluid/dye_flow");
+        var tintColor = FastColor.ARGB32.opaque(color.getTextureDiffuseColor());
         var name = color.getName() + "_dye";
         var tag = COMMON_TAGS.dyesByColor.get(color);
         return REGISTRATE.fluid(name, stillTexture, flowingTexture, DyeFluidType.create(color))
@@ -107,6 +109,7 @@ public class CDPFluids {
                 .bucket()
                 .tag(CDPItems.COMMON_TAGS.dyeBucketsByColor.get(color))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
+                .color(() -> () -> (stack, tintIndex) -> tintIndex > 0 ? -1 : tintColor)
                 .tag(color.getDyedTag())
                 .build()
                 .tag(tag)

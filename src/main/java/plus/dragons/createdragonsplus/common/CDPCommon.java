@@ -38,6 +38,7 @@ public class CDPCommon {
     public static final CDPRegistrate REGISTRATE = new CDPRegistrate(ID);
 
     public CDPCommon(IEventBus modBus) {
+        REGISTRATE.registerEventListeners(modBus);
         CDPCriterions.register(modBus);
         CDPDataMaps.register(modBus);
         CDPFanProcessingTypes.register(modBus);
@@ -45,7 +46,6 @@ public class CDPCommon {
         CDPItems.register(modBus);
         CDPRecipes.register(modBus);
         CDPSounds.register(modBus);
-        REGISTRATE.registerEventListeners(modBus);
         modBus.register(this);
     }
 
