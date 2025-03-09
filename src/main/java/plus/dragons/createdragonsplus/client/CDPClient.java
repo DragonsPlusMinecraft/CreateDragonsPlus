@@ -22,7 +22,7 @@ import net.minecraft.util.FastColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
@@ -34,7 +34,7 @@ public class CDPClient {
     }
 
     @SubscribeEvent
-    public void setup(final FMLCommonSetupEvent event) {}
+    public void setup(final FMLClientSetupEvent event) {}
 
     @SubscribeEvent
     public void registerItemColors(final RegisterColorHandlersEvent.Item event) {
