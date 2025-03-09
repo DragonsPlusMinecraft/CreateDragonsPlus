@@ -157,7 +157,7 @@ publishing {
     }
     repositories {
         maven {
-            name "dragons-plus"
+            name "DragonsPlus"
             url "https://maven.dragons.plus/releases"
             credentials(PasswordCredentials)
             authentication {
