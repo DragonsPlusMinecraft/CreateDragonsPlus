@@ -25,13 +25,17 @@ dependencies {
 
 ### Localization
 - `CDPRegistrate#registerBuiltinLocalization`: Merge builtin language files (under `lang/builtin`) to language provider.
-- `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()`
-  to datagen program arguments to use translated language files under `src/main/translations`.
+- `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()` 
+to datagen program arguments to use translated language files under `src/main/translations`.
 
 ### Advancement
 - `CriterionStatBehaviour`: `BlockEntityBehaviour` for awarding owner player criterion and stats.
 - `BuiltinTrigger`: Criterion trigger for code triggered advancements.
 - `StatTrigger`: Criterion trigger for player stats
+
+### Ponder
+- Ponder plugins are made to be sorted by mod dependency order, allowing addons to register scenes to existing storyboards 
+with reliable orders.
 
 ### Gameplay
 - Dye Fluids and Bulk Coloring

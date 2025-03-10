@@ -16,24 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.client;
+package plus.dragons.createdragonsplus.client.ponder;
 
-import net.createmod.ponder.foundation.PonderIndex;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
-import plus.dragons.createdragonsplus.common.CDPCommon;
+import java.util.List;
+import net.createmod.ponder.api.registration.PonderPlugin;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 
-@Mod(CDPCommon.ID)
-public class CDPClient {
-    public CDPClient(IEventBus modBus) {
-        modBus.register(this);
-    }
+public class PonderPluginSorting {
+    private static final List<String> MODIDS = ModList.get().getSortedMods().stream().map(ModContainer::getModId).toList();
 
-    @SubscribeEvent
-    public void setup(final FMLClientSetupEvent event) {
-        PonderIndex.addPlugin(new CDPPonderPlugin());
+    public static int comparePlugins(PonderPlugin first, PonderPlugin second) {
+        return Integer.compare(MODIDS.indexOf(first.getModId()), MODIDS.indexOf(second.getModId()));
     }
 }
