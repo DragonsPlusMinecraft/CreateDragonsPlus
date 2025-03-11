@@ -38,7 +38,7 @@ import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecipeBuilder<R, B>> implements Consumer<RecipeOutput> {
+public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecipeBuilder<R, ?>> implements Consumer<RecipeOutput> {
     protected final @Nullable String directory;
     protected final List<ICondition> conditions = new ArrayList<>();
     protected @Nullable ResourceLocation id;
@@ -51,8 +51,16 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
 
     public abstract RecipeHolder<R> build();
 
-    @Nullable public AdvancementHolder buildAdvancement() {
+    public @Nullable AdvancementHolder buildAdvancement() {
         return null;
+    }
+
+    public @Nullable String getDirectory() {
+        return directory;
+    }
+
+    public @Nullable ResourceLocation getId() {
+        return id;
     }
 
     @Override
@@ -65,12 +73,12 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         output.accept(id, holder.value(), this.buildAdvancement(), conditions);
     }
 
-    public final B withId(ResourceLocation id) {
+    public B withId(ResourceLocation id) {
         this.id = id;
         return builder();
     }
 
-    public final B withCondition(ICondition condition) {
+    public B withCondition(ICondition condition) {
         this.conditions.add(condition);
         return builder();
     }
