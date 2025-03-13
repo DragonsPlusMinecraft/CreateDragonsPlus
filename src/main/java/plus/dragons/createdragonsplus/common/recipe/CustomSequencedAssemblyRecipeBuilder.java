@@ -55,14 +55,4 @@ public class CustomSequencedAssemblyRecipeBuilder extends SequencedAssemblyRecip
                 .output(transitionalItem).build()));
         return this;
     }
-
-    public CustomSequencedAssemblyRecipeBuilder addStep(Function<ResourceLocation, ProcessingRecipeBuilder<?>> builder) {
-        var recipe = ((SequencedAssemblyRecipeBuilderAccessor) this).getRecipe();
-        ItemStack transitionalItem = recipe.getTransitionalItem();
-        recipe.getSequence().add(new SequencedRecipe<>(builder
-                .apply(ResourceLocation.withDefaultNamespace("dummy"))
-                .require(transitionalItem.getItem())
-                .output(transitionalItem).build()));
-        return this;
-    }
 }
