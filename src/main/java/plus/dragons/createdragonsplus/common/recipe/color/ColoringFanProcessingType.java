@@ -80,14 +80,14 @@ public class ColoringFanProcessingType implements FanProcessingType {
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
         var input = new ColoringRecipeInput(this.color, stack);
-        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING_TYPE.value(), input, level);
+        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), input, level);
         return recipe.isPresent() || this.processCrafting(stack, level).isPresent();
     }
 
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         var input = new ColoringRecipeInput(this.color, stack);
-        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING_TYPE.value(), input, level);
+        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), input, level);
         return recipe.map(it -> it.value().assemble(input, level.registryAccess()))
                 .or(() -> this.processCrafting(stack, level))
                 .map(result -> ItemHelper.multipliedOutput(stack, result))
@@ -208,7 +208,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     private Optional<ItemStack> applyColoring(ItemStack stack, Level level) {
         var coloringInput = new ColoringRecipeInput(this.color, stack);
-        var coloringRecipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING_TYPE.value(), coloringInput, level);
+        var coloringRecipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), coloringInput, level);
         if (coloringRecipe.isPresent()) {
             ItemStack result = coloringRecipe.get().value().assemble(coloringInput, level.registryAccess());
             return Optional.of(result);

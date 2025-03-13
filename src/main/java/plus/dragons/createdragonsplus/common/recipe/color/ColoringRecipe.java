@@ -18,126 +18,34 @@
 
 package plus.dragons.createdragonsplus.common.recipe.color;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
+import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeBuilder;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
-import plus.dragons.createdragonsplus.data.recipe.BaseSingleItemRecipeBuilder;
 
-public class ColoringRecipe implements Recipe<ColoringRecipeInput> {
-    public static final MapCodec<ColoringRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            DyeColor.CODEC.fieldOf("dye").forGetter(recipe -> recipe.color),
-            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(recipe -> recipe.ingredient),
-            ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
-    ).apply(instance, ColoringRecipe::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipe> STREAM_CODEC = StreamCodec.composite(
-            DyeColor.STREAM_CODEC,
-            recipe -> recipe.color,
-            Ingredient.CONTENTS_STREAM_CODEC,
-            recipe -> recipe.ingredient,
-            ItemStack.STREAM_CODEC,
-            recipe -> recipe.result,
-            ColoringRecipe::new
-    );
-    private final DyeColor color;
-    private final Ingredient ingredient;
-    private final ItemStack result;
-
-    public ColoringRecipe(DyeColor color, Ingredient ingredient, ItemStack result) {
-        this.color = color;
-        this.ingredient = ingredient;
-        this.result = result;
+public class ColoringRecipe extends CustomProcessingRecipe<ColoringRecipeInput, ColoringRecipeParams> {
+    public ColoringRecipe(ColoringRecipeParams params) {
+        super(CDPRecipes.COLORING, params);
     }
 
-    public static Builder builder(DyeColor color) {
-        return new Builder(color);
+    public static Builder builder(ResourceLocation id, DyeColor color) {
+        return new Builder(id, color);
     }
 
     public DyeColor getColor() {
-        return this.color;
+        return params.color;
     }
 
     @Override
     public boolean matches(ColoringRecipeInput input, Level level) {
-        return this.color == input.color() && this.ingredient.test(input.item());
+        return params.color == input.color() && this.ingredients.getFirst().test(input.item());
     }
 
-    @Override
-    public ItemStack assemble(ColoringRecipeInput input, Provider registries) {
-        return this.result;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> list = NonNullList.create();
-        list.add(this.ingredient);
-        return list;
-    }
-
-    @Override
-    public ItemStack getResultItem(Provider registries) {
-        return this.result;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return true;
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return CDPRecipes.COLORING_SERIALIZER.value();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return CDPRecipes.COLORING_TYPE.value();
-    }
-
-    public record Serializer(MapCodec<ColoringRecipe> codec,
-                             StreamCodec<RegistryFriendlyByteBuf, ColoringRecipe> streamCodec
-    ) implements RecipeSerializer<ColoringRecipe> {
-        public Serializer() {
-            this(CODEC, STREAM_CODEC);
-        }
-    }
-
-    public static class Builder extends BaseSingleItemRecipeBuilder<ColoringRecipe, Builder> {
-        private final DyeColor color;
-
-        protected Builder(DyeColor color) {
-            super("coloring");
-            this.color = color;
-        }
-
-        @Override
-        protected Builder builder() {
-            return this;
-        }
-
-        @Override
-        public RecipeHolder<ColoringRecipe> build() {
-            if (this.id == null) {
-                this.id = this.result.getItemHolder().unwrapKey().orElseThrow().location();
-            }
-            var recipe = new ColoringRecipe(this.color, this.ingredient, this.result);
-            return new RecipeHolder<>(this.id, recipe);
+    public static class Builder extends CustomProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe> {
+        protected Builder(ResourceLocation recipeId, DyeColor color) {
+            super(ColoringRecipe::new, new ColoringRecipeParams(recipeId, color));
         }
     }
 }

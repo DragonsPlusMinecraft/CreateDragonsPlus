@@ -18,29 +18,36 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
-import net.minecraft.core.Holder;
+import java.util.function.Supplier;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
+import plus.dragons.createdragonsplus.common.recipe.RecipeTypeInfo;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
+import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipeParams;
 
 public class CDPRecipes {
     private static final DeferredRegister<RecipeType<?>> TYPES =
             DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
-    public static final DeferredHolder<RecipeType<?>, RecipeType<ColoringRecipe>> COLORING_TYPE = TYPES
-            .register("coloring", RecipeType::simple);
-
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
             DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, CDPCommon.ID);
-    public static final Holder<RecipeSerializer<?>> COLORING_SERIALIZER = SERIALIZERS
-            .register("coloring", ColoringRecipe.Serializer::new);
+    public static final RecipeTypeInfo<ColoringRecipe> COLORING = register("coloring", () -> CustomProcessingRecipe.serializer(
+            ColoringRecipe::new,
+            ColoringRecipeParams.CODEC,
+            ColoringRecipeParams.STREAM_CODEC
+    ));
 
     public static void register(IEventBus modBus) {
         TYPES.register(modBus);
         SERIALIZERS.register(modBus);
+    }
+
+    private static <R extends Recipe<?>> RecipeTypeInfo<R> register(String name, Supplier<? extends RecipeSerializer<R>> serializer) {
+        return new RecipeTypeInfo<>(name, serializer, SERIALIZERS, TYPES);
     }
 }

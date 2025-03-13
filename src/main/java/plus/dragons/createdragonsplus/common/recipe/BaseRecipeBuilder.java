@@ -83,7 +83,7 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         return builder();
     }
 
-    public final B withOutCondition(ICondition condition) {
+    public final B withoutCondition(ICondition condition) {
         this.conditions.add(new NotCondition(condition));
         return builder();
     }
@@ -103,8 +103,8 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         return builder();
     }
 
-    public final B withOutMod(String mod) {
-        this.withOutCondition(new ModLoadedCondition(mod));
+    public final B withoutMod(String mod) {
+        this.withoutCondition(new ModLoadedCondition(mod));
         return builder();
     }
 
@@ -118,32 +118,32 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         return builder();
     }
 
-    public final B withOutItem(ResourceLocation location) {
-        this.withOutCondition(new ItemExistsCondition(location));
+    public final B withoutItem(ResourceLocation location) {
+        this.withoutCondition(new ItemExistsCondition(location));
         return builder();
     }
 
-    public final B withOutItem(DeferredHolder<Item, ?> item) {
-        this.withOutCondition(new ItemExistsCondition(item.getId()));
+    public final B withoutItem(DeferredHolder<Item, ?> item) {
+        this.withoutCondition(new ItemExistsCondition(item.getId()));
         return builder();
     }
 
     public final B withTag(ResourceLocation location) {
-        this.withOutCondition(new TagEmptyCondition(location));
+        this.withoutCondition(new TagEmptyCondition(location));
         return builder();
     }
 
     public final B withTag(TagKey<Item> tag) {
-        this.withOutCondition(new TagEmptyCondition(tag));
+        this.withoutCondition(new TagEmptyCondition(tag));
         return builder();
     }
 
-    public final B withOutTag(ResourceLocation location) {
+    public final B withoutTag(ResourceLocation location) {
         this.withCondition(new TagEmptyCondition(location));
         return builder();
     }
 
-    public final B withOutTag(TagKey<Item> tag) {
+    public final B withoutTag(TagKey<Item> tag) {
         this.withCondition(new TagEmptyCondition(tag));
         return builder();
     }

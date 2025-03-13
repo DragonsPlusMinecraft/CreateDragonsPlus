@@ -41,6 +41,7 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
@@ -57,8 +58,7 @@ import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.util.CDPLang;
 
 public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe> {
-    public static final RecipeType<ColoringRecipe> TYPE =
-            new RecipeType<>(CDPRecipes.COLORING_TYPE.getId(), ColoringRecipe.class);
+    public static final RecipeType<ColoringRecipe> TYPE = new RecipeType<>(CDPRecipes.COLORING.getId(), ColoringRecipe.class);
 
     protected FanColoringCategory(Info<ColoringRecipe> info) {
         super(info);
@@ -119,7 +119,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
     private static List<RecipeHolder<ColoringRecipe>> getAllRecipes() {
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
-        List<RecipeHolder<ColoringRecipe>> allColoring = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING_TYPE.get()));
+        List<RecipeHolder<ColoringRecipe>> allColoring = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
         List<RecipeHolder<CraftingRecipe>> allCrafting = manager
                 .getAllRecipesFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING);
         for (var holder : allCrafting) {
@@ -130,12 +130,12 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             var result = crafting.getResultItem(level.registryAccess());
             if (crafting.canCraftInDimensions(2, 1) && ingredients.size() == 2 && result.getCount() == 1) {
                 for (var color : DyeColors.ALL) {
-                    convert2x1(color, ingredients, result)
+                    convert2x1(holder.id(), color, ingredients, result)
                             .ifPresent(coloring -> allColoring.add(new RecipeHolder<>(holder.id(), coloring)));
                 }
             } else if (crafting.canCraftInDimensions(3, 3) && ingredients.size() == 9 && result.getCount() == 8) {
                 for (var color : DyeColors.ALL) {
-                    convert3x3(color, ingredients, result)
+                    convert3x3(holder.id(), color, ingredients, result)
                             .ifPresent(coloring -> allColoring.add(new RecipeHolder<>(holder.id(), coloring)));
                 }
             }
@@ -146,19 +146,25 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         return allColoring;
     }
 
-    private static Optional<ColoringRecipe> convert2x1(DyeColor color, List<Ingredient> ingredients, ItemStack result) {
+    private static Optional<ColoringRecipe> convert2x1(ResourceLocation id, DyeColor color, List<Ingredient> ingredients, ItemStack result) {
         var dye = new ItemStack(DyeItem.byColor(color));
         if (ingredients.get(0).test(dye)) {
-            var recipe = new ColoringRecipe(color, ingredients.get(1), result);
+            var recipe = ColoringRecipe.builder(id, color)
+                    .require(ingredients.get(0))
+                    .output(result)
+                    .build();
             return Optional.of(recipe);
         } else if (ingredients.get(1).test(dye)) {
-            var recipe = new ColoringRecipe(color, ingredients.get(0), result);
+            var recipe = ColoringRecipe.builder(id, color)
+                    .require(ingredients.get(1))
+                    .output(result)
+                    .build();
             return Optional.of(recipe);
         }
         return Optional.empty();
     }
 
-    private static Optional<ColoringRecipe> convert3x3(DyeColor color, List<Ingredient> ingredients, ItemStack result) {
+    private static Optional<ColoringRecipe> convert3x3(ResourceLocation id, DyeColor color, List<Ingredient> ingredients, ItemStack result) {
         var dye = new ItemStack(DyeItem.byColor(color));
         Ingredient dyeable = null;
         boolean hasDye = false;
@@ -177,7 +183,10 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         }
         if (!hasDye || dyeable == null)
             return Optional.empty();
-        var recipe = new ColoringRecipe(color, dyeable, result.copyWithCount(1));
+        var recipe = ColoringRecipe.builder(id, color)
+                .require(dyeable)
+                .output(result.copyWithCount(1))
+                .build();
         return Optional.of(recipe);
     }
 
