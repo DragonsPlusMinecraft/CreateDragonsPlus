@@ -6,6 +6,7 @@
   "mixins": [
     "OpenEndFluidHandlerMixin",
     "ProcessingRecipeMixin",
+    "SequencedRecipeMixin",
     "accessor.ExistingFileHelperAccessor",
     "accessor.FanProcessingAccessor",
     "accessor.ProcessingRecipeAccessor",

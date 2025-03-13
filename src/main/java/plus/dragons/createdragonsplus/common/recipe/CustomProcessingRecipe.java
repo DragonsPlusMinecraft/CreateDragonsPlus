@@ -18,16 +18,11 @@
 
 package plus.dragons.createdragonsplus.common.recipe;
 
-import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
-import java.util.function.Function;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import plus.dragons.createdragonsplus.mixin.accessor.ProcessingRecipeAccessor;
 
 public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends CustomProcessingRecipeParams> extends ProcessingRecipe<I> {
@@ -37,25 +32,6 @@ public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends Cu
         super(typeInfo, params);
         this.params = params;
         ((ProcessingRecipeAccessor) this).invokeValidate(typeInfo.getId());
-    }
-
-    public static <P extends CustomProcessingRecipeParams, R extends CustomProcessingRecipe<?, P>> RecipeSerializer<R> serializer(Function<P, R> constructor, MapCodec<P> paramsCodec, StreamCodec<RegistryFriendlyByteBuf, P> paramsStreamCodec) {
-        return new RecipeSerializer<>() {
-            private final MapCodec<R> codec = paramsCodec
-                    .xmap(constructor, CustomProcessingRecipe::getParams);
-            private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec = paramsStreamCodec
-                    .map(constructor, CustomProcessingRecipe::getParams);
-
-            @Override
-            public MapCodec<R> codec() {
-                return codec;
-            }
-
-            @Override
-            public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
-                return streamCodec;
-            }
-        };
     }
 
     protected P getParams() {

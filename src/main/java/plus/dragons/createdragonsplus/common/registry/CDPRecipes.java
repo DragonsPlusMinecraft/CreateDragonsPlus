@@ -26,7 +26,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
+import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeSerializer;
 import plus.dragons.createdragonsplus.common.recipe.RecipeTypeInfo;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipeParams;
@@ -36,7 +36,7 @@ public class CDPRecipes {
             DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
             DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, CDPCommon.ID);
-    public static final RecipeTypeInfo<ColoringRecipe> COLORING = register("coloring", () -> CustomProcessingRecipe.serializer(
+    public static final RecipeTypeInfo<ColoringRecipe> COLORING = register("coloring", () -> new CustomProcessingRecipeSerializer<>(
             ColoringRecipe::new,
             ColoringRecipeParams.CODEC,
             ColoringRecipeParams.STREAM_CODEC
