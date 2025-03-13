@@ -19,14 +19,12 @@
 package plus.dragons.createdragonsplus.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
-import java.util.function.Function;
+import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -36,9 +34,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeSerializer;
+
+import java.util.function.Function;
 
 @Mixin(SequencedRecipe.class)
 public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
@@ -55,12 +56,15 @@ public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
         return NeoForgeExtraCodecs.withAlternative(customCodec, codec);
     }
 
-    @WrapMethod(method = "writeToBuffer")
-    private void writeToBuffer$supportCustomProcessingRecipe(RegistryFriendlyByteBuf buffer, Operation<Void> original) {
-        if (wrapped instanceof CustomProcessingRecipe)
-            Recipe.STREAM_CODEC.encode(buffer, wrapped);
-        else
-            original.call(buffer);
+    @SuppressWarnings("unchecked")
+    @Inject(method = "writeToBuffer", at = @At("HEAD"), cancellable = true)
+    private void writeToBuffer$supportCustomProcessingRecipe(RegistryFriendlyByteBuf buffer, CallbackInfo ci) {
+        if (wrapped instanceof CustomProcessingRecipe) {
+            RecipeSerializer<T> serializer = (RecipeSerializer<T>) wrapped.getSerializer();
+            buffer.writeResourceLocation(RegisteredObjectsHelper.getKeyOrThrow(serializer));
+            serializer.streamCodec().encode(buffer, wrapped);
+            ci.cancel();
+        }
     }
 
     @Inject(method = "readFromBuffer", at = @At(value = "NEW", target = "com/google/gson/JsonParseException"), cancellable = true)
