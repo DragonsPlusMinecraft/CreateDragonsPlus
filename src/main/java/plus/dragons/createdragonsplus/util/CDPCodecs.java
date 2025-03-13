@@ -18,14 +18,26 @@
 
 package plus.dragons.createdragonsplus.util;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import java.util.function.Function;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
+import net.minecraft.util.valueproviders.ConstantFloat;
+import net.minecraft.world.item.enchantment.effects.PlaySoundEffect;
 
 public class CDPCodecs {
     public static final MapCodec<Stat<?>> STAT = BuiltInRegistries.STAT_TYPE.byNameCodec()
             .dispatchMap(Stat::getType, CDPCodecs::statCodec);
+    public static final Codec<PlaySoundEffect> PLAY_SOUND = Codec.either(
+            BuiltInRegistries.SOUND_EVENT.holderByNameCodec(),
+            PlaySoundEffect.CODEC.codec()
+    ).xmap(either -> either.map(
+            sound -> new PlaySoundEffect(sound, ConstantFloat.of(1f), ConstantFloat.of(1f)),
+            Function.identity()
+    ), Either::right);
 
     public static <T> MapCodec<Stat<T>> statCodec(StatType<T> type) {
         return type.getRegistry().byNameCodec().xmap(type::get, Stat::getValue).fieldOf("value");

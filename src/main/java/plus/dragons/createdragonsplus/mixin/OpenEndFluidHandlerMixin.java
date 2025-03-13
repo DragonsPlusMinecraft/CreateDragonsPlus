@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.common.fluid.ConsumingOpenPipeEffectHandler;
 
-@Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe.OpenEndFluidHandler", remap = false)
+@Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe.OpenEndFluidHandler")
 public abstract class OpenEndFluidHandlerMixin extends FluidTank {
     @Shadow
     @Final
@@ -44,26 +44,15 @@ public abstract class OpenEndFluidHandlerMixin extends FluidTank {
     }
 
     @WrapOperation(method = "fill", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/fluid/FluidHelper;copyStackWithAmount(Lnet/neoforged/neoforge/fluids/FluidStack;I)Lnet/neoforged/neoforge/fluids/FluidStack;"))
-    private FluidStack create_dragons_plus$fill$copyStack(
-            FluidStack resource,
-            int amount,
-            Operation<FluidStack> original,
-            @Local OpenPipeEffectHandler handler
-    ) {
+    private FluidStack fill$copyStack(FluidStack resource, int amount, Operation<FluidStack> original, @Local OpenPipeEffectHandler handler) {
         if (handler instanceof ConsumingOpenPipeEffectHandler) return resource.copy();
         return original.call(resource, amount);
     }
 
     @Inject(method = "fill", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/OpenEndedPipe$OpenEndFluidHandler;getFluidAmount()I"))
-    private void create_dragons_plus$fill$applyConsumingEffect(
-            FluidStack resource,
-            FluidAction action,
-            CallbackInfoReturnable<Integer> cir,
-            @Local OpenPipeEffectHandler handler
-    ) {
+    private void fill$applyConsumingEffect(FluidStack resource, FluidAction action, CallbackInfoReturnable<Integer> cir, @Local OpenPipeEffectHandler handler) {
         if (handler instanceof ConsumingOpenPipeEffectHandler) {
-            FluidStack remainder = ConsumingOpenPipeEffectHandler.getRemainder(
-                    (ConsumingOpenPipeEffectHandler) handler, this$0, this.getFluid());
+            FluidStack remainder = ConsumingOpenPipeEffectHandler.getRemainder((ConsumingOpenPipeEffectHandler) handler, this$0, this.getFluid());
             this.setFluid(remainder);
         }
     }

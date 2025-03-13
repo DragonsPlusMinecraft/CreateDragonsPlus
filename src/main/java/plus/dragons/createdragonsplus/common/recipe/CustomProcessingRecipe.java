@@ -28,6 +28,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import plus.dragons.createdragonsplus.mixin.accessor.ProcessingRecipeAccessor;
 
 public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends CustomProcessingRecipeParams> extends ProcessingRecipe<I> {
     protected final P params;
@@ -35,6 +36,7 @@ public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends Cu
     public CustomProcessingRecipe(IRecipeTypeInfo typeInfo, P params) {
         super(typeInfo, params);
         this.params = params;
+        ((ProcessingRecipeAccessor) this).invokeValidate(typeInfo.getId());
     }
 
     public static <P extends CustomProcessingRecipeParams, R extends CustomProcessingRecipe<?, P>> RecipeSerializer<R> serializer(Function<P, R> constructor, MapCodec<P> paramsCodec, StreamCodec<RegistryFriendlyByteBuf, P> paramsStreamCodec) {

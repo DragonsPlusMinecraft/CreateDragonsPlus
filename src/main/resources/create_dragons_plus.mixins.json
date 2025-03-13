@@ -5,8 +5,11 @@
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
     "OpenEndFluidHandlerMixin",
+    "ProcessingRecipeMixin",
     "accessor.ExistingFileHelperAccessor",
-    "accessor.FanProcessingAccessor"
+    "accessor.FanProcessingAccessor",
+    "accessor.ProcessingRecipeAccessor",
+    "accessor.SequencedAssemblyRecipeBuilderAccessor"
   ],
   "client": [
     "PonderIndexMixin"
