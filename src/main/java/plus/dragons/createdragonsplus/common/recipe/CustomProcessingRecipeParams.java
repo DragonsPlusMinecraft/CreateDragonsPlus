@@ -74,7 +74,6 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
     }
 
     protected void toNetwork(RegistryFriendlyByteBuf buffer) {
-        ResourceLocation.STREAM_CODEC.encode(buffer, id);
         CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).encode(buffer, ingredients);
         CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).encode(buffer, results);
         if (getMaxFluidInputCount() > 0)
@@ -205,7 +204,7 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
     protected static <P extends CustomProcessingRecipeParams> StreamCodec<RegistryFriendlyByteBuf, P> streamCodec(Function<ResourceLocation, P> constructor) {
         return StreamCodec.of(
                 (buffer, params) -> params.toNetwork(buffer),
-                buffer -> Util.make(constructor.apply(ResourceLocation.STREAM_CODEC.decode(buffer)), params -> params.fromNetwork(buffer))
+                buffer -> Util.make(constructor.apply(null), params -> params.fromNetwork(buffer))
         );
     }
 }
