@@ -31,6 +31,8 @@ public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends Cu
     public CustomProcessingRecipe(IRecipeTypeInfo typeInfo, P params) {
         super(typeInfo, params);
         this.params = params;
+        if (this.id == null)
+            this.id = typeInfo.getId();
         ((ProcessingRecipeAccessor) this).invokeValidate(typeInfo.getId());
     }
 

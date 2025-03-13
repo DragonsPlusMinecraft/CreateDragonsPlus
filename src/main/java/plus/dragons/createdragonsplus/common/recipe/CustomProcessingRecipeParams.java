@@ -38,13 +38,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParams {
     protected CustomProcessingRecipeParams(ResourceLocation id) {
         super(id);
     }
 
-    public ResourceLocation getId() {
+    protected final @Nullable ResourceLocation getId() {
         return id;
     }
 
@@ -105,11 +106,10 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> itemCodec(Function<ResourceLocation, P> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(params -> params.id),
                 NonNullList.codecOf(Ingredient.CODEC).fieldOf("ingredients").forGetter(params -> params.ingredients),
                 NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (id, ingredients, results) -> {
-            var params = constructor.apply(id);
+        ).apply(instance, (ingredients, results) -> {
+            var params = constructor.apply(null);
             params.ingredients = ingredients;
             params.results = results;
             return params;
@@ -118,7 +118,6 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidInputCodec(Function<ResourceLocation, P> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(params -> params.id),
                 Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
                     ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
                     params.ingredients.forEach(it -> builder.add(Either.left(it)));
@@ -126,8 +125,8 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
                     return builder.build();
                 }),
                 NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (id, ingredients, results) -> {
-            var params = constructor.apply(id);
+        ).apply(instance, (ingredients, results) -> {
+            var params = constructor.apply(null);
             for (var ingredient : ingredients)
                 ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
             params.results = results;
@@ -137,11 +136,10 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidOutputCodec(Function<ResourceLocation, P> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(params -> params.id),
                 NonNullList.codecOf(Ingredient.CODEC).fieldOf("ingredients").forGetter(params -> params.ingredients),
                 NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (id, ingredients, results) -> {
-            var params = constructor.apply(id);
+        ).apply(instance, (ingredients, results) -> {
+            var params = constructor.apply(null);
             params.ingredients = ingredients;
             params.results = results;
             return params;
@@ -150,7 +148,6 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidCodec(Function<ResourceLocation, P> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(params -> params.id),
                 Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
                     ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
                     params.ingredients.forEach(it -> builder.add(Either.left(it)));
@@ -163,8 +160,8 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
                     params.fluidResults.forEach(it -> builder.add(Either.right(it)));
                     return builder.build();
                 })
-        ).apply(instance, (id, ingredients, results) -> {
-            var params = constructor.apply(id);
+        ).apply(instance, (ingredients, results) -> {
+            var params = constructor.apply(null);
             for (var ingredient : ingredients)
                 ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
             for (var result : results)
@@ -175,7 +172,6 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> completeCodec(Function<ResourceLocation, P> constructor) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(params -> params.id),
                 Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
                     ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
                     params.ingredients.forEach(it -> builder.add(Either.left(it)));
@@ -193,8 +189,8 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
                 HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
                         .forGetter(params -> params.requiredHeat),
                 Codec.BOOL.optionalFieldOf("keep_held_item", false).forGetter(params -> params.keepHeldItem)
-        ).apply(instance, (id, ingredients, results, processingDuration, requiredHeat, keepHeldItem) -> {
-            var params = constructor.apply(id);
+        ).apply(instance, (ingredients, results, processingDuration, requiredHeat, keepHeldItem) -> {
+            var params = constructor.apply(null);
             for (var ingredient : ingredients)
                 ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
             for (var result : results)

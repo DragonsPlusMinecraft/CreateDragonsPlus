@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.common.recipe;
 
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import java.util.Objects;
 import java.util.function.Function;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -30,7 +31,7 @@ public class CustomProcessingRecipeBuilder<P extends CustomProcessingRecipeParam
     protected final Function<P, R> factory;
 
     public CustomProcessingRecipeBuilder(Function<P, R> factory, P params) {
-        super(null, params.getId());
+        super(null, Objects.requireNonNull(params.getId()));
         this.factory = factory;
         this.params = params;
     }
