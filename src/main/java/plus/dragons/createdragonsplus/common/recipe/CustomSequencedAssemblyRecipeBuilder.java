@@ -23,18 +23,37 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeBuilder;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import plus.dragons.createdragonsplus.mixin.accessor.SequencedAssemblyRecipeBuilderAccessor;
 
+/**
+ * Custom extension of {@link SequencedAssemblyRecipeBuilder} supporting {@link CustomProcessingRecipeBuilder}.
+ */
 public class CustomSequencedAssemblyRecipeBuilder extends SequencedAssemblyRecipeBuilder {
     public CustomSequencedAssemblyRecipeBuilder(ResourceLocation id) {
         super(id);
+    }
+
+    @Override
+    public CustomSequencedAssemblyRecipeBuilder require(ItemLike ingredient) {
+        return (CustomSequencedAssemblyRecipeBuilder) super.require(ingredient);
+    }
+
+    @Override
+    public CustomSequencedAssemblyRecipeBuilder require(TagKey<Item> tag) {
+        return (CustomSequencedAssemblyRecipeBuilder) super.require(tag);
+    }
+
+    @Override
+    public CustomSequencedAssemblyRecipeBuilder require(Ingredient ingredient) {
+        return (CustomSequencedAssemblyRecipeBuilder) super.require(ingredient);
     }
 
     @Override
@@ -43,26 +62,24 @@ public class CustomSequencedAssemblyRecipeBuilder extends SequencedAssemblyRecip
     }
 
     @Override
+    public CustomSequencedAssemblyRecipeBuilder loops(int loops) {
+        return (CustomSequencedAssemblyRecipeBuilder) super.loops(loops);
+    }
+
+    @Override
     public <T extends ProcessingRecipe<?>> CustomSequencedAssemblyRecipeBuilder addStep(ProcessingRecipeFactory<T> factory, UnaryOperator<ProcessingRecipeBuilder<T>> builder) {
         return (CustomSequencedAssemblyRecipeBuilder) super.addStep(factory, builder);
     }
 
-    public CustomSequencedAssemblyRecipeBuilder addStep(BiFunction<Item, ResourceLocation, ProcessingRecipeBuilder<?>> builder) {
+    @SuppressWarnings("unchecked")
+    public <B extends CustomProcessingRecipeBuilder<?, ?>> CustomSequencedAssemblyRecipeBuilder addStep(Function<ResourceLocation, B> factory, UnaryOperator<B> builder) {
         var recipe = ((SequencedAssemblyRecipeBuilderAccessor) this).getRecipe();
         ItemStack transitionalItem = recipe.getTransitionalItem();
         recipe.getSequence().add(new SequencedRecipe<>(builder
-                .apply(transitionalItem.getItem(), ResourceLocation.withDefaultNamespace("dummy"))
-                .output(transitionalItem).build()));
-        return this;
-    }
-
-    public CustomSequencedAssemblyRecipeBuilder addStep(Function<ResourceLocation, ProcessingRecipeBuilder<?>> builder) {
-        var recipe = ((SequencedAssemblyRecipeBuilderAccessor) this).getRecipe();
-        ItemStack transitionalItem = recipe.getTransitionalItem();
-        recipe.getSequence().add(new SequencedRecipe<>(builder
-                .apply(ResourceLocation.withDefaultNamespace("dummy"))
-                .require(transitionalItem.getItem())
-                .output(transitionalItem).build()));
+                .apply((B) factory.apply(ResourceLocation.withDefaultNamespace("dummy"))
+                        .require(transitionalItem.getItem())
+                        .output(transitionalItem)
+                ).build()));
         return this;
     }
 }

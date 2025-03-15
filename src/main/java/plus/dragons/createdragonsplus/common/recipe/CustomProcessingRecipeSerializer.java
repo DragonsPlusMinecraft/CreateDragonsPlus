@@ -24,13 +24,19 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
+/**
+ * {@link RecipeSerializer} implementation for {@link CustomProcessingRecipe}
+ * based on {@link CustomProcessingRecipeParams}'s {@link MapCodec} and {@link StreamCodec}.
+ * @param <P> the {@link CustomProcessingRecipeParams params} type
+ * @param <R> the {@link CustomProcessingRecipe recipe} type
+ */
 public class CustomProcessingRecipeSerializer<P extends CustomProcessingRecipeParams, R extends CustomProcessingRecipe<?, P>> implements RecipeSerializer<R> {
     private final MapCodec<R> codec;
     private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
 
     public CustomProcessingRecipeSerializer(Function<P, R> constructor, MapCodec<P> paramsCodec, StreamCodec<RegistryFriendlyByteBuf, P> paramsStreamCodec) {
-        this.codec = paramsCodec.xmap(constructor, CustomProcessingRecipe::getParams);
-        this.streamCodec = paramsStreamCodec.map(constructor, CustomProcessingRecipe::getParams);
+        this.codec = paramsCodec.xmap(constructor, recipe -> recipe.params);
+        this.streamCodec = paramsStreamCodec.map(constructor, recipe -> recipe.params);
     }
 
     @Override

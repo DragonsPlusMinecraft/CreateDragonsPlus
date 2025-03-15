@@ -20,28 +20,33 @@ dependencies {
 - `CDPRegistrate`: Registrate with Create related builders and other advanced functions.
 
 ### Tag
-- `TagRegistry`: Instance based, easily seperate tags under different namespaces.
+- `TagRegistry`: Instance based, easily seperates tags under different namespaces.
   Supports datagen (including tag localization).
 
-### Localization
-- `CDPRegistrate#registerBuiltinLocalization`: Merge builtin language files (under `lang/builtin`) to language provider.
-- `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()` 
-to datagen program arguments to use translated language files under `src/main/translations`.
+### Recipe
+- Full support for custom processing recipe with custom params, including builder, serializer 
+  and sequenced assembly support.
+- Custom builder for vanilla recipe types, supporting integration output (output that might not exist at runtime).
 
 ### Advancement
-- `CriterionStatBehaviour`: `BlockEntityBehaviour` for awarding owner player criterion and stats.
+- `AdvancementBehaviour`: `BlockEntityBehaviour` for awarding owner player advancements by stats and builtin trigger.
 - `BuiltinTrigger`: Criterion trigger for code triggered advancements.
 - `StatTrigger`: Criterion trigger for player stats
 
+### Localization
+- `CDPRegistrate#registerBuiltinLocalization`: Merge builtin language files (under `lang/builtin`) to language provider.
+- `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()`
+  to datagen program arguments to use translated language files under `src/main/translations`.
+
 ### Ponder
-- Ponder plugins are made to be sorted by mod dependency order, allowing addons to register scenes to existing storyboards 
+- Ponder plugins are made to be sorted by mod dependency order, allowing addons to register scenes to existing components 
 with reliable orders.
 
 ### Gameplay
 - Dye Fluids and Bulk Coloring
 
 ## Contribute
-Feel free to open a PR to either translate the mod or to add another feature! All help is appreciated!
+Feel free to open a PR to either provide localization or to add another feature! All help is appreciated!
 
-### If you want to help us to translate...
+### Localization
 Please use the language files in `src/generated` and submit to `src/main/translations`.

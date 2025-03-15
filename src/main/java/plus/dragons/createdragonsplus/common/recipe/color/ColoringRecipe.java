@@ -43,9 +43,26 @@ public class ColoringRecipe extends CustomProcessingRecipe<ColoringRecipeInput, 
         return params.color == input.color() && this.ingredients.getFirst().test(input.item());
     }
 
+    @Override
+    protected int getMaxInputCount() {
+        return 1;
+    }
+
+    @Override
+    protected int getMaxOutputCount() {
+        return 12;
+    }
+
     public static class Builder extends CustomProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe> {
         protected Builder(ResourceLocation recipeId, DyeColor color) {
-            super(ColoringRecipe::new, new ColoringRecipeParams(recipeId, color));
+            super(ColoringRecipe::new, recipeId);
+            var params = (ColoringRecipeParams) this.params;
+            params.color = color;
+        }
+
+        @Override
+        protected ColoringRecipeParams createParams(ResourceLocation id) {
+            return new ColoringRecipeParams(id);
         }
     }
 }

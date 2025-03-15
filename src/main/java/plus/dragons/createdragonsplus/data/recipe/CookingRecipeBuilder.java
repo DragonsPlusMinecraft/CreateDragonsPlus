@@ -31,8 +31,7 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
-public class CookingRecipeBuilder<R extends AbstractCookingRecipe> extends
-                                                                   BaseSingleItemRecipeBuilder<R, CookingRecipeBuilder<R>> {
+public class CookingRecipeBuilder<R extends AbstractCookingRecipe> extends BaseSingleItemRecipeBuilder<R, CookingRecipeBuilder<R>> {
     private final AbstractCookingRecipe.Factory<R> factory;
     private float experience;
     private int cookingTime;

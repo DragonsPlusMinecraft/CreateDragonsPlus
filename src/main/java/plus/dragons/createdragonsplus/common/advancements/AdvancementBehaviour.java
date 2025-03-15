@@ -50,16 +50,16 @@ import plus.dragons.createdragonsplus.util.CDPCodecs;
 import plus.dragons.createdragonsplus.util.ErrorMessages;
 
 /**
- * {@link BlockEntityBehaviour} for awarding owner player stats and criterions. <br>
- * The owner player can be set using {@link #setPlacedBy(Level, BlockPos, LivingEntity)} in
+ * {@link BlockEntityBehaviour} for awarding owner player advancements through stats and builtin triggers. <br>
+ * The owner player should be set using {@link #setPlacedBy(Level, BlockPos, LivingEntity)} in
  * {@link Block#setPlacedBy(Level, BlockPos, BlockState, LivingEntity, ItemStack)}. <br>
  * Stats will be stored if owner player is not available, and will add to next success award. <br>
  * @see BuiltinTrigger
  * @see StatTrigger
  */
-public class CriterionStatBehaviour extends BlockEntityBehaviour {
-    public static final BehaviourType<CriterionStatBehaviour> TYPE =
-            new BehaviourType<>(CDPCommon.asResource("criterion_stat").toString());
+public class AdvancementBehaviour extends BlockEntityBehaviour {
+    public static final BehaviourType<AdvancementBehaviour> TYPE =
+            new BehaviourType<>(CDPCommon.asResource("advancement").toString());
     protected static final String TYPE_KEY = TYPE.getName();
     protected static final String OWNER_KEY = "Owner";
     protected static final String STATS_COUNTER_KEY = "StatsCounter";
@@ -83,12 +83,12 @@ public class CriterionStatBehaviour extends BlockEntityBehaviour {
     protected @Nullable UUID owner;
     protected Object2IntMap<Stat<?>> statsCounter = new Object2IntOpenHashMap<>();
 
-    public CriterionStatBehaviour(SmartBlockEntity be) {
+    public AdvancementBehaviour(SmartBlockEntity be) {
         super(be);
     }
 
     public static void setPlacedBy(Level level, BlockPos pos, LivingEntity entity) {
-        CriterionStatBehaviour behaviour = get(level, pos, TYPE);
+        AdvancementBehaviour behaviour = get(level, pos, TYPE);
         if (behaviour != null && entity instanceof ServerPlayer player)
             behaviour.setOwner(player);
     }
@@ -144,21 +144,17 @@ public class CriterionStatBehaviour extends BlockEntityBehaviour {
         if (clientPacket)
             return;
 
-        if (!nbt.contains(TYPE_KEY))
-            return;
-        CompoundTag data = nbt.getCompound(TYPE_KEY);
-
-        if (!data.contains(OWNER_KEY)) {
+        if (!nbt.contains(OWNER_KEY)) {
             this.setOwner((UUID) null);
             return;
         }
-        this.setOwner(data.getUUID(OWNER_KEY));
+        this.setOwner(nbt.getUUID(OWNER_KEY));
 
-        if (!data.contains(STATS_COUNTER_KEY)) {
+        if (!nbt.contains(STATS_COUNTER_KEY)) {
             this.statsCounter.clear();
             return;
         }
-        STATS_COUNTER_CODEC.parse(NbtOps.INSTANCE, data.get(STATS_COUNTER_KEY))
+        STATS_COUNTER_CODEC.parse(NbtOps.INSTANCE, nbt.get(STATS_COUNTER_KEY))
                 .resultOrPartial(this::errorReading)
                 .ifPresent(map -> this.statsCounter = map);
     }
@@ -168,16 +164,13 @@ public class CriterionStatBehaviour extends BlockEntityBehaviour {
         if (clientPacket)
             return;
 
-        CompoundTag data = new CompoundTag();
-        nbt.put(TYPE_KEY, data);
-
         if (this.owner != null)
-            data.putUUID(OWNER_KEY, this.owner);
+            nbt.putUUID(OWNER_KEY, this.owner);
 
         if (!this.statsCounter.isEmpty()) {
             STATS_COUNTER_CODEC.encodeStart(NbtOps.INSTANCE, this.statsCounter)
                     .resultOrPartial(this::errorWriting)
-                    .ifPresent(it -> data.put(STATS_COUNTER_KEY, it));
+                    .ifPresent(it -> nbt.put(STATS_COUNTER_KEY, it));
         }
     }
 

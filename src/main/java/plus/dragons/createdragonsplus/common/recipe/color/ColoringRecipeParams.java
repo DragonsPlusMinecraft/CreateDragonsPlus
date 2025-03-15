@@ -31,7 +31,7 @@ import plus.dragons.createdragonsplus.util.FieldsAssertedNonnullByDefault;
 @FieldsAssertedNonnullByDefault
 public class ColoringRecipeParams extends CustomProcessingRecipeParams {
     public static final MapCodec<ColoringRecipeParams> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            itemCodec(ColoringRecipeParams::new).forGetter(Function.identity()),
+            codec(ColoringRecipeParams::new).forGetter(Function.identity()),
             DyeColor.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)
     ).apply(instance, ColoringRecipeParams::setColor));
     public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipeParams> STREAM_CODEC =
@@ -57,24 +57,14 @@ public class ColoringRecipeParams extends CustomProcessingRecipeParams {
     }
 
     @Override
-    protected void toNetwork(RegistryFriendlyByteBuf buffer) {
-        super.toNetwork(buffer);
+    protected void encode(RegistryFriendlyByteBuf buffer) {
+        super.encode(buffer);
         DyeColor.STREAM_CODEC.encode(buffer, color);
     }
 
     @Override
-    protected void fromNetwork(RegistryFriendlyByteBuf buffer) {
-        super.fromNetwork(buffer);
+    protected void decode(RegistryFriendlyByteBuf buffer) {
+        super.decode(buffer);
         color = DyeColor.STREAM_CODEC.decode(buffer);
-    }
-
-    @Override
-    protected int getMaxInputCount() {
-        return 1;
-    }
-
-    @Override
-    protected int getMaxOutputCount() {
-        return 12;
     }
 }

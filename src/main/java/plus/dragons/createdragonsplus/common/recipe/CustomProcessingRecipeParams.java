@@ -18,7 +18,6 @@
 
 package plus.dragons.createdragonsplus.common.recipe;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -27,184 +26,96 @@ import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.minecraft.Util;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParams {
+    protected static final ResourceLocation DESERIALIZATION_UNKNOWN =
+            ResourceLocation.withDefaultNamespace("deserialization_unknown");
+
     protected CustomProcessingRecipeParams(ResourceLocation id) {
         super(id);
     }
 
-    protected final @Nullable ResourceLocation getId() {
-        return id;
-    }
-
-    protected abstract int getMaxInputCount();
-
-    protected abstract int getMaxOutputCount();
-
-    protected int getMaxFluidInputCount() {
-        return 0;
-    }
-
-    protected int getMaxFluidOutputCount() {
-        return 0;
-    }
-
-    protected boolean canRequireHeat() {
-        return false;
-    }
-
-    protected boolean canSpecifyDuration() {
-        return false;
-    }
-
-    protected boolean canKeepHeldItem() {
-        return false;
-    }
-
-    protected void toNetwork(RegistryFriendlyByteBuf buffer) {
-        CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).encode(buffer, ingredients);
-        CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).encode(buffer, results);
-        if (getMaxFluidInputCount() > 0)
-            CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).encode(buffer, fluidIngredients);
-        if (getMaxFluidOutputCount() > 0)
-            CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).encode(buffer, fluidResults);
-        if (canSpecifyDuration())
-            ByteBufCodecs.VAR_INT.encode(buffer, processingDuration);
-        if (canRequireHeat())
-            HeatCondition.STREAM_CODEC.encode(buffer, requiredHeat);
-        if (canKeepHeldItem())
-            ByteBufCodecs.BOOL.encode(buffer, keepHeldItem);
-    }
-
-    protected void fromNetwork(RegistryFriendlyByteBuf buffer) {
-        ingredients = CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).decode(buffer);
-        results = CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).decode(buffer);
-        if (getMaxFluidInputCount() > 0)
-            fluidIngredients = CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).decode(buffer);
-        if (getMaxFluidOutputCount() > 0)
-            fluidResults = CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).decode(buffer);
-        if (canSpecifyDuration())
-            processingDuration = ByteBufCodecs.VAR_INT.decode(buffer);
-        if (canRequireHeat())
-            requiredHeat = HeatCondition.STREAM_CODEC.decode(buffer);
-        if (canKeepHeldItem())
-            keepHeldItem = ByteBufCodecs.BOOL.decode(buffer);
-    }
-
-    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> itemCodec(Function<ResourceLocation, P> constructor) {
+    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> codec(Function<ResourceLocation, P> factory) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                NonNullList.codecOf(Ingredient.CODEC).fieldOf("ingredients").forGetter(params -> params.ingredients),
-                NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (ingredients, results) -> {
-            var params = constructor.apply(null);
-            params.ingredients = ingredients;
-            params.results = results;
-            return params;
-        }));
-    }
-
-    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidInputCodec(Function<ResourceLocation, P> constructor) {
-        return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
-                    ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
-                    params.ingredients.forEach(it -> builder.add(Either.left(it)));
-                    params.fluidIngredients.forEach(it -> builder.add(Either.right(it)));
-                    return builder.build();
-                }),
-                NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (ingredients, results) -> {
-            var params = constructor.apply(null);
-            for (var ingredient : ingredients)
-                ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
-            params.results = results;
-            return params;
-        }));
-    }
-
-    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidOutputCodec(Function<ResourceLocation, P> constructor) {
-        return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                NonNullList.codecOf(Ingredient.CODEC).fieldOf("ingredients").forGetter(params -> params.ingredients),
-                NonNullList.codecOf(ProcessingOutput.CODEC).fieldOf("results").forGetter(params -> params.results)
-        ).apply(instance, (ingredients, results) -> {
-            var params = constructor.apply(null);
-            params.ingredients = ingredients;
-            params.results = results;
-            return params;
-        }));
-    }
-
-    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> fluidCodec(Function<ResourceLocation, P> constructor) {
-        return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
-                    ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
-                    params.ingredients.forEach(it -> builder.add(Either.left(it)));
-                    params.fluidIngredients.forEach(it -> builder.add(Either.right(it)));
-                    return builder.build();
-                }),
-                Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results").forGetter(params -> {
-                    ImmutableList.Builder<Either<ProcessingOutput, FluidStack>> builder = ImmutableList.builder();
-                    params.results.forEach(it -> builder.add(Either.left(it)));
-                    params.fluidResults.forEach(it -> builder.add(Either.right(it)));
-                    return builder.build();
-                })
-        ).apply(instance, (ingredients, results) -> {
-            var params = constructor.apply(null);
-            for (var ingredient : ingredients)
-                ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
-            for (var result : results)
-                result.ifLeft(params.results::add).ifRight(params.fluidResults::add);
-            return params;
-        }));
-    }
-
-    protected static <P extends CustomProcessingRecipeParams> MapCodec<P> completeCodec(Function<ResourceLocation, P> constructor) {
-        return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients").forGetter(params -> {
-                    ImmutableList.Builder<Either<Ingredient, FluidIngredient>> builder = ImmutableList.builder();
-                    params.ingredients.forEach(it -> builder.add(Either.left(it)));
-                    params.fluidIngredients.forEach(it -> builder.add(Either.right(it)));
-                    return builder.build();
-                }),
-                Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results").forGetter(params -> {
-                    ImmutableList.Builder<Either<ProcessingOutput, FluidStack>> builder = ImmutableList.builder();
-                    params.results.forEach(it -> builder.add(Either.left(it)));
-                    params.fluidResults.forEach(it -> builder.add(Either.right(it)));
-                    return builder.build();
-                }),
-                ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("processing_time", 0)
-                        .forGetter(params -> params.processingDuration),
+                Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients")
+                        .forGetter(CustomProcessingRecipeParams::ingredients),
+                Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results")
+                        .forGetter(CustomProcessingRecipeParams::results),
+                Codec.INT.optionalFieldOf("processing_time", 0)
+                        .forGetter(CustomProcessingRecipeParams::processingDuration),
                 HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
-                        .forGetter(params -> params.requiredHeat),
-                Codec.BOOL.optionalFieldOf("keep_held_item", false).forGetter(params -> params.keepHeldItem)
-        ).apply(instance, (ingredients, results, processingDuration, requiredHeat, keepHeldItem) -> {
-            var params = constructor.apply(null);
-            for (var ingredient : ingredients)
-                ingredient.ifLeft(params.ingredients::add).ifRight(params.fluidIngredients::add);
-            for (var result : results)
-                result.ifLeft(params.results::add).ifRight(params.fluidResults::add);
+                        .forGetter(CustomProcessingRecipeParams::requiredHeat)
+        ).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
+            P params = factory.apply(DESERIALIZATION_UNKNOWN);
+            ingredients.forEach(either -> either
+                    .ifLeft(params.ingredients::add)
+                    .ifRight(params.fluidIngredients::add));
+            results.forEach(either -> either
+                    .ifLeft(params.results::add)
+                    .ifRight(params.fluidResults::add));
             params.processingDuration = processingDuration;
             params.requiredHeat = requiredHeat;
-            params.keepHeldItem = keepHeldItem;
             return params;
         }));
     }
 
     protected static <P extends CustomProcessingRecipeParams> StreamCodec<RegistryFriendlyByteBuf, P> streamCodec(Function<ResourceLocation, P> constructor) {
         return StreamCodec.of(
-                (buffer, params) -> params.toNetwork(buffer),
-                buffer -> Util.make(constructor.apply(null), params -> params.fromNetwork(buffer))
+                (buffer, params) -> params.encode(buffer),
+                buffer -> Util.make(constructor.apply(DESERIALIZATION_UNKNOWN), params -> params.decode(buffer))
         );
+    }
+
+    protected final List<Either<Ingredient, FluidIngredient>> ingredients() {
+        List<Either<Ingredient, FluidIngredient>> ingredients =
+                new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
+        this.ingredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
+        this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
+        return ingredients;
+    }
+
+    protected final List<Either<ProcessingOutput, FluidStack>> results() {
+        List<Either<ProcessingOutput, FluidStack>> results =
+                new ArrayList<>(this.results.size() + this.fluidResults.size());
+        this.results.forEach(result -> results.add(Either.left(result)));
+        this.fluidResults.forEach(result -> results.add(Either.right(result)));
+        return results;
+    }
+
+    protected final int processingDuration() {
+        return processingDuration;
+    }
+
+    protected final HeatCondition requiredHeat() {
+        return requiredHeat;
+    }
+
+    protected void encode(RegistryFriendlyByteBuf buffer) {
+        CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).encode(buffer, ingredients);
+        CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).encode(buffer, results);
+        CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).encode(buffer, fluidIngredients);
+        CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).encode(buffer, fluidResults);
+        ByteBufCodecs.VAR_INT.encode(buffer, processingDuration);
+        HeatCondition.STREAM_CODEC.encode(buffer, requiredHeat);
+    }
+
+    protected void decode(RegistryFriendlyByteBuf buffer) {
+        ingredients = CatnipStreamCodecBuilders.nonNullList(Ingredient.CONTENTS_STREAM_CODEC).decode(buffer);
+        results = CatnipStreamCodecBuilders.nonNullList(ProcessingOutput.STREAM_CODEC).decode(buffer);
+        fluidIngredients = CatnipStreamCodecBuilders.nonNullList(FluidIngredient.STREAM_CODEC).decode(buffer);
+        fluidResults = CatnipStreamCodecBuilders.nonNullList(FluidStack.STREAM_CODEC).decode(buffer);
+        processingDuration = ByteBufCodecs.VAR_INT.decode(buffer);
+        requiredHeat = HeatCondition.STREAM_CODEC.decode(buffer);
     }
 }

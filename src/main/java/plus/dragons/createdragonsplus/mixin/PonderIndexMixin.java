@@ -18,28 +18,33 @@
 
 package plus.dragons.createdragonsplus.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import java.util.LinkedHashSet;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.TreeSet;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.foundation.PonderIndex;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import org.spongepowered.asm.mixin.Debug;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import plus.dragons.createdragonsplus.client.ponder.PonderPluginSorting;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
+@Debug
 @Mixin(PonderIndex.class)
 public class PonderIndexMixin {
-    @ModifyReceiver(method = "forEachPlugin", at = @At(value = "INVOKE", target = "Ljava/util/Set;forEach(Ljava/util/function/Consumer;)V"))
-    private static Set<PonderPlugin> forEachPlugin$sorted(Set<PonderPlugin> plugins, Consumer<PonderPlugin> consumer) {
-        return plugins.stream().sorted(PonderPluginSorting::comparePlugins).collect(Collectors.toCollection(LinkedHashSet::new));
-    }
+    @Shadow
+    @Final
+    @Mutable
+    private static Set<PonderPlugin> plugins;
 
-    @ModifyReturnValue(method = "streamPlugins", at = @At("RETURN"))
-    private static Stream<PonderPlugin> streamPlugins$sorted(Stream<PonderPlugin> plugins) {
-        return plugins.sorted(PonderPluginSorting::comparePlugins);
+    @Redirect(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/createmod/ponder/foundation/PonderIndex;plugins:Ljava/util/Set;"), require = 0)
+    private static void clinit$orderPlugins(Set<PonderPlugin> value) {
+        List<String> mods = ModList.get().getSortedMods().stream().map(ModContainer::getModId).toList();
+        plugins = new TreeSet<>(Comparator.comparing(PonderPlugin::getModId, Comparator.comparingInt(mods::indexOf)));
     }
 }

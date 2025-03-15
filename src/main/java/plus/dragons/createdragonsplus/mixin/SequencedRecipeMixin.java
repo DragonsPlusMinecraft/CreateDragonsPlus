@@ -24,6 +24,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
+import java.util.function.Function;
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.crafting.Recipe;
@@ -39,8 +40,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeSerializer;
 
-import java.util.function.Function;
-
 @Mixin(SequencedRecipe.class)
 public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
     @Shadow @Final private T wrapped;
@@ -50,7 +49,7 @@ public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
         Codec<ProcessingRecipe<?>> customCodec = Recipe.CODEC.comapFlatMap(
                 recipe -> recipe instanceof ProcessingRecipe<?> customRecipe
                         ? DataResult.success(customRecipe)
-                        : DataResult.error(() -> "Not a ProcessingRecipe"),
+                        : DataResult.error(() -> recipe.getType() + " is not a processing recipe"),
                 Function.identity()
         );
         return NeoForgeExtraCodecs.withAlternative(customCodec, codec);

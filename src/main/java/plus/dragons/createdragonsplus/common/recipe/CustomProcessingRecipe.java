@@ -20,67 +20,45 @@ package plus.dragons.createdragonsplus.common.recipe;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.crafting.RecipeInput;
-import plus.dragons.createdragonsplus.mixin.accessor.ProcessingRecipeAccessor;
 
+/**
+ * Base class for custom {@link ProcessingRecipe processing recipe} with custom {@link ProcessingRecipeParams params}.
+ * @param <I> {@link RecipeInput input} type of the recipe
+ * @param <P> {@link ProcessingRecipeParams params} type of the recipe
+ * @see CustomProcessingRecipeParams
+ * @see CustomProcessingRecipeSerializer
+ * @see CustomProcessingRecipeBuilder
+ */
 public abstract class CustomProcessingRecipe<I extends RecipeInput, P extends CustomProcessingRecipeParams> extends ProcessingRecipe<I> {
     protected final P params;
 
     public CustomProcessingRecipe(IRecipeTypeInfo typeInfo, P params) {
         super(typeInfo, params);
         this.params = params;
-        if (this.id == null)
-            this.id = typeInfo.getId();
-        ((ProcessingRecipeAccessor) this).invokeValidate(typeInfo.getId());
-    }
-
-    protected P getParams() {
-        return params;
     }
 
     @Override
-    protected int getMaxInputCount() {
-        return params.getMaxInputCount();
-    }
-
-    @Override
-    protected int getMaxOutputCount() {
-        return params.getMaxOutputCount();
-    }
-
-    @Override
-    protected int getMaxFluidInputCount() {
-        return params.getMaxFluidInputCount();
-    }
-
-    @Override
-    protected int getMaxFluidOutputCount() {
-        return params.getMaxFluidOutputCount();
-    }
-
-    @Override
-    protected boolean canSpecifyDuration() {
-        return params.canSpecifyDuration();
-    }
-
-    @Override
-    protected boolean canRequireHeat() {
-        return params.canRequireHeat();
-    }
-
-    @Override
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public final AllRecipeTypes getRecipeType() {
         throw new UnsupportedOperationException("Not a Create recipe");
     }
 
+    /**
+     * @deprecated override {@link CustomProcessingRecipeParams#encode(RegistryFriendlyByteBuf)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public final void writeAdditional(FriendlyByteBuf buffer) {}
 
+    /**
+     * @deprecated override {@link CustomProcessingRecipeParams#decode(RegistryFriendlyByteBuf)} instead.
+     */
     @Override
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public final void readAdditional(FriendlyByteBuf buffer) {}
 }
