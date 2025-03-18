@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.common.fluid.ConsumingOpenPipeEffectHandler;
 
-@Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe.OpenEndFluidHandler")
+@Mixin(targets = "com.simibubi.create.content.fluids.OpenEndedPipe$OpenEndFluidHandler")
 public abstract class OpenEndFluidHandlerMixin extends FluidTank {
     @Shadow
     @Final
