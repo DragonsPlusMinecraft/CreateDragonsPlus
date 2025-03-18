@@ -72,7 +72,7 @@ public class CustomSequencedAssemblyRecipeBuilder extends SequencedAssemblyRecip
     }
 
     @SuppressWarnings("unchecked")
-    public <B extends CustomProcessingRecipeBuilder<?, ?>> CustomSequencedAssemblyRecipeBuilder addStep(Function<ResourceLocation, B> factory, UnaryOperator<B> builder) {
+    public <B extends CustomProcessingRecipeBuilder<?, ?>> CustomSequencedAssemblyRecipeBuilder addStep(Function<ResourceLocation, B> factory, Function<B, ? extends ProcessingRecipeBuilder<?>> builder) {
         var recipe = ((SequencedAssemblyRecipeBuilderAccessor) this).getRecipe();
         ItemStack transitionalItem = recipe.getTransitionalItem();
         recipe.getSequence().add(new SequencedRecipe<>(builder
