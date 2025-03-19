@@ -38,19 +38,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParams {
+public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
     protected static final ResourceLocation DESERIALIZATION_UNKNOWN =
             ResourceLocation.withDefaultNamespace("deserialization_unknown");
+    public static final MapCodec<CustomProcessingRecipeParams> CODEC = codec(CustomProcessingRecipeParams::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, CustomProcessingRecipeParams> STREAM_CODEC =
+            streamCodec(CustomProcessingRecipeParams::new);
 
-    protected CustomProcessingRecipeParams(ResourceLocation id) {
+    public CustomProcessingRecipeParams(ResourceLocation id) {
         super(id);
     }
 
     protected static <P extends CustomProcessingRecipeParams> MapCodec<P> codec(Function<ResourceLocation, P> factory) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.either(Ingredient.CODEC, FluidIngredient.CODEC).listOf().fieldOf("ingredients")
+                Codec.either(FluidIngredient.CODEC, Ingredient.CODEC).listOf().fieldOf("ingredients")
                         .forGetter(CustomProcessingRecipeParams::ingredients),
-                Codec.either(ProcessingOutput.CODEC, FluidStack.CODEC).listOf().fieldOf("results")
+                Codec.either(FluidStack.CODEC, ProcessingOutput.CODEC).listOf().fieldOf("results")
                         .forGetter(CustomProcessingRecipeParams::results),
                 Codec.INT.optionalFieldOf("processing_time", 0)
                         .forGetter(CustomProcessingRecipeParams::processingDuration),
@@ -59,11 +62,11 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
         ).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
             P params = factory.apply(DESERIALIZATION_UNKNOWN);
             ingredients.forEach(either -> either
-                    .ifLeft(params.ingredients::add)
-                    .ifRight(params.fluidIngredients::add));
+                    .ifRight(params.ingredients::add)
+                    .ifLeft(params.fluidIngredients::add));
             results.forEach(either -> either
-                    .ifLeft(params.results::add)
-                    .ifRight(params.fluidResults::add));
+                    .ifRight(params.results::add)
+                    .ifLeft(params.fluidResults::add));
             params.processingDuration = processingDuration;
             params.requiredHeat = requiredHeat;
             return params;
@@ -77,19 +80,19 @@ public abstract class CustomProcessingRecipeParams extends ProcessingRecipeParam
         );
     }
 
-    protected final List<Either<Ingredient, FluidIngredient>> ingredients() {
-        List<Either<Ingredient, FluidIngredient>> ingredients =
+    protected final List<Either<FluidIngredient, Ingredient>> ingredients() {
+        List<Either<FluidIngredient, Ingredient>> ingredients =
                 new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
-        this.ingredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
-        this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
+        this.ingredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
+        this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
         return ingredients;
     }
 
-    protected final List<Either<ProcessingOutput, FluidStack>> results() {
-        List<Either<ProcessingOutput, FluidStack>> results =
+    protected final List<Either<FluidStack, ProcessingOutput>> results() {
+        List<Either<FluidStack, ProcessingOutput>> results =
                 new ArrayList<>(this.results.size() + this.fluidResults.size());
-        this.results.forEach(result -> results.add(Either.left(result)));
-        this.fluidResults.forEach(result -> results.add(Either.right(result)));
+        this.results.forEach(result -> results.add(Either.right(result)));
+        this.fluidResults.forEach(result -> results.add(Either.left(result)));
         return results;
     }
 
