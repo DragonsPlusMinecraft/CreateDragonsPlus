@@ -49,7 +49,7 @@ public abstract class OpenEndFluidHandlerMixin extends FluidTank {
         return original.call(resource, amount);
     }
 
-    @Inject(method = "fill", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/OpenEndedPipe$OpenEndFluidHandler;getFluidAmount()I"))
+    @Inject(method = "fill", at = @At("TAIL"))
     private void fill$applyConsumingEffect(FluidStack resource, FluidAction action, CallbackInfoReturnable<Integer> cir, @Local OpenPipeEffectHandler handler) {
         if (handler instanceof ConsumingOpenPipeEffectHandler) {
             FluidStack remainder = ConsumingOpenPipeEffectHandler.getRemainder((ConsumingOpenPipeEffectHandler) handler, this$0, this.getFluid());
