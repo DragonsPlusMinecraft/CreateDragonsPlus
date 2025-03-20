@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "plus.dragons.createdragonsplus.mixin",
+  "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfig",
   "compatibilityLevel": "JAVA_21",
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
