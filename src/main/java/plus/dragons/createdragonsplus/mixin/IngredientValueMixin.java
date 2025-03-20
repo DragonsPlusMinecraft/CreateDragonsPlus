@@ -24,6 +24,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationIngredient;
@@ -32,11 +33,14 @@ import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationIngredi
 public interface IngredientValueMixin {
     @ModifyExpressionValue(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/MapCodec;xmap(Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;"))
     private static MapCodec<Ingredient.Value> clinit$addIntegrationValueCodec(MapCodec<Ingredient.Value> codec) {
-        return Codec.mapEither(IntegrationIngredient.Value.MAP_CODEC, codec).xmap(
-                either -> either.map(Function.identity(), Function.identity()),
-                value -> value instanceof IntegrationIngredient.Value integrationValue
-                        ? Either.left(integrationValue)
-                        : Either.right(value)
-        );
+        if (DatagenModLoader.isRunningDataGen()) {
+            return Codec.mapEither(IntegrationIngredient.Value.MAP_CODEC, codec).xmap(
+                    either -> either.map(Function.identity(), Function.identity()),
+                    value -> value instanceof IntegrationIngredient.Value integrationValue
+                            ? Either.left(integrationValue)
+                            : Either.right(value)
+            );
+        }
+        return codec;
     }
 }
