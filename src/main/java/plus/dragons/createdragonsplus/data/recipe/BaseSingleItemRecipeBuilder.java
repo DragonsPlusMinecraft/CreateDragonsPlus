@@ -28,6 +28,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.recipe.BaseRecipeBuilder;
+import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationResultRecipe;
 
 public abstract class BaseSingleItemRecipeBuilder<R extends Recipe<?>, B extends BaseSingleItemRecipeBuilder<R, B>> extends BaseRecipeBuilder<R, B> {
     protected Ingredient ingredient = Ingredient.EMPTY;

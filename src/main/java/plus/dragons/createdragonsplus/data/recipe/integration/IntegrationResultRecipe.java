@@ -16,10 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.data.recipe;
+package plus.dragons.createdragonsplus.data.recipe.integration;
 
 import com.google.common.collect.Maps;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.mixin.accessor.MappedRegistryAccessor;
@@ -28,13 +27,11 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.HolderOwner;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -49,11 +46,11 @@ import plus.dragons.createdragonsplus.common.recipe.BaseRecipeBuilder;
 public final class IntegrationResultRecipe implements Recipe<RecipeInput> {
     private static final Map<RecipeSerializer<Recipe<?>>, Serializer> SERIALIZER_DELEGATES = Maps.newConcurrentMap();
     private final Recipe<?> delegate;
-    private final Result result;
+    private final IntegrationResult result;
 
     public IntegrationResultRecipe(Recipe<?> delegate, ItemStack delegateResult, ResourceLocation result) {
         this.delegate = delegate;
-        this.result = new Result(delegateResult, result);
+        this.result = new IntegrationResult(delegateResult, result);
     }
 
     @Override
@@ -88,19 +85,6 @@ public final class IntegrationResultRecipe implements Recipe<RecipeInput> {
         return this.delegate.getType();
     }
 
-    record Result(ItemStack delegate, ResourceLocation id) {
-        static Codec<Result> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id")
-                        .forGetter(Result::id),
-                ExtraCodecs.intRange(1, 99).fieldOf("count").orElse(1)
-                        .forGetter(result -> result.delegate.getCount()),
-                DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
-                        .forGetter(result -> result.delegate.getComponentsPatch())
-        ).apply(instance, (id, count, components) -> {
-            throw new UnsupportedOperationException("Can not decode with encode-only codec");
-        }));
-    }
-
     static final class Serializer implements RecipeSerializer<IntegrationResultRecipe> {
         private static final HolderOwner<RecipeSerializer<?>> HOLDER_OWNER = new HolderOwner<>() {
             @Override
@@ -114,7 +98,7 @@ public final class IntegrationResultRecipe implements Recipe<RecipeInput> {
         Serializer(RecipeSerializer<Recipe<?>> deletgate) {
             this.codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     deletgate.codec().forGetter(recipe -> recipe.delegate),
-                    Result.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+                    IntegrationResult.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
             ).apply(instance, (delegate, result) -> {
                 throw new UnsupportedOperationException("Can not decode with encode-only codec");
             }));

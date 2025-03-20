@@ -44,6 +44,7 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.recipe.BaseRecipeBuilder;
+import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationResultRecipe;
 
 public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedRecipeBuilder> {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
