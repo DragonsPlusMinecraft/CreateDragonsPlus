@@ -153,6 +153,12 @@ public class FluidTankBehaviour extends BlockEntityBehaviour {
         return tanks;
     }
 
+    public void setTank(int index, TankFactory factory) {
+        var tank = this.tanks[index] = new TankSegment(factory);
+        this.handlers[index] = tank.tank;
+        this.updateFluids();
+    }
+
     public boolean isEmpty() {
         for (TankSegment tankSegment : tanks)
             if (!tankSegment.tank.isEmpty())
