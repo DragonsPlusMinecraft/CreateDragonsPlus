@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.common.fluids.tank;
 
 import com.google.common.util.concurrent.Runnables;
@@ -5,6 +23,9 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import java.util.List;
+import java.util.function.Consumer;
 import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.animation.LerpedFloat.Chaser;
 import net.createmod.catnip.nbt.NBTHelper;
@@ -18,39 +39,38 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import java.util.function.Consumer;
-
 public class FluidTankBehaviour extends BlockEntityBehaviour {
     public static final BehaviourType<FluidTankBehaviour> TYPE = new BehaviourType<>();
     private static final int SYNC_RATE = 8;
     protected int syncCooldown;
     protected boolean queuedSync;
-    protected FluidTank[] handlers;
+    protected SmartFluidTank[] handlers;
     protected TankSegment[] tanks;
     protected IFluidHandler capability;
     protected Runnable fluidUpdateCallback;
 
-    public FluidTankBehaviour(SmartBlockEntity blockEntity, FluidTank[] handlers, boolean enforceVariety) {
+    public FluidTankBehaviour(SmartBlockEntity blockEntity, List<TankFactory> factories, boolean enforceVariety) {
         super(blockEntity);
-        this.handlers = handlers;
-        this.tanks = new TankSegment[handlers.length];
-        for (int i = 0; i < handlers.length; i++) {
-            TankSegment tankSegment = new TankSegment(handlers[i]);
+        this.handlers = new SmartFluidTank[factories.size()];
+        this.tanks = new TankSegment[factories.size()];
+        for (int i = 0; i < factories.size(); i++) {
+            TankSegment tankSegment = new TankSegment(factories.get(i));
             this.tanks[i] = tankSegment;
-            handlers[i] = tankSegment.tank;
+            this.handlers[i] = tankSegment.tank;
         }
-        capability = Util.make(new CombinedTankWrapper(handlers), tank -> {
+        capability = Util.make(new CombinedTankWrapper(this.handlers), tank -> {
             if (enforceVariety)
                 tank.enforceVariety();
         });
         fluidUpdateCallback = Runnables.doNothing();
     }
 
-    public FluidTankBehaviour(SmartBlockEntity blockEntity, FluidTank tank) {
+    public FluidTankBehaviour(SmartBlockEntity blockEntity, TankFactory factory) {
         super(blockEntity);
-        this.handlers = new FluidTank[]{tank};
-        this.tanks = new TankSegment[]{new TankSegment(tank)};
-        capability = tank;
+        var tank = new TankSegment(factory);
+        this.handlers = new SmartFluidTank[]{tank.tank};
+        this.tanks = new TankSegment[]{tank};
+        capability = tank.tank;
         fluidUpdateCallback = Runnables.doNothing();
     }
 
@@ -170,13 +190,18 @@ public class FluidTankBehaviour extends BlockEntityBehaviour {
         });
     }
 
+    @FunctionalInterface
+    public interface TankFactory {
+        SmartFluidTank create(Consumer<FluidStack> fluidUpdateCallback);
+    }
+
     public class TankSegment {
-        public final FluidTank tank;
+        public final SmartFluidTank tank;
         protected LerpedFloat fluidLevel;
         protected FluidStack renderedFluid;
 
-        public TankSegment(FluidTank tank) {
-            this.tank = tank;
+        public TankSegment(TankFactory factory) {
+            this.tank = factory.create(fluid -> onFluidStackChanged());
             fluidLevel = LerpedFloat.linear()
                     .startWithValue(0)
                     .chase(0, .25, Chaser.EXP);

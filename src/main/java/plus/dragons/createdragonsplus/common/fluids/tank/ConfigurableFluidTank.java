@@ -1,12 +1,28 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.common.fluids.tank;
 
 import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import net.neoforged.neoforge.fluids.FluidStack;
-import org.apache.commons.lang3.function.Consumers;
-
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class ConfigurableFluidTank extends SmartFluidTank {
     protected Predicate<FluidStack> insertion = Predicates.alwaysTrue();
@@ -14,10 +30,6 @@ public class ConfigurableFluidTank extends SmartFluidTank {
 
     public ConfigurableFluidTank(int capacity, Consumer<FluidStack> updateCallback) {
         super(capacity, updateCallback);
-    }
-
-    public ConfigurableFluidTank(int capacity) {
-        super(capacity, Consumers.nop());
     }
 
     public ConfigurableFluidTank allowInsertion() {

@@ -18,15 +18,13 @@
 
 package plus.dragons.createdragonsplus.mixin;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ILaunchHandlerService;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import net.neoforged.fml.loading.targets.CommonLaunchHandler;
-import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
