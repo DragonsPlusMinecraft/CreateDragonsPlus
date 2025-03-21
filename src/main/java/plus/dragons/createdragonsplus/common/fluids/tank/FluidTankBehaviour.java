@@ -36,7 +36,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 public class FluidTankBehaviour extends BlockEntityBehaviour {
@@ -138,7 +137,7 @@ public class FluidTankBehaviour extends BlockEntityBehaviour {
         level.invalidateCapabilities(getPos());
     }
 
-    public FluidTank getPrimaryHandler() {
+    public SmartFluidTank getPrimaryHandler() {
         return handlers[0];
     }
 
@@ -146,7 +145,7 @@ public class FluidTankBehaviour extends BlockEntityBehaviour {
         return tanks[0];
     }
 
-    public FluidTank[] getHandlers() {
+    public SmartFluidTank[] getHandlers() {
         return handlers;
     }
 
