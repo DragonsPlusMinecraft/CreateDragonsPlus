@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.common.fluid.dye;
+package plus.dragons.createdragonsplus.common.fluids.dye;
 
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import java.util.function.Supplier;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Vector3f;
-import plus.dragons.createdragonsplus.common.fluid.SolidRenderFluidType;
+import plus.dragons.createdragonsplus.common.fluids.SolidRenderFluidType;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class DyeFluidType extends SolidRenderFluidType {

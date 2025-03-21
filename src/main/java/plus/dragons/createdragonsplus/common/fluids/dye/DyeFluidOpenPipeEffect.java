@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.common.fluid.dye;
+package plus.dragons.createdragonsplus.common.fluids.dye;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import net.minecraft.world.entity.Entity;

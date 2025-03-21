@@ -27,7 +27,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.Tags;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 
 public class CDPItems {

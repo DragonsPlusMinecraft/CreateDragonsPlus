@@ -56,10 +56,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidOpenPipeEffect;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeFluidType;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeLiquidBlock;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeLiquidBlock;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
@@ -89,8 +89,8 @@ public class CDPFluids {
     }
 
     private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeColor color) {
-        var stillTexture = REGISTRATE.asResource("fluid/dye_still");
-        var flowingTexture = REGISTRATE.asResource("fluid/dye_flow");
+        var stillTexture = REGISTRATE.asResource("fluids/dye_still");
+        var flowingTexture = REGISTRATE.asResource("fluids/dye_flow");
         var tintColor = FastColor.ARGB32.opaque(color.getTextureDiffuseColor());
         var name = color.getName() + "_dye";
         var tag = COMMON_TAGS.dyesByColor.get(color);

@@ -293,8 +293,8 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
             NonNullFunction<BaseFlowingFluid.Properties, T> flowingFactory
     ) {
         return entry(name, callback -> new VirtualFluidBuilder<>(self(), self(), name, callback,
-                asResource("fluid/" + name + "_still"),
-                asResource("fluid/" + name + "_flow"),
+                asResource("fluids/" + name + "_still"),
+                asResource("fluids/" + name + "_flow"),
                 type, source, flowingFactory
         ));
     }
@@ -312,8 +312,8 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public FluidBuilder<VirtualFluid, CDPRegistrate> virtualFluid(String name) {
         return entry(name, callback -> new VirtualFluidBuilder<>(self(), self(), name, callback,
-                asResource("fluid/" + name + "_still"),
-                asResource("fluid/" + name + "_flow"),
+                asResource("fluids/" + name + "_still"),
+                asResource("fluids/" + name + "_flow"),
                 this::defaultFluidType, VirtualFluid::createSource, VirtualFluid::createFlowing));
     }
 
@@ -326,15 +326,15 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     @Override
     public FluidBuilder<BaseFlowingFluid.Flowing, CDPRegistrate> fluid(String name) {
         return fluid(name,
-                asResource("fluid/" + name + "_still"),
-                asResource("fluid/" + name + "_flow"));
+                asResource("fluids/" + name + "_still"),
+                asResource("fluids/" + name + "_flow"));
     }
 
     @Override
     public FluidBuilder<BaseFlowingFluid.Flowing, CDPRegistrate> fluid(String name, FluidBuilder.FluidTypeFactory typeFactory) {
         return fluid(name,
-                asResource("fluid/" + name + "_still"),
-                asResource("fluid/" + name + "_flow"),
+                asResource("fluids/" + name + "_still"),
+                asResource("fluids/" + name + "_flow"),
                 typeFactory);
     }
 

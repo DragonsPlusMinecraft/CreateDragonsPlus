@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.common.fluid;
+package plus.dragons.createdragonsplus.common.fluids;
 
 import com.simibubi.create.AllFluids;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;

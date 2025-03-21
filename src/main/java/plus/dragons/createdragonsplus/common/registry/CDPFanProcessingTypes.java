@@ -29,7 +29,7 @@ import net.minecraft.world.item.DyeColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.fluid.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringFanProcessingType;
 
 public class CDPFanProcessingTypes {
