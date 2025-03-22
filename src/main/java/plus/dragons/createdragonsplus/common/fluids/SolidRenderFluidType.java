@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.common.fluids;
 
 import com.simibubi.create.AllFluids;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -27,7 +28,10 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Vector3f;
+import plus.dragons.createdragonsplus.util.CodeReference;
 
+
+@CodeReference(targets = "com.simibubi.create.AllFluids.SolidRenderedPlaceableFluidType", source = "create", license = "mit")
 public class SolidRenderFluidType extends AllFluids.TintedFluidType {
     protected static final int ALPHA = 0xff00000;
     protected static final int NO_ALPHA = 0x00ffffff;
@@ -71,7 +75,7 @@ public class SolidRenderFluidType extends AllFluids.TintedFluidType {
 
     @Override
     public int getTintColor(FluidState state, BlockAndTintGetter world, BlockPos pos) {
-        return this.tintColor & NO_ALPHA;
+        return this.blockTintColor;
     }
 
     @Override

@@ -28,8 +28,10 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.api.registry.registrate.SimpleBuilder;
 import com.simibubi.create.content.fluids.VirtualFluid;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.data.CreateBlockEntityBuilder;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.VirtualFluidBuilder;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import com.tterrag.registrate.AbstractRegistrate;
@@ -90,7 +92,10 @@ import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.TagRegistry;
 import plus.dragons.createdragonsplus.mixin.accessor.ExistingFileHelperAccessor;
+import plus.dragons.createdragonsplus.util.CodeReference;
 
+
+@CodeReference(value = CreateRegistrate.class, source = "create", license = "mit")
 public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     protected final Logger logger;
     protected final Map<Holder<?>, Holder<CreativeModeTab>> creativeModeTabLookup = new HashMap<>();

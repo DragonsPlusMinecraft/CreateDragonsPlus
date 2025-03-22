@@ -22,6 +22,7 @@ import com.google.common.util.concurrent.Runnables;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import java.util.List;
@@ -37,7 +38,9 @@ import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.mutable.MutableInt;
+import plus.dragons.createdragonsplus.util.CodeReference;
 
+@CodeReference(value = SmartFluidTankBehaviour.class, source = "create", license = "mit")
 public class FluidTankBehaviour extends BlockEntityBehaviour {
     public static final BehaviourType<FluidTankBehaviour> TYPE = new BehaviourType<>();
     private static final int SYNC_RATE = 8;

@@ -26,9 +26,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeParams;
-import plus.dragons.createdragonsplus.util.FieldsAssertedNonnullByDefault;
+import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
-@FieldsAssertedNonnullByDefault
+@FieldsNullabilityUnknownByDefault
 public class ColoringRecipeParams extends CustomProcessingRecipeParams {
     public static final MapCodec<ColoringRecipeParams> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             codec(ColoringRecipeParams::new).forGetter(Function.identity()),

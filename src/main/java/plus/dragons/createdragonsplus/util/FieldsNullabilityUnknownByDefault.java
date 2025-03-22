@@ -21,11 +21,10 @@ package plus.dragons.createdragonsplus.util;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import javax.annotation.Nonnull;
 import javax.annotation.meta.TypeQualifierDefault;
-import javax.annotation.meta.When;
+import org.jetbrains.annotations.UnknownNullability;
 
-@Nonnull(when = When.UNKNOWN)
+@UnknownNullability
 @TypeQualifierDefault(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface FieldsAssertedNonnullByDefault {}
+@Retention(RetentionPolicy.CLASS)
+public @interface FieldsNullabilityUnknownByDefault {}

@@ -4,14 +4,13 @@
 you should have received a copy of the GNU General Public License along with this program.
 
   This software contains (modified) code and assets from other open-source software. This
-file serves as an overview for these code and their respective licenses.
+file serves as an overview for these software and their respective licenses.
+
+  All (modified) code from other open-source software are annotated with @CodeReference,
+you may find relevant infomation
 
 1. Create
 
   Create is one of the upstream dependency of this software, licensed under MIT License.
 All code and assets copied from Create are licensed MIT License and GNU Lesser General
 Public License v3. You may find the full license file of Create in this program jar.
-
-  List of copied code and the original code:
-  - Copied:   plus/dragons/createdragonsplus/common/registry/CDPRegistrate
-    Original: com/simibubi/create/foundation/data/CreateRegistrate
