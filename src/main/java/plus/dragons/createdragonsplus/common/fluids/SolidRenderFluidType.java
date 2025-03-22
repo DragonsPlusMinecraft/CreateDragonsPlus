@@ -19,7 +19,6 @@
 package plus.dragons.createdragonsplus.common.fluids;
 
 import com.simibubi.create.AllFluids;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;

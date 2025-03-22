@@ -28,7 +28,6 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.api.registry.registrate.SimpleBuilder;
 import com.simibubi.create.content.fluids.VirtualFluid;
-import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.data.CreateBlockEntityBuilder;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.data.CreateRegistrate;
