@@ -133,7 +133,7 @@ public abstract class BlazeBlockEntity extends SmartBlockEntity {
     public HeatLevel getHeatLevelForRender() {
         HeatLevel heatLevel = getHeatLevelFromBlock();
         if (!heatLevel.isAtLeast(HeatLevel.FADING))
-            return HeatLevel.FADING;
+            return HeatLevel.SMOULDERING;
         return heatLevel;
     }
 
