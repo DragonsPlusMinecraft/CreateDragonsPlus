@@ -207,16 +207,16 @@ public class BlazeBlockVisual<T extends BlazeBlockEntity> extends AbstractBlockE
 
     protected void setupGogglesTransform(PartialModel gogglesModel, TransformedInstance goggles, float headY, float horizontalAngle) {
         goggles.setIdentityTransform()
-                .rotateCentered(horizontalAngle, Axis.Y)
                 .translate(getVisualPosition())
+                .rotateCentered(horizontalAngle, Direction.UP)
                 .translateY(headY + .5f)
                 .setChanged();
     }
 
     protected void setupHatTransform(PartialModel hatModel, TransformedInstance hat, float headY, float horizontalAngle) {
         hat.setIdentityTransform()
-                .rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
                 .translate(getVisualPosition())
+                .rotateCentered(horizontalAngle + Mth.PI, Direction.UP)
                 .translate(.5f, headY + .75f, .5f)
                 .setChanged();
     }

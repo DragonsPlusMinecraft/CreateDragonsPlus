@@ -149,7 +149,7 @@ public abstract class BlazeBlockEntity extends SmartBlockEntity {
             return;
         assert level != null;
         onHeatChange(currentHeat, newHeat);
-        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlazeBurnerBlock.HEAT_LEVEL, newHeat));
+        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlazeBlock.HEAT_LEVEL, newHeat));
         notifyUpdate();
     }
 
