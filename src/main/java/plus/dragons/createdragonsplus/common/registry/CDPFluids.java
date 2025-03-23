@@ -89,8 +89,8 @@ public class CDPFluids {
     }
 
     private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeColor color) {
-        var stillTexture = REGISTRATE.asResource("fluids/dye_still");
-        var flowingTexture = REGISTRATE.asResource("fluids/dye_flow");
+        var stillTexture = REGISTRATE.asResource("fluid/dye_still");
+        var flowingTexture = REGISTRATE.asResource("fluid/dye_flow");
         var tintColor = FastColor.ARGB32.opaque(color.getTextureDiffuseColor());
         var name = color.getName() + "_dye";
         var tag = COMMON_TAGS.dyesByColor.get(color);
