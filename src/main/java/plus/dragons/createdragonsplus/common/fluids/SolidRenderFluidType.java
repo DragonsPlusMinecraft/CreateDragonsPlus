@@ -29,7 +29,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
-
 @CodeReference(targets = "com.simibubi.create.AllFluids.SolidRenderedPlaceableFluidType", source = "create", license = "mit")
 public class SolidRenderFluidType extends AllFluids.TintedFluidType {
     protected static final int ALPHA = 0xff00000;

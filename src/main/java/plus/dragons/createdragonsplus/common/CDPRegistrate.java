@@ -93,7 +93,6 @@ import plus.dragons.createdragonsplus.data.tag.TagRegistry;
 import plus.dragons.createdragonsplus.mixin.accessor.ExistingFileHelperAccessor;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
-
 @CodeReference(value = CreateRegistrate.class, source = "create", license = "mit")
 public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     protected final Logger logger;
