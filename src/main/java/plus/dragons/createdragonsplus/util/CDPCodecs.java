@@ -29,6 +29,7 @@ import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.world.item.enchantment.effects.PlaySoundEffect;
 
 public class CDPCodecs {
+    public static final Codec<Double> POSITIVE_DOUBLE = Codec.doubleRange(0, Double.MAX_VALUE);
     public static final MapCodec<Stat<?>> STAT = BuiltInRegistries.STAT_TYPE.byNameCodec()
             .dispatchMap(Stat::getType, CDPCodecs::statCodec);
     public static final Codec<PlaySoundEffect> PLAY_SOUND = Codec.either(

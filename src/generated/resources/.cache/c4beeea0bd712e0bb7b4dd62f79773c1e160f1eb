@@ -1,4 +1,4 @@
-// 1.21.1	2025-03-26T18:22:03.7056163	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-03-26T21:39:14.7764767	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 30944dc3840117f79d60ca7eca170ea5847ecb0d assets/create_dragons_plus/blockstates/black_dye.json
 5511ed73c7a82ef6ac5a79f7b21eeca34cc193de assets/create_dragons_plus/blockstates/blue_dye.json
 5d2b44ea68a4e18cecee4658da13110f5184a89d assets/create_dragons_plus/blockstates/brown_dye.json
@@ -51,7 +51,7 @@ eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/white_dye_bucket.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/yellow_dye_bucket.json
 a2fdd28fc87806aea987e5e35cfeefbace133fbe data/create_dragons_plus/advancement/recipes/blaze_upgrade_smithing_template.json
-602f218100408299ae615219176aee49e6ec9369 data/create_dragons_plus/data_maps/fluid/coloring_catalyst.json
+602f218100408299ae615219176aee49e6ec9369 data/create_dragons_plus/data_maps/fluid/coloring_catalysts.json
 3e83bbaeeccf92f797b242768dc21664d795a5b1 data/create_dragons_plus/recipe/crafting/blaze_upgrade_smithing_template.json
 fd6a0e88acb036d303b4dd6da3dbaed770479ef5 data/create_dragons_plus/recipe/mixing/black_dye_from_fluid.json
 53e9d1894f8702dd9ff292d56537a771378463a0 data/create_dragons_plus/recipe/mixing/black_dye_from_item.json
