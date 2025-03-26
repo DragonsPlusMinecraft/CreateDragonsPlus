@@ -44,7 +44,6 @@ import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.render.SpriteShiftEntry;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.util.CodeReference;
