@@ -37,6 +37,7 @@
   "fluid.create_dragons_plus.white_dye": "白色染料",
   "fluid.create_dragons_plus.yellow_dye": "黄色染料",
   "item.create_dragons_plus.black_dye_bucket": "黑色染料桶",
+  "item.create_dragons_plus.blaze_upgrade_smithing_template": "锻造模板",
   "item.create_dragons_plus.blue_dye_bucket": "蓝色染料桶",
   "item.create_dragons_plus.brown_dye_bucket": "棕色染料桶",
   "item.create_dragons_plus.cyan_dye_bucket": "青色染料桶",
@@ -50,6 +51,10 @@
   "item.create_dragons_plus.pink_dye_bucket": "粉色染料桶",
   "item.create_dragons_plus.purple_dye_bucket": "紫色染料桶",
   "item.create_dragons_plus.red_dye_bucket": "红色染料桶",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.additions_slot_description": "放入烈焰人的工作方块",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "烈焰人燃烧室",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "放入烈焰人燃烧室",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "烈焰人的工作方块",
   "item.create_dragons_plus.white_dye_bucket": "白色染料桶",
   "item.create_dragons_plus.yellow_dye_bucket": "黄色染料桶",
   "recipe.create_dragons_plus.fan_coloring": "批量染色",
@@ -87,5 +92,6 @@
   "tag.item.c.buckets.dye.purple": "紫色染料桶",
   "tag.item.c.buckets.dye.red": "红色染料桶",
   "tag.item.c.buckets.dye.white": "白色染料桶",
-  "tag.item.c.buckets.dye.yellow": "黄色染料桶"
+  "tag.item.c.buckets.dye.yellow": "黄色染料桶",
+  "upgrade.create_dragons_plus.blaze_upgrade": "烈焰人升级"
 }

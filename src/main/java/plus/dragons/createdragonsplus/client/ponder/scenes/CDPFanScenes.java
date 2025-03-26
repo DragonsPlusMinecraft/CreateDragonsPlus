@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
-public class CEIFanScenes {
+public class CDPFanScenes {
     public static void bulkColoring(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("bulk_coloring", "Bulk Coloring");

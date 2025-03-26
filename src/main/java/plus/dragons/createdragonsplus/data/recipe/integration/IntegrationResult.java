@@ -27,8 +27,10 @@ import net.minecraft.world.item.ItemStack;
 
 public record IntegrationResult(ItemStack delegate, ResourceLocation id) {
     public static Codec<IntegrationResult> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(IntegrationResult::id),
-            ExtraCodecs.intRange(1, 99).fieldOf("count").orElse(1).forGetter(result -> result.delegate.getCount()),
+            ResourceLocation.CODEC.fieldOf("id")
+                    .forGetter(IntegrationResult::id),
+            ExtraCodecs.intRange(1, 99).fieldOf("count").orElse(1)
+                    .forGetter(result -> Math.max(result.delegate.getCount(), 1)),
             DataComponentPatch.CODEC
                     .optionalFieldOf("components", DataComponentPatch.EMPTY)
                     .forGetter(result -> result.delegate.getComponentsPatch())

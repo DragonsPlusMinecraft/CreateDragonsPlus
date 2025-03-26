@@ -38,7 +38,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.level.block.Blocks;
@@ -51,7 +50,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
@@ -60,6 +58,7 @@ import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeLiquidBlock;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
@@ -77,15 +76,6 @@ public class CDPFluids {
     public static void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(Reactions::registerFluidInteractions);
         event.enqueueWork(Reactions::registerOpenPipeEffects);
-    }
-
-    @SubscribeEvent
-    public static void buildCreativeModeTab(final BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
-            for (var color : DyeColors.CREATIVE_MODE_TAB) {
-                DYES_BY_COLOR.get(color).getBucket().ifPresent(event::accept);
-            }
-        }
     }
 
     private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeColor color) {
@@ -118,11 +108,13 @@ public class CDPFluids {
                                 .require(DyeItem.byColor(color))
                                 .require(Fluids.WATER, 250)
                                 .output(ctx.get(), 250)
+                                .withCondition(CDPConfig.features().dyeFluids)
                                 .build(prov);
                         new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_fluid"))
                                 .require(ctx.get(), 250)
                                 .output(DyeItem.byColor(color))
                                 .requiresHeat(HeatCondition.HEATED)
+                                .withCondition(CDPConfig.features().dyeFluids)
                                 .build(prov);
                 })
                 .setData(ProviderType.DATA_MAP, (ctx, prov) -> prov
@@ -182,7 +174,7 @@ public class CDPFluids {
             }
         }
 
-        public static void registerFluidInteractions() {
+        static void registerFluidInteractions() {
             DYES_BY_COLOR.forEach((color, entry) -> {
                 var type = entry.getType();
                 var block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(color.getName()).withSuffix("_concrete"));
@@ -196,7 +188,7 @@ public class CDPFluids {
             });
         }
 
-        public static void registerOpenPipeEffects() {
+        static void registerOpenPipeEffects() {
             DYES_BY_COLOR.forEach((color, entry) -> OpenPipeEffectHandler.REGISTRY.register(entry.getSource(), new DyeFluidOpenPipeEffect(color)));
         }
     }

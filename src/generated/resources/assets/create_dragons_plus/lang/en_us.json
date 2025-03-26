@@ -37,6 +37,7 @@
   "fluid.create_dragons_plus.white_dye": "White Dye",
   "fluid.create_dragons_plus.yellow_dye": "Yellow Dye",
   "item.create_dragons_plus.black_dye_bucket": "Black Dye Bucket",
+  "item.create_dragons_plus.blaze_upgrade_smithing_template": "Smithing Template",
   "item.create_dragons_plus.blue_dye_bucket": "Blue Dye Bucket",
   "item.create_dragons_plus.brown_dye_bucket": "Brown Dye Bucket",
   "item.create_dragons_plus.cyan_dye_bucket": "Cyan Dye Bucket",
@@ -50,6 +51,10 @@
   "item.create_dragons_plus.pink_dye_bucket": "Pink Dye Bucket",
   "item.create_dragons_plus.purple_dye_bucket": "Purple Dye Bucket",
   "item.create_dragons_plus.red_dye_bucket": "Red Dye Bucket",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.additions_slot_description": "Add working blocks for Blaze",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "Blaze Burner",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "Add Blaze Burner",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "Working blocks for Blaze",
   "item.create_dragons_plus.white_dye_bucket": "White Dye Bucket",
   "item.create_dragons_plus.yellow_dye_bucket": "Yellow Dye Bucket",
   "recipe.create_dragons_plus.fan_coloring": "Bulk Coloring",
@@ -87,5 +92,6 @@
   "tag.item.c.buckets.dye.purple": "Purple Dye Buckets",
   "tag.item.c.buckets.dye.red": "Red Dye Buckets",
   "tag.item.c.buckets.dye.white": "White Dye Buckets",
-  "tag.item.c.buckets.dye.yellow": "Yellow Dye Buckets"
+  "tag.item.c.buckets.dye.yellow": "Yellow Dye Buckets",
+  "upgrade.create_dragons_plus.blaze_upgrade": "Blaze Upgrade"
 }

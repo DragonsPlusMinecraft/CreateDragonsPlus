@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:blaze_upgrade"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "minecraft:blaze_rod"
+    },
+    "n": {
+      "item": "minecraft:netherrack"
+    },
+    "t": {
+      "item": "create_dragons_plus:blaze_upgrade_smithing_template"
+    }
+  },
+  "pattern": [
+    "btb",
+    "bnb",
+    "bbb"
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_dragons_plus:blaze_upgrade_smithing_template"
+  }
+}

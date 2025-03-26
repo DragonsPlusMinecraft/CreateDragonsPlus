@@ -31,10 +31,17 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 
 @Mod(CDPCommon.ID)
 public class CDPConfig {
+    private static ModConfigSpec COMMON_SPEC;
+    private static CDPCommonConfig COMMON_CONFIG;
     private static ModConfigSpec CLIENT_SPEC;
     private static CDPClientConfig CLIENT_CONFIG;
 
     public CDPConfig(IEventBus modBus, ModContainer container) {
+        COMMON_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
+            COMMON_CONFIG = new CDPCommonConfig();
+            COMMON_CONFIG.registerAll(builder);
+            return Unit.INSTANCE;
+        }).getValue(), spec -> container.registerConfig(Type.COMMON, spec));
         CLIENT_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
             CLIENT_CONFIG = new CDPClientConfig();
             CLIENT_CONFIG.registerAll(builder);
@@ -43,21 +50,33 @@ public class CDPConfig {
         modBus.register(this);
     }
 
+    public static CDPCommonConfig common() {
+        return COMMON_CONFIG;
+    }
+
     public static CDPClientConfig client() {
         return CLIENT_CONFIG;
+    }
+
+    public static CDPFeaturesConfig features() {
+        return COMMON_CONFIG.features;
     }
 
     @SubscribeEvent
     public void onLoad(ModConfigEvent.Loading event) {
         var spec = event.getConfig().getSpec();
-        if (spec == CLIENT_SPEC)
+        if (spec == COMMON_SPEC)
+            COMMON_CONFIG.onLoad();
+        else if (spec == CLIENT_SPEC)
             CLIENT_CONFIG.onLoad();
     }
 
     @SubscribeEvent
     public void onReload(ModConfigEvent.Reloading event) {
         var spec = event.getConfig().getSpec();
-        if (spec == CLIENT_SPEC)
+        if (spec == COMMON_SPEC)
+            COMMON_CONFIG.onReload();
+        else if (spec == CLIENT_SPEC)
             CLIENT_CONFIG.onReload();
     }
 }

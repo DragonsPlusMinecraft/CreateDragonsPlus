@@ -37,6 +37,7 @@
   "fluid.create_dragons_plus.white_dye": "ǝʎᗡ ǝʇıɥM",
   "fluid.create_dragons_plus.yellow_dye": "ǝʎᗡ ʍoןןǝʎ",
   "item.create_dragons_plus.black_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ʞɔɐןᗺ",
+  "item.create_dragons_plus.blaze_upgrade_smithing_template": "ǝʇɐןdɯǝ⟘ buıɥʇıɯS",
   "item.create_dragons_plus.blue_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ǝnןᗺ",
   "item.create_dragons_plus.brown_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ uʍoɹᗺ",
   "item.create_dragons_plus.cyan_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ uɐʎƆ",
@@ -50,6 +51,10 @@
   "item.create_dragons_plus.pink_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ʞuıԀ",
   "item.create_dragons_plus.purple_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ǝןdɹnԀ",
   "item.create_dragons_plus.red_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ pǝᴚ",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.additions_slot_description": "ǝzɐןᗺ ɹoɟ sʞɔoןq buıʞɹoʍ ppⱯ",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.applies_to": "ɹǝuɹnᗺ ǝzɐןᗺ",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.base_slot_description": "ɹǝuɹnᗺ ǝzɐןᗺ ppⱯ",
+  "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "ǝzɐןᗺ ɹoɟ sʞɔoןq buıʞɹoM",
   "item.create_dragons_plus.white_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ǝʇıɥM",
   "item.create_dragons_plus.yellow_dye_bucket": "ʇǝʞɔnᗺ ǝʎᗡ ʍoןןǝʎ",
   "recipe.create_dragons_plus.fan_coloring": "buıɹoןoƆ ʞןnᗺ",
@@ -87,5 +92,6 @@
   "tag.item.c.buckets.dye.purple": "sʇǝʞɔnᗺ ǝʎᗡ ǝןdɹnԀ",
   "tag.item.c.buckets.dye.red": "sʇǝʞɔnᗺ ǝʎᗡ pǝᴚ",
   "tag.item.c.buckets.dye.white": "sʇǝʞɔnᗺ ǝʎᗡ ǝʇıɥM",
-  "tag.item.c.buckets.dye.yellow": "sʇǝʞɔnᗺ ǝʎᗡ ʍoןןǝʎ"
+  "tag.item.c.buckets.dye.yellow": "sʇǝʞɔnᗺ ǝʎᗡ ʍoןןǝʎ",
+  "upgrade.create_dragons_plus.blaze_upgrade": "ǝpɐɹbd∩ ǝzɐןᗺ"
 }

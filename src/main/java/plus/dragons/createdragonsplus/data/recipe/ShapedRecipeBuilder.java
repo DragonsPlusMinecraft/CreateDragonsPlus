@@ -36,7 +36,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -50,7 +49,7 @@ public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedR
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private int width = 0;
     private final List<String> pattern = new ArrayList<>();
-    private ItemStack result = new ItemStack(Items.BARRIER);
+    private ItemStack result = ItemStack.EMPTY;
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     private RecipeCategory category = RecipeCategory.MISC;
     private String group = "";

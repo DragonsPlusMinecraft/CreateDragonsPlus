@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:blaze_upgrade"
+    }
+  ],
+  "criteria": {
+    "has_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create_dragons_plus:blaze_upgrade_smithing_template"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "create_dragons_plus:blaze_upgrade_smithing_template"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_template"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "create_dragons_plus:blaze_upgrade_smithing_template"
+    ]
+  },
+  "sends_telemetry_event": true
+}

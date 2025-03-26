@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:dye_fluids"
+    }
+  ],
   "type": "create:mixing",
   "ingredients": [
     {

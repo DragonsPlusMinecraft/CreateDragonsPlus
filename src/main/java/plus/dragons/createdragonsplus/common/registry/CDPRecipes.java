@@ -36,6 +36,7 @@ public class CDPRecipes {
             DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
     private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
             DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, CDPCommon.ID);
+
     public static final RecipeTypeInfo<ColoringRecipe> COLORING = register("coloring", () -> new CustomProcessingRecipeSerializer<>(
             ColoringRecipe::new,
             ColoringRecipeParams.CODEC,

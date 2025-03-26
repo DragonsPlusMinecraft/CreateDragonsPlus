@@ -16,19 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.client.ponder;
+package plus.dragons.createdragonsplus.client.texture;
 
-import com.simibubi.create.AllBlocks;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
-import com.tterrag.registrate.util.entry.RegistryEntry;
-import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.resources.ResourceLocation;
-import plus.dragons.createdragonsplus.client.ponder.scenes.CDPFanScenes;
 
-public class CDPPonderScenes {
-    public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        var registration = helper.<ItemProviderEntry<?, ?>>withKeyFunction(RegistryEntry::getId);
-        registration.forComponents(AllBlocks.ENCASED_FAN)
-                .addStoryBoard("bulk_coloring", CDPFanScenes::bulkColoring);
-    }
+public class CDPGuiTextures {
+    public static final List<ResourceLocation> BLAZE_UPGRADE_BASE_SLOT_ICONS = new ArrayList<>();
+    public static final List<ResourceLocation> BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS = new ArrayList<>();
 }

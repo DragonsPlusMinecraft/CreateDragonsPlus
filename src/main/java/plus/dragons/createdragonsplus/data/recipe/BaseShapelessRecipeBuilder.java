@@ -23,7 +23,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -33,7 +32,7 @@ import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationResultR
 
 public abstract class BaseShapelessRecipeBuilder<R extends Recipe<?>, B extends BaseShapelessRecipeBuilder<R, B>> extends BaseRecipeBuilder<R, B> {
     protected final NonNullList<Ingredient> ingredients = NonNullList.create();
-    protected ItemStack result = new ItemStack(Items.BARRIER);
+    protected ItemStack result = ItemStack.EMPTY;
 
     protected BaseShapelessRecipeBuilder(@Nullable String directory) {
         super(directory);
