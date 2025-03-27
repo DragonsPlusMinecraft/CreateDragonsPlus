@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "create_dragons_plus:config_feature",
-      "feature": "create_dragons_plus:blaze_upgrade"
+      "feature": "create_dragons_plus:blaze_upgrade_smithing_template"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -24,7 +24,7 @@
     "bbb"
   ],
   "result": {
-    "count": 1,
+    "count": 2,
     "id": "create_dragons_plus:blaze_upgrade_smithing_template"
   }
 }

@@ -39,8 +39,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
-    protected static final ResourceLocation DESERIALIZATION_UNKNOWN =
-            ResourceLocation.withDefaultNamespace("deserialization_unknown");
+    protected static final ResourceLocation UNKNOWN =
+            ResourceLocation.withDefaultNamespace("unknown");
     public static final MapCodec<CustomProcessingRecipeParams> CODEC = codec(CustomProcessingRecipeParams::new);
     public static final StreamCodec<RegistryFriendlyByteBuf, CustomProcessingRecipeParams> STREAM_CODEC =
             streamCodec(CustomProcessingRecipeParams::new);
@@ -60,7 +60,7 @@ public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
                 HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
                         .forGetter(CustomProcessingRecipeParams::requiredHeat)
         ).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
-            P params = factory.apply(DESERIALIZATION_UNKNOWN);
+            P params = factory.apply(UNKNOWN);
             ingredients.forEach(either -> either
                     .ifRight(params.ingredients::add)
                     .ifLeft(params.fluidIngredients::add));
@@ -76,7 +76,7 @@ public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
     protected static <P extends CustomProcessingRecipeParams> StreamCodec<RegistryFriendlyByteBuf, P> streamCodec(Function<ResourceLocation, P> constructor) {
         return StreamCodec.of(
                 (buffer, params) -> params.encode(buffer),
-                buffer -> Util.make(constructor.apply(DESERIALIZATION_UNKNOWN), params -> params.decode(buffer))
+                buffer -> Util.make(constructor.apply(UNKNOWN), params -> params.decode(buffer))
         );
     }
 

@@ -20,7 +20,6 @@ package plus.dragons.createdragonsplus.common.registry;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.api.stress.BlockStressValues;
-
 import java.util.function.DoubleSupplier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -34,7 +33,6 @@ import net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.util.CDPCodecs;
 
 public class CDPDataMaps {
     public static final DataMapType<Fluid, DyeColor> FLUID_COLORING_CATALYSTS = DataMapType
@@ -46,11 +44,11 @@ public class CDPDataMaps {
             .synced(DyeColor.CODEC, true)
             .build();
     public static final DataMapType<Block, Double> BLOCK_STRESS_IMPACTS = DataMapType
-            .builder(CDPCommon.asResource("stress/impacts"), Registries.BLOCK, CDPCodecs.POSITIVE_DOUBLE)
+            .builder(CDPCommon.asResource("stress/impacts"), Registries.BLOCK, Codec.doubleRange(0, Double.MAX_VALUE))
             .synced(Codec.DOUBLE, true)
             .build();
     public static final DataMapType<Block, Double> BLOCK_STRESS_CAPACITIES = DataMapType
-            .builder(CDPCommon.asResource("stress/capacities"), Registries.BLOCK, CDPCodecs.POSITIVE_DOUBLE)
+            .builder(CDPCommon.asResource("stress/capacities"), Registries.BLOCK, Codec.doubleRange(0, Double.MAX_VALUE))
             .synced(Codec.DOUBLE, true)
             .build();
 

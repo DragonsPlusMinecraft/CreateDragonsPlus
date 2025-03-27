@@ -61,7 +61,7 @@ public class CDPItems {
             ))
             .lang("Smithing Template")
             .recipe((ctx, prov) -> shaped()
-                    .output(ctx.get())
+                    .output(ctx.get(), 2)
                     .define('t', ctx.get())
                     .define('n', Items.NETHERRACK)
                     .define('b', Items.BLAZE_ROD)
@@ -69,7 +69,7 @@ public class CDPItems {
                     .pattern("bnb")
                     .pattern("bbb")
                     .unlockedBy("has_template", RegistrateRecipeProvider.has(ctx.get()))
-                    .withCondition(CDPConfig.features().blazeUpgrade)
+                    .withCondition(CDPConfig.features().blazeUpgradeSmithingTemplate)
                     .accept(prov))
             .register();
 
@@ -88,7 +88,7 @@ public class CDPItems {
                 }
             }
         } else if (tab == CreativeModeTabs.INGREDIENTS) {
-            if (CDPConfig.features().blazeUpgrade.get()) {
+            if (CDPConfig.features().blazeUpgradeSmithingTemplate.get()) {
                 event.insertAfter(
                         new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                         BLAZE_UPGRADE_SMITHING_TEMPLATE.asStack(),

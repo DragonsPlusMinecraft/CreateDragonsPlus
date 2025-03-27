@@ -74,7 +74,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public int getPriority() {
-        return 350;
+        return 500; // Should be greater than splashing (400)
     }
 
     @Override
@@ -108,7 +108,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
         level.addParticle(new DustParticleOptions(this.rgb, 2),
                 pos.x + (level.random.nextFloat() - .5f) * .5f,
                 pos.y + .5f,
-                pos.z + (level.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+                pos.z + (level.random.nextFloat() - .5f) * .5f,
+                0, 1 / 8f, 0);
     }
 
     @Override

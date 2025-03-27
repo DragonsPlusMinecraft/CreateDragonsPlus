@@ -36,6 +36,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.jei.category.FanColoringCategory;
 import plus.dragons.createdragonsplus.util.ErrorMessages;
 
@@ -52,7 +53,9 @@ public class CDPJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         this.categories.clear();
-        this.categories.add(FanColoringCategory.create());
+        if (CDPConfig.features().dyeFluids.get()) {
+            this.categories.add(FanColoringCategory.create());
+        }
         registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));
     }
 

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "create_dragons_plus:config_feature",
-      "feature": "create_dragons_plus:blaze_upgrade"
+      "feature": "create_dragons_plus:blaze_upgrade_smithing_template"
     }
   ],
   "criteria": {

@@ -21,15 +21,25 @@ package plus.dragons.createdragonsplus.config;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class CDPFeaturesConfig extends FeaturesConfig {
-    public final ConfigFeature dyeFluids = feature(true, "dye_fluids", Comments.dyeFluids);
-    public final ConfigFeature blazeUpgrade = feature(false, "blaze_upgrade", Comments.blazeUpgrade);
+    public final ConfigFeature dyeFluids = feature(
+            true,
+            "dye_fluids",
+            Comments.dyeFluids
+    );
+    public final ConfigFeature blazeUpgradeSmithingTemplate = feature(
+            false,
+            "blaze_upgrade_smithing_template",
+            Comments.blazeUpgradeSmithingTemplate
+    );
 
     public CDPFeaturesConfig() {
         super(CDPCommon.ID);
     }
 
     static class Comments {
-        static final String dyeFluids = "If Dye Fluids and Bulk Coloring should be enabled";
-        static final String blazeUpgrade = "If Blaze Upgrade Smithing Template should be enabled";
+        static final String dyeFluids =
+                "If Dye Fluids should be enabled and craftable from Dyes";
+        static final String blazeUpgradeSmithingTemplate =
+                "If Blaze Upgrade Smithing Template should be enabled and generated in loot";
     }
 }
