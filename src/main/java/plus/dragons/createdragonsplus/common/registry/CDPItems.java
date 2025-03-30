@@ -21,14 +21,22 @@ package plus.dragons.createdragonsplus.common.registry;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shaped;
 
+import com.simibubi.create.AllTags.AllItemTags;
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
+import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import java.util.EnumMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
@@ -37,7 +45,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SmithingTemplateItem;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
@@ -49,6 +56,26 @@ import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 public class CDPItems {
     public static final CommonTags COMMON_TAGS = new CommonTags();
 
+    public static final ItemEntry<PackageItem> RARE_BLAZE_PACKAGE = REGISTRATE
+            .item("rare_blaze_pacakge", prop -> new PackageItem(prop,
+                    new PackageStyle("rare_blaze", 12, 10, 21, true)))
+            .setData(ProviderType.LANG, NonNullBiConsumer.noop())
+            .properties(prop -> prop.stacksTo(1).component(DataComponents.FIRE_RESISTANT, Unit.INSTANCE))
+            .tag(AllItemTags.PACKAGES.tag)
+            .model((ctx, prov) -> prov
+                    .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
+                    .texture("2", prov.modLoc("item/package/rare_blaze")))
+            .register();
+    public static final ItemEntry<PackageItem> RARE_MARBLE_GATE_PACKAGE = REGISTRATE
+            .item("rare_marble_gate_pacakge", prop -> new PackageItem(prop,
+                    new PackageStyle("rare_marble_gate", 12, 10, 21, true)))
+            .setData(ProviderType.LANG, NonNullBiConsumer.noop())
+            .properties(prop -> prop.stacksTo(1))
+            .tag(AllItemTags.PACKAGES.tag)
+            .model((ctx, prov) -> prov
+                    .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
+                    .texture("2", prov.modLoc("item/package/rare_marble_gate")))
+            .register();
     public static final ItemEntry<SmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
             .item("blaze_upgrade_smithing_template", prop -> new SmithingTemplateItem(
                     Tooltips.BLAZE_UPGRADE_APPLIES_TO,
@@ -74,11 +101,10 @@ public class CDPItems {
             .register();
 
     public static void register(IEventBus modBus) {
-        modBus.register(CDPItems.class);
         REGISTRATE.registerItemTags(COMMON_TAGS);
+        modBus.addListener(CDPItems::buildCreativeModeTab);
     }
 
-    @SubscribeEvent
     public static void buildCreativeModeTab(final BuildCreativeModeTabContentsEvent event) {
         var tab = event.getTabKey();
         if (tab == CreativeModeTabs.COLORED_BLOCKS) {
