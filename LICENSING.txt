@@ -7,7 +7,7 @@ you should have received a copy of the GNU General Public License along with thi
 file serves as an overview for these software and their respective licenses.
 
   All (modified) code from other open-source software are annotated with @CodeReference,
-you may find relevant infomation
+you may find relevant infomation from the annotations.
 
 1. Create
 
