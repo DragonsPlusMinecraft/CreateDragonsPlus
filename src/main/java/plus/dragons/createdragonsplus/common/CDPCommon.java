@@ -23,6 +23,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
+import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPConditions;
 import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
@@ -40,6 +42,8 @@ public class CDPCommon {
 
     public CDPCommon(IEventBus modBus) {
         REGISTRATE.registerEventListeners(modBus);
+        CDPBlockEntities.register(modBus);
+        CDPBlocks.register(modBus);
         CDPConditions.register(modBus);
         CDPCriterions.register(modBus);
         CDPDataMaps.register(modBus);

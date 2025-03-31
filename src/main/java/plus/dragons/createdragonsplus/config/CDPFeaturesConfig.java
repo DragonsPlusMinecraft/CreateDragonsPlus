@@ -26,6 +26,11 @@ public class CDPFeaturesConfig extends FeaturesConfig {
             "dye_fluids",
             Comments.dyeFluids
     );
+    public final ConfigFeature fluidHatch = feature(
+            true,
+            "fluid_hatch",
+            Comments.fluidHatch
+    );
     public final ConfigFeature blazeUpgradeSmithingTemplate = feature(
             false,
             "blaze_upgrade_smithing_template",
@@ -39,6 +44,8 @@ public class CDPFeaturesConfig extends FeaturesConfig {
     static class Comments {
         static final String dyeFluids =
                 "If Dye Fluids should be enabled and craftable from Dyes";
+        static final String fluidHatch =
+                "If Fluid Hatch should be enabled";
         static final String blazeUpgradeSmithingTemplate =
                 "If Blaze Upgrade Smithing Template should be enabled and generated in loot";
     }

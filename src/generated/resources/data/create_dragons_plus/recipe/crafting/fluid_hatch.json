@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid_hatch"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:ingots/copper"
+    },
+    {
+      "item": "create:item_drain"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_dragons_plus:fluid_hatch"
+  }
+}

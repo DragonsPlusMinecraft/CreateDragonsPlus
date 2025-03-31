@@ -43,12 +43,12 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SmithingTemplateItem;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.features.ConfigFeatureSmithingTemplateItem;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
@@ -76,15 +76,16 @@ public class CDPItems {
                     .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
                     .texture("2", prov.modLoc("item/package/rare_marble_gate")))
             .register();
-    public static final ItemEntry<SmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
-            .item("blaze_upgrade_smithing_template", prop -> new SmithingTemplateItem(
+    public static final ItemEntry<ConfigFeatureSmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
+            .item("blaze_upgrade_smithing_template", prop -> new ConfigFeatureSmithingTemplateItem(
                     Tooltips.BLAZE_UPGRADE_APPLIES_TO,
                     Tooltips.BLAZE_UPGRADE_INGREDIENTS,
                     Tooltips.BLAZE_UPGRADE,
                     Tooltips.BLAZE_UPGRADE_BASE_SLOT,
                     Tooltips.BLAZE_UPGRADE_ADDITIONS_SLOT,
                     CDPGuiTextures.BLAZE_UPGRADE_BASE_SLOT_ICONS,
-                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS
+                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS,
+                    CDPConfig.features().blazeUpgradeSmithingTemplate
             ))
             .lang("Smithing Template")
             .recipe((ctx, prov) -> shaped()

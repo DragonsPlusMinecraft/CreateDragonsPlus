@@ -67,7 +67,7 @@ public class FeaturesConfig extends ConfigBase {
         public static final MapCodec<ConfigFeature> CODEC = ResourceLocation.CODEC.comapFlatMap(
                 id -> FEATURES.containsKey(id)
                         ? DataResult.success(FEATURES.get(id))
-                        : DataResult.error(() -> "No config feature with id [" + id + "] exists"),
+                        : DataResult.error(() -> "No config features with id [" + id + "] exists"),
                 ConfigFeature::getId
         ).fieldOf("feature");
         private final ResourceLocation id;
@@ -78,7 +78,7 @@ public class FeaturesConfig extends ConfigBase {
             this.id = ResourceLocation.fromNamespaceAndPath(modid, name);
             this.override = getFeatureOverride(this.id);
             if (FEATURES.containsKey(id))
-                throw new IllegalStateException("Config feature with id [" + id + "] already registered");
+                throw new IllegalStateException("Config features with id [" + id + "] already registered");
             FEATURES.put(id, this);
         }
 

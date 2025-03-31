@@ -50,7 +50,9 @@ public class CDPLoots {
         public static void onLootTableLoad(LootTableLoadEvent event) {
             var name = event.getName();
             var table = event.getTable();
-            if (CDPConfig.features().blazeUpgradeSmithingTemplate.get() && BLAZE_UPGRADE_SMITHING_TEMPLATE.containsKey(name)) {
+            if (CDPConfig.features().blazeUpgradeSmithingTemplate.get() &&
+                BLAZE_UPGRADE_SMITHING_TEMPLATE.containsKey(name)
+            ) {
                 addBlazeUpgradeSmithingTemplate(table, BLAZE_UPGRADE_SMITHING_TEMPLATE.getInt(name));
             }
         }

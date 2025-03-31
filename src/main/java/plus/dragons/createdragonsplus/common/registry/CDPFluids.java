@@ -54,6 +54,7 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketItem;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
@@ -96,7 +97,7 @@ public class CDPFluids {
                 .block((fluid, prop) -> new DyeLiquidBlock(color, fluid, prop))
                 .build()
                 .source(BaseFlowingFluid.Source::new)
-                .bucket()
+                .bucket(DyeBucketItem::new)
                 .tag(CDPItems.COMMON_TAGS.dyeBucketsByColor.get(color))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
                 .color(() -> () -> (stack, tintIndex) -> tintIndex > 0 ? -1 : tintColor)
