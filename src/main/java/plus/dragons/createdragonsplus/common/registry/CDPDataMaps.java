@@ -35,12 +35,12 @@ import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class CDPDataMaps {
-    public static final DataMapType<Fluid, DyeColor> FLUID_COLORING_CATALYSTS = DataMapType
-            .builder(CDPCommon.asResource("coloring_catalysts"), Registries.FLUID, DyeColor.CODEC)
+    public static final DataMapType<Fluid, DyeColor> FLUID_FAN_COLORING_CATALYSTS = DataMapType
+            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.FLUID, DyeColor.CODEC)
             .synced(DyeColor.CODEC, true)
             .build();
-    public static final DataMapType<Block, DyeColor> BLOCK_COLORING_CATALYSTS = DataMapType
-            .builder(CDPCommon.asResource("coloring_catalysts"), Registries.BLOCK, DyeColor.CODEC)
+    public static final DataMapType<Block, DyeColor> BLOCK_FAN_COLORING_CATALYSTS = DataMapType
+            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.BLOCK, DyeColor.CODEC)
             .synced(DyeColor.CODEC, true)
             .build();
     public static final DataMapType<Block, Double> BLOCK_STRESS_IMPACTS = DataMapType
@@ -58,8 +58,8 @@ public class CDPDataMaps {
     }
 
     public static void register(final RegisterDataMapTypesEvent event) {
-        event.register(FLUID_COLORING_CATALYSTS);
-        event.register(BLOCK_COLORING_CATALYSTS);
+        event.register(FLUID_FAN_COLORING_CATALYSTS);
+        event.register(BLOCK_FAN_COLORING_CATALYSTS);
         event.register(BLOCK_STRESS_IMPACTS);
         event.register(BLOCK_STRESS_CAPACITIES);
         BlockStressValues.IMPACTS.registerProvider(CDPDataMaps::getStressImpact);

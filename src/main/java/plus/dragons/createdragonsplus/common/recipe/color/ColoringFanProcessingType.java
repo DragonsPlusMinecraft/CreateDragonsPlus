@@ -67,9 +67,9 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
-        if (level.getFluidState(pos).holder().getData(CDPDataMaps.FLUID_COLORING_CATALYSTS) == this.color)
+        if (level.getFluidState(pos).holder().getData(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS) == this.color)
             return true;
-        return level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_COLORING_CATALYSTS) == this.color;
+        return level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_FAN_COLORING_CATALYSTS) == this.color;
     }
 
     @Override

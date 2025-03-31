@@ -119,7 +119,7 @@ public class CDPFluids {
                                 .build(prov);
                 })
                 .setData(ProviderType.DATA_MAP, (ctx, prov) -> prov
-                        .builder(CDPDataMaps.FLUID_COLORING_CATALYSTS)
+                        .builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS)
                         .add(tag, color, false))
                 .register();
     }
