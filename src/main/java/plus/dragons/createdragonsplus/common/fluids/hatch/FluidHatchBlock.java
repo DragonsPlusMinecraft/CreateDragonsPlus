@@ -182,6 +182,9 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
         ItemStack copy = stack.copy();
         emptying = GenericItemEmptying.emptyItem(level, copy, false);
         capability.fill(fluidStack.copy(), FluidAction.EXECUTE);
+        blockEntity.setChanged();
+        if (level instanceof ServerLevel serverLevel)
+            serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
 
         if (!player.isCreative() && !(blockEntity instanceof CreativeFluidTankBlockEntity)) {
             if (copy.isEmpty()) {
