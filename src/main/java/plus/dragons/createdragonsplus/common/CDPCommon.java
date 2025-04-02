@@ -18,6 +18,8 @@
 
 package plus.dragons.createdragonsplus.common;
 
+import com.simibubi.create.foundation.item.ItemDescription;
+import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,7 +40,8 @@ import plus.dragons.createdragonsplus.common.registry.CDPSounds;
 public class CDPCommon {
     public static final String ID = "create_dragons_plus";
     public static final String PERSISTENT_DATA_KEY = "CreateDragonsPlusData";
-    public static final CDPRegistrate REGISTRATE = new CDPRegistrate(ID);
+    public static final CDPRegistrate REGISTRATE = new CDPRegistrate(ID)
+            .setTooltipModifier(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE));
 
     public CDPCommon(IEventBus modBus) {
         REGISTRATE.registerEventListeners(modBus);

@@ -36,6 +36,7 @@ public class CDPData {
         if (!DatagenModLoader.isRunningDataGen())
             return;
         REGISTRATE.registerBuiltinLocalization("interface");
+        REGISTRATE.registerBuiltinLocalization("tooltips");
         REGISTRATE.registerPonderLocalization(CDPPonderPlugin::new);
         REGISTRATE.registerForeignLocalization();
         modBus.register(this);
