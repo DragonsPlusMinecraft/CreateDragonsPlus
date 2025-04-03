@@ -44,11 +44,11 @@ public class StressConfig extends ConfigBase {
 	protected final Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
 	protected final Map<ResourceLocation, ConfigValue<Double>> capacities = new HashMap<>();
 
-    public StressConfig(String modid) {
+	public StressConfig(String modid) {
 		this.modid = modid;
 	}
 
-    protected int getVersion() {
+	protected int getVersion() {
 		return 1;
 	}
 
