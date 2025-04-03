@@ -44,11 +44,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.features.ConfigFeatureSmithingTemplateItem;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketFluidHandler;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
@@ -103,9 +107,10 @@ public class CDPItems {
 
     public static void register(IEventBus modBus) {
         REGISTRATE.registerItemTags(COMMON_TAGS);
-        modBus.addListener(CDPItems::buildCreativeModeTab);
+        modBus.register(CDPItems.class);
     }
 
+    @SubscribeEvent
     public static void buildCreativeModeTab(final BuildCreativeModeTabContentsEvent event) {
         var tab = event.getTabKey();
         if (tab == CreativeModeTabs.COLORED_BLOCKS) {
@@ -122,6 +127,16 @@ public class CDPItems {
                         TabVisibility.PARENT_AND_SEARCH_TABS
                 );
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
+        for (var entry : CDPFluids.DYES_BY_COLOR.values()) {
+            var bucket = entry.getBucket();
+            if (bucket.isEmpty())
+                continue;
+            event.registerItem(FluidHandler.ITEM, (stack, ctx) -> new DyeBucketFluidHandler(stack), bucket.get());
         }
     }
 
