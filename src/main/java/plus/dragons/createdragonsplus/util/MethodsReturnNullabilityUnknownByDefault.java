@@ -18,12 +18,11 @@
 
 package plus.dragons.createdragonsplus.util;
 
-import org.jetbrains.annotations.UnknownNullability;
-
-import javax.annotation.meta.TypeQualifierDefault;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import javax.annotation.meta.TypeQualifierDefault;
+import org.jetbrains.annotations.UnknownNullability;
 
 @UnknownNullability
 @TypeQualifierDefault(ElementType.METHOD)
