@@ -1,7 +1,10 @@
-### Create: Dragons Plus 1.1.1
+### Create: Dragons Plus 1.2.0
 
 #### Fix
 
-- Fix crash on Dedicated Server due to Dye Buckets
-- Fix Dye Bucket not supporting generic filling
-- Fix Fluid Hatch's tooltip asking for sneak click when not needed
+- Fix Blaze Blocks not rendering hats properly when Flywheel's backend is off.
+
+#### Development Feature
+
+- Added a Capability-based implementation for providing `BlockEntityBehaviour` without `SmartBlockEntity`.
+- Added `@UnknownNullability` defaults annotation for return values and parameters.

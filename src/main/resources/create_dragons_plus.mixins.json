@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
+    "BlockEntityBehaviourMixin",
     "IngredientValueMixin",
     "OpenEndFluidHandlerMixin",
     "ProcessingRecipeMixin",

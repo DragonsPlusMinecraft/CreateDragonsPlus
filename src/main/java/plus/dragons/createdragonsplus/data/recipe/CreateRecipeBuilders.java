@@ -70,7 +70,7 @@ public class CreateRecipeBuilders {
         return new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, id);
     }
 
-    public static ProcessingRecipeBuilder<SplashingRecipe> splashinng(ResourceLocation id) {
+    public static ProcessingRecipeBuilder<SplashingRecipe> splashing(ResourceLocation id) {
         return new ProcessingRecipeBuilder<>(SplashingRecipe::new, id);
     }
 

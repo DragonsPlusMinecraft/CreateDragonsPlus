@@ -98,9 +98,9 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
         SuperByteBuffer hatBuffer = CachedBuffers.partial(hatModel, blockState);
         if (transformStack != null)
             hatBuffer.transform(transformStack);
-        hatBuffer.translate(.5f, headY + .75f, .5f);
+        hatBuffer.translate(0f, headY + .75f, 0f);
         RenderType renderType = getRenderType(blockState, hatModel);
-        draw(hatBuffer, horizontalAngle + Mth.PI, poseStack, bufferSource.getBuffer(renderType));
+        drawCentered(hatBuffer, horizontalAngle + Mth.PI, poseStack, bufferSource.getBuffer(renderType));
     }
 
     public void renderBlaze(
@@ -197,6 +197,13 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
 
     protected static void draw(SuperByteBuffer buffer, float horizontalAngle, PoseStack poseStack, VertexConsumer vertexConsumer) {
         buffer.rotateCentered(horizontalAngle, Direction.UP)
+                .light(LightTexture.FULL_BRIGHT)
+                .renderInto(poseStack, vertexConsumer);
+    }
+
+    protected static void drawCentered(SuperByteBuffer buffer, float horizontalAngle, PoseStack poseStack, VertexConsumer vertexConsumer) {
+        buffer.rotateCentered(horizontalAngle, Direction.UP)
+                .translate(0.5f, 0, 0.5f)
                 .light(LightTexture.FULL_BRIGHT)
                 .renderInto(poseStack, vertexConsumer);
     }
