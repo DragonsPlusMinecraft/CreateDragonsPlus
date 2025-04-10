@@ -1,5 +1,7 @@
-### Create: Dragons Plus 1.2.1
+### Create: Dragons Plus 1.3.0
 
-#### Fix
+#### Development Feature
 
-- Fix Bulk Coloring's JEI shows auto-converted 1:1 Dyeing recipe with wrong ingredient
+- Add `CDPAdvancement` for Advancement building and datagen
+- Add `CustomStatBuilder` and method to `CDPRegistrate`
+- StatTrigger is registered already.
