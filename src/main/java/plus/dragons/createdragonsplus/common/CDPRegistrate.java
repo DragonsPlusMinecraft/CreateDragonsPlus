@@ -50,6 +50,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -86,6 +87,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import plus.dragons.createdragonsplus.common.registrate.builder.CustomStatBuilder;
 import plus.dragons.createdragonsplus.data.lang.ForeignLanguageProvider;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
@@ -203,6 +205,15 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public CDPRegistrate registerBuiltinLocalization(String name) {
         this.addDataGenerator(ProviderType.LANG, provider -> this.generateBuiltinLocalization(name, provider));
+        return this;
+    }
+
+    public CDPRegistrate registerExtraLocalization(Consumer<BiConsumer<String, String>> provideLang) {
+        this.addDataGenerator(ProviderType.LANG,
+                provider ->{
+                    BiConsumer<String, String> langConsumer = provider::add;
+                    provideLang.accept(langConsumer);
+                });
         return this;
     }
 
@@ -363,5 +374,9 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
         return this.entry(name, callback -> new SimpleBuilder<>(this, this, name, callback,
                 CreateRegistries.DISPLAY_TARGET, supplier
         ).byBlock(DisplayTarget.BY_BLOCK).byBlockEntity(DisplayTarget.BY_BLOCK_ENTITY));
+    }
+
+    public CustomStatBuilder<CDPRegistrate> customStat(String name, Supplier<ResourceLocation> supplier) {
+        return this.entry(name, callback -> new CustomStatBuilder<>(this, this, name, callback, supplier));
     }
 }
