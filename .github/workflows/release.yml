@@ -1,4 +1,4 @@
-name: Release
+name: Release to Curseforge/Modrinth
 on: [workflow_dispatch]
 
 permissions:
@@ -28,4 +28,4 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: ./gradlew build publish publishMods
+        run: ./gradlew build publishMods
