@@ -17,7 +17,7 @@ dependencies {
 ## Features
 
 ### Register
-- `CDPRegistrate`: Registrate with Create related builders and other advanced functions.
+- `CDPRegistrate`: Registrate with Create related builders and other advanced functions, with builder for more registries.
 
 ### Tag
 - `TagRegistry`: Instance based, easily seperates tags under different namespaces.
@@ -30,12 +30,14 @@ dependencies {
 
 ### Advancement
 - `AdvancementBehaviour`: `BlockEntityBehaviour` for awarding owner player advancements by stats and builtin trigger.
-- `BuiltinTrigger`: Criterion trigger for code triggered advancements.
-- `StatTrigger`: Criterion trigger for player stats
+- `CDPAdvancement`: Open version of `CreateAdvancement`
+- `BuiltinTrigger`: Criterion trigger for code triggered advancements. Builtin trigger of CDPAdvancement. Read all comment before use.
+- `StatTrigger`: Criterion trigger for player stats.
 
 ### Localization
 - `CDPRegistrate#registerBuiltinLocalization`: Merge builtin language files (under `lang/builtin`) to language provider.
 - `CDPRegistrate#registerForeignLocalization`: Merge foreign language files with untranslate entries. Add `'--existing', file('src/main/translations/').getAbsolutePath()`
+- `CDPRegistrate#registerExtraLocalization`: Merge language piece from methods of certain format
   to datagen program arguments to use translated language files under `src/main/translations`.
 
 ### Ponder

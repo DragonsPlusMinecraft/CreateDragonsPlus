@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import plus.dragons.createdragonsplus.common.advancements.criterion.BuiltinTrigger;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger;
-import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
 import java.util.function.BiConsumer;
