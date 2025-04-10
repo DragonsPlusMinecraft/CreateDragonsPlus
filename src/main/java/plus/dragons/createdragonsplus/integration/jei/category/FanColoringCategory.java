@@ -150,13 +150,13 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var dye = new ItemStack(DyeItem.byColor(color));
         if (ingredients.get(0).test(dye)) {
             var recipe = ColoringRecipe.builder(id, color)
-                    .require(ingredients.get(0))
+                    .require(ingredients.get(1))
                     .output(result)
                     .build();
             return Optional.of(recipe);
         } else if (ingredients.get(1).test(dye)) {
             var recipe = ColoringRecipe.builder(id, color)
-                    .require(ingredients.get(1))
+                    .require(ingredients.get(0))
                     .output(result)
                     .build();
             return Optional.of(recipe);
