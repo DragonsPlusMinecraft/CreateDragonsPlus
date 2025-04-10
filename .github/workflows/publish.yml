@@ -24,4 +24,4 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Publish to Maven
-        run: ./gradlew publish -DragonsPlusUsername=${{ secrets.MAVEN_USERNAME }} -DragonsPlusPassword=${{ secrets.MAVEN_PASSWORD }}
+        run: ./gradlew publish -PDragonsPlusUsername=${{ secrets.MAVEN_USERNAME }} -PDragonsPlusPassword=${{ secrets.MAVEN_PASSWORD }}
