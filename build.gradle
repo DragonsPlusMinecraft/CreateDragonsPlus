@@ -138,10 +138,13 @@ tasks.withType(Jar) {
 
 spotless {
     java {
-        importOrder()
+        endWithNewline()
+        leadingTabsToSpaces()
         removeUnusedImports()
-        formatAnnotations()
-        licenseHeaderFile "HEADER.txt"
+        toggleOffOn()
+        importOrder()
+        eclipse().configFile "codeformat/formatter-config.xml"
+        licenseHeaderFile "codeformat/HEADER.txt"
     }
 }
 

@@ -122,7 +122,7 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
         ServerPlayer owner = this.getOwner();
         if (owner == null) {
             if (this.owner != null)
-                this.statsCounter.computeInt(stat, (k, v) -> v + count);
+                this.statsCounter.computeInt(stat, (k, v) -> (v == null ? 0 : v) + count);
             return;
         }
         owner.awardStat(stat, count + this.statsCounter.removeInt(stat));
