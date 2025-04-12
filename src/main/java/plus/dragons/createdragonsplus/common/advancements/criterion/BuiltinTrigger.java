@@ -18,19 +18,20 @@
 
 package plus.dragons.createdragonsplus.common.advancements.criterion;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
+
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 
+
 public class BuiltinTrigger implements CriterionTrigger<BuiltinTrigger>, CriterionTriggerInstance {
-    private final Map<PlayerAdvancements, Set<Listener<BuiltinTrigger>>> listeners = Maps.newIdentityHashMap();
+    private final Map<PlayerAdvancements, Set<Listener<BuiltinTrigger>>> listeners = new IdentityHashMap<>();
     private final Codec<BuiltinTrigger> codec = Codec.unit(this);
 
     public void trigger(ServerPlayer player) {
@@ -68,4 +69,6 @@ public class BuiltinTrigger implements CriterionTrigger<BuiltinTrigger>, Criteri
 
     @Override
     public void validate(CriterionValidator validator) {}
+
+
 }

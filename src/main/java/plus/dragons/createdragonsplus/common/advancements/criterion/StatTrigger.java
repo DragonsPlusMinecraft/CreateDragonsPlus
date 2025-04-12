@@ -25,18 +25,23 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
+
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
+import net.minecraft.stats.Stats;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.StatAwardEvent;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger.Instance;
+import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
 import plus.dragons.createdragonsplus.util.CDPCodecs;
 
 public class StatTrigger implements CriterionTrigger<Instance> {
@@ -101,6 +106,14 @@ public class StatTrigger implements CriterionTrigger<Instance> {
         public static final Codec<Instance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 CDPCodecs.STAT.forGetter(Instance::stat),
                 MinMaxBounds.Ints.CODEC.fieldOf("bounds").forGetter(Instance::bounds)).apply(instance, Instance::new));
+
+        public static Criterion<Instance> of(Stat<?> stat, MinMaxBounds.Ints bounds){
+            return CDPCriterions.STAT.get().createCriterion(new Instance(stat,bounds));
+        }
+
+        public static Criterion<Instance> of(ResourceLocation stat, MinMaxBounds.Ints bounds){
+            return CDPCriterions.STAT.get().createCriterion(new Instance(Stats.CUSTOM.get(stat),bounds));
+        }
 
         @Override
         public void validate(CriterionValidator validator) {}
