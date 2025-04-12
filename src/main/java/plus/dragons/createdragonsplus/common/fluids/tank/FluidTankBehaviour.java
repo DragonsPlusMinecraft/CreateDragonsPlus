@@ -70,8 +70,8 @@ public class FluidTankBehaviour extends BlockEntityBehaviour {
     public FluidTankBehaviour(SmartBlockEntity blockEntity, TankFactory factory) {
         super(blockEntity);
         var tank = new TankSegment(factory);
-        this.handlers = new SmartFluidTank[]{tank.tank};
-        this.tanks = new TankSegment[]{tank};
+        this.handlers = new SmartFluidTank[] { tank.tank };
+        this.tanks = new TankSegment[] { tank };
         capability = tank.tank;
         fluidUpdateCallback = Runnables.doNothing();
     }

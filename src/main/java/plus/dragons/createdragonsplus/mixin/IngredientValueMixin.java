@@ -36,7 +36,6 @@ public interface IngredientValueMixin {
                 either -> either.map(Function.identity(), Function.identity()),
                 value -> value instanceof IntegrationIngredient.Value integrationValue
                         ? Either.left(integrationValue)
-                        : Either.right(value)
-        );
+                        : Either.right(value));
     }
 }

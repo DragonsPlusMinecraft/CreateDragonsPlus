@@ -32,8 +32,7 @@ public class ConfigFeatureSmithingTemplateItem extends SmithingTemplateItem impl
             Component appliesTo, Component ingredients, Component upgradeDescription,
             Component baseSlotDescription, Component additionsSlotDescription,
             List<ResourceLocation> baseSlotEmptyIcons, List<ResourceLocation> additionalSlotEmptyIcons,
-            ConfigFeature config, FeatureFlag... requiredFeatures
-    ) {
+            ConfigFeature config, FeatureFlag... requiredFeatures) {
         super(
                 appliesTo,
                 ingredients,
@@ -42,8 +41,7 @@ public class ConfigFeatureSmithingTemplateItem extends SmithingTemplateItem impl
                 additionsSlotDescription,
                 baseSlotEmptyIcons,
                 additionalSlotEmptyIcons,
-                requiredFeatures
-        );
+                requiredFeatures);
         this.config = config;
     }
 

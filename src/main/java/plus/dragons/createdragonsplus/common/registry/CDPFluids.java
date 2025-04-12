@@ -67,7 +67,9 @@ public class CDPFluids {
     public static final CommonTags COMMON_TAGS = new CommonTags();
     public static final EnumMap<DyeColor, FluidEntry<BaseFlowingFluid.Flowing>> DYES_BY_COLOR = Util.make(
             new EnumMap<>(DyeColor.class),
-            map -> {for (var color : DyeColors.ALL) map.put(color, dye(color));});
+            map -> {
+                for (var color : DyeColors.ALL) map.put(color, dye(color));
+            });
 
     public static void register(IEventBus modBus) {
         modBus.register(CDPFluids.class);
@@ -106,18 +108,18 @@ public class CDPFluids {
                 .build()
                 .tag(tag)
                 .setData(ProviderType.RECIPE, (ctx, prov) -> {
-                        new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_item"))
-                                .require(DyeItem.byColor(color))
-                                .require(Fluids.WATER, 250)
-                                .output(ctx.get(), 250)
-                                .withCondition(CDPConfig.features().dyeFluids)
-                                .build(prov);
-                        new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_fluid"))
-                                .require(ctx.get(), 250)
-                                .output(DyeItem.byColor(color))
-                                .requiresHeat(HeatCondition.HEATED)
-                                .withCondition(CDPConfig.features().dyeFluids)
-                                .build(prov);
+                    new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_item"))
+                            .require(DyeItem.byColor(color))
+                            .require(Fluids.WATER, 250)
+                            .output(ctx.get(), 250)
+                            .withCondition(CDPConfig.features().dyeFluids)
+                            .build(prov);
+                    new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_fluid"))
+                            .require(ctx.get(), 250)
+                            .output(DyeItem.byColor(color))
+                            .requiresHeat(HeatCondition.HEATED)
+                            .withCondition(CDPConfig.features().dyeFluids)
+                            .build(prov);
                 })
                 .setData(ProviderType.DATA_MAP, (ctx, prov) -> prov
                         .builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS)

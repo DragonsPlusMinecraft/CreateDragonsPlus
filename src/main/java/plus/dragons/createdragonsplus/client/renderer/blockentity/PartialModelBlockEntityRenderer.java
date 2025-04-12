@@ -30,8 +30,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public interface PartialModelBlockEntityRenderer {
     RenderType[] REVERSED_CHUNK_BUFFER_LAYERS = Util.make(
             RenderType.chunkBufferLayers().toArray(RenderType[]::new),
-            ArrayUtils::reverse
-    );
+            ArrayUtils::reverse);
 
     default RenderType getRenderType(BlockState blockState, PartialModel model) {
         ChunkRenderTypeSet types = model.get().getRenderTypes(blockState, RandomSource.create(42L), ModelData.EMPTY);

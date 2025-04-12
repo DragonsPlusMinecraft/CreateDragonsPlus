@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 /**
  * {@link RecipeSerializer} implementation for {@link CustomProcessingRecipe}
  * based on {@link CustomProcessingRecipeParams}'s {@link MapCodec} and {@link StreamCodec}.
+ * 
  * @param <P> the {@link CustomProcessingRecipeParams params} type
  * @param <R> the {@link CustomProcessingRecipe recipe} type
  */

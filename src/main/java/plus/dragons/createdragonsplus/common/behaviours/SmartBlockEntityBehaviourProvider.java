@@ -29,6 +29,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPCapabilities;
  * Base implementation of {@link BehaviourProvider} through a wrapping {@link SmartBlockEntity}.
  * <p>
  * Register to {@link CDPCapabilities#BEHAVIOUR_PROVIDER} to supply {@link BlockEntityBehaviour} from non-{@link SmartBlockEntity}.
+ * 
  * @param <T> the type of the owning {@link BlockEntity}
  */
 public abstract class SmartBlockEntityBehaviourProvider<T extends BlockEntity> extends SmartBlockEntity implements BehaviourProvider {
@@ -39,7 +40,8 @@ public abstract class SmartBlockEntityBehaviourProvider<T extends BlockEntity> e
         this.blockEntity = blockEntity;
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public Level getLevel() {
         return blockEntity.getLevel();
     }

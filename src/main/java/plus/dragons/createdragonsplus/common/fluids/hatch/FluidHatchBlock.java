@@ -88,7 +88,8 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
     }
 
     @Override
-    @Nullable public BlockState getStateForPlacement(BlockPlaceContext context) {
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state == null)
             return null;
@@ -163,8 +164,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
     public FluidStack tryEmptyItem(
             Level level, Player player, InteractionHand hand, ItemStack stack,
-            BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter
-    ) {
+            BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter) {
         if (!GenericItemEmptying.canItemBeEmptied(level, stack))
             return FluidStack.EMPTY;
 

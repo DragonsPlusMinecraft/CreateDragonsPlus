@@ -116,7 +116,8 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
         return this.creativeModeTabLookup.containsKey(holder);
     }
 
-    @Nullable public Holder<CreativeModeTab> getCreativeModeTab(Holder<?> holder) {
+    @Nullable
+    public Holder<CreativeModeTab> getCreativeModeTab(Holder<?> holder) {
         return this.creativeModeTabLookup.get(holder);
     }
 
@@ -265,8 +266,7 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     @Override
     public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.EntityFactory<T> factory, MobCategory category) {
-        return (CreateEntityBuilder<T, P>) this.entry(name, callback ->
-                CreateEntityBuilder.create(this, parent, name, callback, factory, category));
+        return (CreateEntityBuilder<T, P>) this.entry(name, callback -> CreateEntityBuilder.create(this, parent, name, callback, factory, category));
     }
 
     public FluidType defaultFluidType(FluidType.Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture) {
@@ -293,13 +293,11 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
             String name,
             FluidBuilder.FluidTypeFactory type,
             NonNullFunction<BaseFlowingFluid.Properties, T> source,
-            NonNullFunction<BaseFlowingFluid.Properties, T> flowingFactory
-    ) {
+            NonNullFunction<BaseFlowingFluid.Properties, T> flowingFactory) {
         return entry(name, callback -> new VirtualFluidBuilder<>(self(), self(), name, callback,
                 asResource("fluid/" + name + "_still"),
                 asResource("fluid/" + name + "_flow"),
-                type, source, flowingFactory
-        ));
+                type, source, flowingFactory));
     }
 
     public <T extends BaseFlowingFluid> FluidBuilder<T, CDPRegistrate> virtualFluid(
@@ -343,25 +341,21 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public <T extends MountedItemStorageType<?>> SimpleBuilder<MountedItemStorageType<?>, T, CDPRegistrate> mountedItemStorage(String name, Supplier<T> supplier) {
         return this.entry(name, callback -> new SimpleBuilder<>(this, this, name, callback,
-                CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, supplier
-        ).byBlock(MountedItemStorageType.REGISTRY));
+                CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, supplier).byBlock(MountedItemStorageType.REGISTRY));
     }
 
     public <T extends MountedFluidStorageType<?>> SimpleBuilder<MountedFluidStorageType<?>, T, CDPRegistrate> mountedFluidStorage(String name, Supplier<T> supplier) {
         return this.entry(name, callback -> new SimpleBuilder<>(this, this, name, callback,
-                CreateRegistries.MOUNTED_FLUID_STORAGE_TYPE, supplier
-        ).byBlock(MountedFluidStorageType.REGISTRY));
+                CreateRegistries.MOUNTED_FLUID_STORAGE_TYPE, supplier).byBlock(MountedFluidStorageType.REGISTRY));
     }
 
     public <T extends DisplaySource> SimpleBuilder<DisplaySource, T, CDPRegistrate> displaySource(String name, Supplier<T> supplier) {
         return this.entry(name, callback -> new SimpleBuilder<>(this, this, name, callback,
-                CreateRegistries.DISPLAY_SOURCE, supplier
-        ).byBlock(DisplaySource.BY_BLOCK).byBlockEntity(DisplaySource.BY_BLOCK_ENTITY));
+                CreateRegistries.DISPLAY_SOURCE, supplier).byBlock(DisplaySource.BY_BLOCK).byBlockEntity(DisplaySource.BY_BLOCK_ENTITY));
     }
 
     public <T extends DisplayTarget> SimpleBuilder<DisplayTarget, T, CDPRegistrate> displayTarget(String name, Supplier<T> supplier) {
         return this.entry(name, callback -> new SimpleBuilder<>(this, this, name, callback,
-                CreateRegistries.DISPLAY_TARGET, supplier
-        ).byBlock(DisplayTarget.BY_BLOCK).byBlockEntity(DisplayTarget.BY_BLOCK_ENTITY));
+                CreateRegistries.DISPLAY_TARGET, supplier).byBlock(DisplayTarget.BY_BLOCK).byBlockEntity(DisplayTarget.BY_BLOCK_ENTITY));
     }
 }

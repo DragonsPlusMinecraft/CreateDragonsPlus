@@ -125,7 +125,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (entity instanceof LivingEntity livingEntity)
             this.applyColoring(livingEntity, level);
         if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-            || entity.getType() == EntityType.BLAZE) {
+                || entity.getType() == EntityType.BLAZE) {
             entity.hurt(entity.damageSources().drown(), 2);
         }
         if (entity.isOnFire()) {

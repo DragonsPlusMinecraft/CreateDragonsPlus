@@ -98,10 +98,9 @@ public final class IntegrationResultRecipe implements Recipe<RecipeInput> {
         Serializer(RecipeSerializer<Recipe<?>> deletgate) {
             this.codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
                     deletgate.codec().forGetter(recipe -> recipe.delegate),
-                    IntegrationResult.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
-            ).apply(instance, (delegate, result) -> {
-                throw new UnsupportedOperationException("Can not decode with encode-only codec");
-            }));
+                    IntegrationResult.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)).apply(instance, (delegate, result) -> {
+                        throw new UnsupportedOperationException("Can not decode with encode-only codec");
+                    }));
             MappedRegistryAccessor<RecipeSerializer<?>> registry = (MappedRegistryAccessor<RecipeSerializer<?>>) BuiltInRegistries.RECIPE_SERIALIZER;
             int id = registry.getToId().getOrDefault(this, -1);
             ResourceKey<RecipeSerializer<?>> wrappedKey = registry.getByValue().get(deletgate).key();

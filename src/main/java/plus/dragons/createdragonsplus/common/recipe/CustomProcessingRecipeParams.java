@@ -39,11 +39,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
-    protected static final ResourceLocation UNKNOWN =
-            ResourceLocation.withDefaultNamespace("unknown");
+    protected static final ResourceLocation UNKNOWN = ResourceLocation.withDefaultNamespace("unknown");
     public static final MapCodec<CustomProcessingRecipeParams> CODEC = codec(CustomProcessingRecipeParams::new);
-    public static final StreamCodec<RegistryFriendlyByteBuf, CustomProcessingRecipeParams> STREAM_CODEC =
-            streamCodec(CustomProcessingRecipeParams::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, CustomProcessingRecipeParams> STREAM_CODEC = streamCodec(CustomProcessingRecipeParams::new);
 
     public CustomProcessingRecipeParams(ResourceLocation id) {
         super(id);
@@ -58,39 +56,36 @@ public class CustomProcessingRecipeParams extends ProcessingRecipeParams {
                 Codec.INT.optionalFieldOf("processing_time", 0)
                         .forGetter(CustomProcessingRecipeParams::processingDuration),
                 HeatCondition.CODEC.optionalFieldOf("heat_requirement", HeatCondition.NONE)
-                        .forGetter(CustomProcessingRecipeParams::requiredHeat)
-        ).apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
-            P params = factory.apply(UNKNOWN);
-            ingredients.forEach(either -> either
-                    .ifRight(params.ingredients::add)
-                    .ifLeft(params.fluidIngredients::add));
-            results.forEach(either -> either
-                    .ifRight(params.results::add)
-                    .ifLeft(params.fluidResults::add));
-            params.processingDuration = processingDuration;
-            params.requiredHeat = requiredHeat;
-            return params;
-        }));
+                        .forGetter(CustomProcessingRecipeParams::requiredHeat))
+                .apply(instance, (ingredients, results, processingDuration, requiredHeat) -> {
+                    P params = factory.apply(UNKNOWN);
+                    ingredients.forEach(either -> either
+                            .ifRight(params.ingredients::add)
+                            .ifLeft(params.fluidIngredients::add));
+                    results.forEach(either -> either
+                            .ifRight(params.results::add)
+                            .ifLeft(params.fluidResults::add));
+                    params.processingDuration = processingDuration;
+                    params.requiredHeat = requiredHeat;
+                    return params;
+                }));
     }
 
     protected static <P extends CustomProcessingRecipeParams> StreamCodec<RegistryFriendlyByteBuf, P> streamCodec(Function<ResourceLocation, P> constructor) {
         return StreamCodec.of(
                 (buffer, params) -> params.encode(buffer),
-                buffer -> Util.make(constructor.apply(UNKNOWN), params -> params.decode(buffer))
-        );
+                buffer -> Util.make(constructor.apply(UNKNOWN), params -> params.decode(buffer)));
     }
 
     protected final List<Either<FluidIngredient, Ingredient>> ingredients() {
-        List<Either<FluidIngredient, Ingredient>> ingredients =
-                new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
+        List<Either<FluidIngredient, Ingredient>> ingredients = new ArrayList<>(this.ingredients.size() + this.fluidIngredients.size());
         this.ingredients.forEach(ingredient -> ingredients.add(Either.right(ingredient)));
         this.fluidIngredients.forEach(ingredient -> ingredients.add(Either.left(ingredient)));
         return ingredients;
     }
 
     protected final List<Either<FluidStack, ProcessingOutput>> results() {
-        List<Either<FluidStack, ProcessingOutput>> results =
-                new ArrayList<>(this.results.size() + this.fluidResults.size());
+        List<Either<FluidStack, ProcessingOutput>> results = new ArrayList<>(this.results.size() + this.fluidResults.size());
         this.results.forEach(result -> results.add(Either.right(result)));
         this.fluidResults.forEach(result -> results.add(Either.left(result)));
         return results;

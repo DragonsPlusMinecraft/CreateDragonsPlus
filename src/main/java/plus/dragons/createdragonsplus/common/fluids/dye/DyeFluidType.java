@@ -48,8 +48,7 @@ public class DyeFluidType extends SolidRenderFluidType {
                 tintColor,
                 fogColor,
                 DyeFluidType::getDyeFluidVisibility,
-                color
-        );
+                color);
     }
 
     private static float getDyeFluidVisibility() {

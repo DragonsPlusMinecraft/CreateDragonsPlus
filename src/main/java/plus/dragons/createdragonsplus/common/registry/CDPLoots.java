@@ -51,8 +51,7 @@ public class CDPLoots {
             var name = event.getName();
             var table = event.getTable();
             if (CDPConfig.features().blazeUpgradeSmithingTemplate.get() &&
-                BLAZE_UPGRADE_SMITHING_TEMPLATE.containsKey(name)
-            ) {
+                    BLAZE_UPGRADE_SMITHING_TEMPLATE.containsKey(name)) {
                 addBlazeUpgradeSmithingTemplate(table, BLAZE_UPGRADE_SMITHING_TEMPLATE.getInt(name));
             }
         }

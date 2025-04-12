@@ -25,9 +25,8 @@ import net.minecraft.Util;
 import net.minecraft.world.item.DyeColor;
 
 public class DyeColors {
-    public static final DyeColor[] ALL = Util.make(new DyeColor[16], colors ->
-            System.arraycopy(DyeColor.values(), 0, colors, 0, 16));
-    public static final DyeColor[] CREATIVE_MODE_TAB = new DyeColor[]{
+    public static final DyeColor[] ALL = Util.make(new DyeColor[16], colors -> System.arraycopy(DyeColor.values(), 0, colors, 0, 16));
+    public static final DyeColor[] CREATIVE_MODE_TAB = new DyeColor[] {
             DyeColor.WHITE,
             DyeColor.LIGHT_GRAY,
             DyeColor.GRAY,

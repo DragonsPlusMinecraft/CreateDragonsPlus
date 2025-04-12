@@ -25,8 +25,7 @@ public class CDPCommonConfig extends ConfigBase {
     public final CDPFeaturesConfig features = nested(1, CDPFeaturesConfig::new,
             Comments.features,
             Comments.featuresOverride,
-            RequiresRestart.BOTH.asComment()
-    );
+            RequiresRestart.BOTH.asComment());
 
     @Override
     public String getName() {
@@ -34,10 +33,8 @@ public class CDPCommonConfig extends ConfigBase {
     }
 
     static class Comments {
-        static final String features =
-                "Enable/Disable features of Create: Dragons Plus";
-        static final String featuresOverride =
-                "Mods depending on certain features may forcibly enable/disable them, " +
+        static final String features = "Enable/Disable features of Create: Dragons Plus";
+        static final String featuresOverride = "Mods depending on certain features may forcibly enable/disable them, " +
                 "in that case, the corresponding config will be ignored";
     }
 }

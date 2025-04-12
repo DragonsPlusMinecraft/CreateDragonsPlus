@@ -52,8 +52,7 @@ public class SolidRenderFluidType extends AllFluids.TintedFluidType {
                 flowingTexture,
                 tintColor,
                 fogColor,
-                fogDistanceModifier
-        );
+                fogDistanceModifier);
     }
 
     public static FluidTypeFactory create(Vector3f fogColor, Supplier<Float> fogDistanceModifier) {
@@ -62,8 +61,7 @@ public class SolidRenderFluidType extends AllFluids.TintedFluidType {
                 flowingTexture,
                 NO_TINT,
                 fogColor,
-                fogDistanceModifier
-        );
+                fogDistanceModifier);
     }
 
     @Override

@@ -68,8 +68,7 @@ public class FeaturesConfig extends ConfigBase {
                 id -> FEATURES.containsKey(id)
                         ? DataResult.success(FEATURES.get(id))
                         : DataResult.error(() -> "No config features with id [" + id + "] exists"),
-                ConfigFeature::getId
-        ).fieldOf("feature");
+                ConfigFeature::getId).fieldOf("feature");
         private final ResourceLocation id;
         private final @Nullable Boolean override;
 

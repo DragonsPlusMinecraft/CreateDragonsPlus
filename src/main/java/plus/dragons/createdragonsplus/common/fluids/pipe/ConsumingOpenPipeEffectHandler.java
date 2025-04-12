@@ -26,7 +26,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
-
     int consume(Level level, AABB aoe, FluidStack contained);
 
     @Internal
@@ -37,16 +36,17 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
             throw new IllegalStateException(
                     "Can not handle open pipe effect at %s %s, "
                             .formatted(pipe.getWorld(), pipe.getPos()) +
-                    "[%s] returned illegal negative consumed effect amount: %s"
-                            .formatted(handler.getClass().getName(), consumed));
+                            "[%s] returned illegal negative consumed effect amount: %s"
+                                    .formatted(handler.getClass().getName(), consumed));
         } else if (consumed > contained) {
             throw new IllegalStateException(
                     "Can not handle open pipe effect at %s %s, "
                             .formatted(pipe.getWorld(), pipe.getPos()) +
-                    "[%s] returned illegal consumed effect amount: %s, "
-                            .formatted(handler.getClass().getName(), consumed) +
-                    "exceeding contained effect amount: %s"
-                            .formatted(contained));
+                            "[%s] returned illegal consumed effect amount: %s, "
+                                    .formatted(handler.getClass().getName(), consumed)
+                            +
+                            "exceeding contained effect amount: %s"
+                                    .formatted(contained));
         }
         return fluid.copyWithAmount(contained - consumed);
     }

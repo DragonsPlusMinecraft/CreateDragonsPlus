@@ -115,16 +115,14 @@ public class ForeignLanguageProvider implements DataProvider {
         return result;
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    @SuppressWarnings({ "UnstableApiUsage", "deprecation" })
     protected void save(CachedOutput output, String locale, JsonObject result) {
         Path path = this.langPathProvider.json(ResourceLocation.fromNamespaceAndPath(this.modid, locale));
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            HashingOutputStream hashingOutputStream =
-                    new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
+            HashingOutputStream hashingOutputStream = new HashingOutputStream(Hashing.sha1(), byteArrayOutputStream);
             try (JsonWriter jsonwriter = new JsonWriter(
-                    new OutputStreamWriter(hashingOutputStream, StandardCharsets.UTF_8)
-            )) {
+                    new OutputStreamWriter(hashingOutputStream, StandardCharsets.UTF_8))) {
                 jsonwriter.setSerializeNulls(false);
                 jsonwriter.setIndent(" ".repeat(java.lang.Math.max(0, INDENT_WIDTH.get())));
                 GsonHelper.writeValue(jsonwriter, result, KEY_COMPARATOR);
@@ -147,8 +145,7 @@ public class ForeignLanguageProvider implements DataProvider {
                     return readTemplate.thenCombineAsync(
                             this.getForeignTemplateLocalization(entry.getValue()),
                             this::combine,
-                            Util.backgroundExecutor()
-                    ).thenAcceptAsync(result -> this.save(output, locale, result), Util.backgroundExecutor());
+                            Util.backgroundExecutor()).thenAcceptAsync(result -> this.save(output, locale, result), Util.backgroundExecutor());
                 })
                 .toArray(CompletableFuture[]::new);
         return CompletableFuture.allOf(all);

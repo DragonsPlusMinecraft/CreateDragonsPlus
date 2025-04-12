@@ -78,8 +78,8 @@ public class CustomSequencedAssemblyRecipeBuilder extends SequencedAssemblyRecip
         recipe.getSequence().add(new SequencedRecipe<>(builder
                 .apply((B) factory.apply(ResourceLocation.withDefaultNamespace("dummy"))
                         .require(transitionalItem.getItem())
-                        .output(transitionalItem)
-                ).build()));
+                        .output(transitionalItem))
+                .build()));
         return this;
     }
 }

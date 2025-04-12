@@ -18,7 +18,6 @@
 
 package plus.dragons.createdragonsplus.data;
 
-
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import net.neoforged.bus.api.IEventBus;

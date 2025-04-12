@@ -100,7 +100,7 @@ public class CDPFanScenes {
                 .pointAt(util.vector().topOf(2, 1, 2))
                 .attachKeyFrame()
                 .text("Like Bulk Blasting and Bulk Smoking, " +
-                      "Bulk Coloring is automatically compatible with certain crafting recipes using dyes");
+                        "Bulk Coloring is automatically compatible with certain crafting recipes using dyes");
         scene.idle(80);
         scene.world().changeBeltItemTo(transported, slimeBall);
         scene.idle(80);

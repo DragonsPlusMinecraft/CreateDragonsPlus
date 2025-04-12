@@ -42,7 +42,9 @@ import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeSerial
 
 @Mixin(SequencedRecipe.class)
 public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
-    @Shadow @Final private T wrapped;
+    @Shadow
+    @Final
+    private T wrapped;
 
     @ModifyReceiver(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Codec;validate(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;"))
     private static Codec<ProcessingRecipe<?>> codec$supportCustomProcessingRecipe(Codec<ProcessingRecipe<?>> codec, Function<ProcessingRecipe<?>, DataResult<ProcessingRecipe<?>>> checker) {
@@ -50,8 +52,7 @@ public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
                 recipe -> recipe instanceof ProcessingRecipe<?> customRecipe
                         ? DataResult.success(customRecipe)
                         : DataResult.error(() -> recipe.getType() + " is not a processing recipe"),
-                Function.identity()
-        );
+                Function.identity());
         return NeoForgeExtraCodecs.withAlternative(customCodec, codec);
     }
 
@@ -68,7 +69,7 @@ public class SequencedRecipeMixin<T extends ProcessingRecipe<?>> {
 
     @Inject(method = "readFromBuffer", at = @At(value = "NEW", target = "com/google/gson/JsonParseException"), cancellable = true)
     private static void readFromBuffer$supportCustomProcessingRecipe(RegistryFriendlyByteBuf buffer, CallbackInfoReturnable<SequencedRecipe<?>> cir, @Local RecipeSerializer<?> serializer) {
-        if (serializer instanceof CustomProcessingRecipeSerializer<?,?> customSerializer) {
+        if (serializer instanceof CustomProcessingRecipeSerializer<?, ?> customSerializer) {
             var recipe = customSerializer.streamCodec().decode(buffer);
             cir.setReturnValue(new SequencedRecipe<>(recipe));
         }

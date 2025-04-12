@@ -44,7 +44,8 @@ public class CDPMixinConfig implements IMixinConfigPlugin {
     }
 
     @Override
-    @Nullable public String getRefMapperConfig() {
+    @Nullable
+    public String getRefMapperConfig() {
         return null;
     }
 
@@ -59,7 +60,8 @@ public class CDPMixinConfig implements IMixinConfigPlugin {
     public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
 
     @Override
-    @Nullable public List<String> getMixins() {
+    @Nullable
+    public List<String> getMixins() {
         return null;
     }
 

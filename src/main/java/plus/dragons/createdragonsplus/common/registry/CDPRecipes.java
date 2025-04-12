@@ -32,16 +32,13 @@ import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipeParams;
 
 public class CDPRecipes {
-    private static final DeferredRegister<RecipeType<?>> TYPES =
-            DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
-    private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
-            DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, CDPCommon.ID);
+    private static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
+    private static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, CDPCommon.ID);
 
     public static final RecipeTypeInfo<ColoringRecipe> COLORING = register("coloring", () -> new CustomProcessingRecipeSerializer<>(
             ColoringRecipe::new,
             ColoringRecipeParams.CODEC,
-            ColoringRecipeParams.STREAM_CODEC
-    ));
+            ColoringRecipeParams.STREAM_CODEC));
 
     public static void register(IEventBus modBus) {
         TYPES.register(modBus);

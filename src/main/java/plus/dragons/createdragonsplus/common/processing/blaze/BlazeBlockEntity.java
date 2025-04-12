@@ -97,8 +97,7 @@ public abstract class BlazeBlockEntity extends SmartBlockEntity {
         if (active) {
             headAngle.chase((AngleHelper.horizontalAngle(getBlockState()
                     .getOptionalValue(BlazeBurnerBlock.FACING)
-                    .orElse(Direction.SOUTH)
-            ) + 180) % 360, .125f, Chaser.EXP);
+                    .orElse(Direction.SOUTH)) + 180) % 360, .125f, Chaser.EXP);
             headAngle.tickChaser();
         } else {
             float target = 0;
@@ -183,9 +182,9 @@ public abstract class BlazeBlockEntity extends SmartBlockEntity {
 
         double yMotion = empty ? .0625f : random.nextDouble() * .0125f;
         Vec3 flamePos = center.add(VecHelper.offsetRandomly(Vec3.ZERO, random, .5f)
-                        .multiply(1, .25f, 1)
-                        .normalize()
-                        .scale((empty ? .25f : .5) + random.nextDouble() * .125f))
+                .multiply(1, .25f, 1)
+                .normalize()
+                .scale((empty ? .25f : .5) + random.nextDouble() * .125f))
                 .add(0, .5, 0);
 
         if (heatLevel.isAtLeast(HeatLevel.SEETHING)) {

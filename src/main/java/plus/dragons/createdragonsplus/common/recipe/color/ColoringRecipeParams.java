@@ -32,10 +32,8 @@ import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 public class ColoringRecipeParams extends CustomProcessingRecipeParams {
     public static final MapCodec<ColoringRecipeParams> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             codec(ColoringRecipeParams::new).forGetter(Function.identity()),
-            DyeColor.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)
-    ).apply(instance, ColoringRecipeParams::setColor));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipeParams> STREAM_CODEC =
-            streamCodec(ColoringRecipeParams::new);
+            DyeColor.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)).apply(instance, ColoringRecipeParams::setColor));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipeParams> STREAM_CODEC = streamCodec(ColoringRecipeParams::new);
     protected DyeColor color;
 
     protected ColoringRecipeParams(ResourceLocation id) {

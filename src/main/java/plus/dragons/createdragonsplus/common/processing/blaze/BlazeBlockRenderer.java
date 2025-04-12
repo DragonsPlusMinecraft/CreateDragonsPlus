@@ -69,8 +69,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
                 light, overlay, seed,
                 animation, horizontalAngle,
                 active && heatLevel.isAtLeast(HeatLevel.FADING),
-                blazeModel, hatModel, gogglesModel
-        );
+                blazeModel, hatModel, gogglesModel);
     }
 
     protected void renderGoggles(
@@ -78,8 +77,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
             PoseStack poseStack, @Nullable PoseStack transformStack, MultiBufferSource bufferSource,
             int light, int overlay, int seed,
             float animation, float horizontalAngle, float headY,
-            PartialModel blazeModel, PartialModel gogglesModel
-    ) {
+            PartialModel blazeModel, PartialModel gogglesModel) {
         SuperByteBuffer gogglesBuffer = CachedBuffers.partial(gogglesModel, blockState);
         if (transformStack != null)
             gogglesBuffer.transform(transformStack);
@@ -93,8 +91,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
             PoseStack poseStack, @Nullable PoseStack transformStack, MultiBufferSource bufferSource,
             int light, int overlay, int seed,
             float animation, float horizontalAngle, float headY,
-            PartialModel blazeModel, PartialModel hatModel
-    ) {
+            PartialModel blazeModel, PartialModel hatModel) {
         SuperByteBuffer hatBuffer = CachedBuffers.partial(hatModel, blockState);
         if (transformStack != null)
             hatBuffer.transform(transformStack);
@@ -108,8 +105,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
             PoseStack poseStack, @Nullable PoseStack transformStack, MultiBufferSource bufferSource,
             int light, int overlay, int seed,
             float animation, float horizontalAngle, boolean active,
-            PartialModel blazeModel, @Nullable PartialModel hatModel, @Nullable PartialModel gogglesModel
-    ) {
+            PartialModel blazeModel, @Nullable PartialModel hatModel, @Nullable PartialModel gogglesModel) {
         float seededRenderTime = renderTime + (seed % 13) * 16f;
         float offsetScale = heatLevel.isAtLeast(HeatLevel.FADING) ? 64 : 16;
         float offset = Mth.sin((seededRenderTime / 16f) % (2 * Mth.PI)) / offsetScale;
@@ -131,8 +127,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
                     poseStack, transformStack, bufferSource,
                     light, overlay, seed,
                     animation, horizontalAngle, headY,
-                    blazeModel, gogglesModel
-            );
+                    blazeModel, gogglesModel);
         // Hat
         if (hatModel != null)
             renderHat(
@@ -140,8 +135,7 @@ public class BlazeBlockRenderer<T extends BlazeBlockEntity> extends SafeBlockEnt
                     poseStack, transformStack, bufferSource,
                     light, overlay, seed,
                     animation, horizontalAngle, headY,
-                    blazeModel, hatModel
-            );
+                    blazeModel, hatModel);
         // Blaze Rods
         if (heatLevel.isAtLeast(HeatLevel.FADING)) {
             PartialModel rodsModel = heatLevel == HeatLevel.SEETHING ? AllPartialModels.BLAZE_BURNER_SUPER_RODS

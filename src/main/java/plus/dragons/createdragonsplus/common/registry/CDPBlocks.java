@@ -49,5 +49,6 @@ public class CDPBlocks {
                     .accept(prov))
             .build()
             .register();
+
     public static void register(IEventBus modBus) {}
 }

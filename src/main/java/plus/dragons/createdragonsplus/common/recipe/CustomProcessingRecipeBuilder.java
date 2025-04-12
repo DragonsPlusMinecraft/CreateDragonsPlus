@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Base builder class for {@link CustomProcessingRecipe}.
+ * 
  * @param <P> the {@link CustomProcessingRecipeParams params} type
  * @param <R> the {@link CustomProcessingRecipe recipe} type
  */

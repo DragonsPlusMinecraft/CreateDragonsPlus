@@ -46,6 +46,7 @@ public class CreateRecipeBuilders {
     public static ProcessingRecipeBuilder<CrushingRecipe> crushing(ResourceLocation id) {
         return new ProcessingRecipeBuilder<>(CrushingRecipe::new, id);
     }
+
     public static ProcessingRecipeBuilder<CuttingRecipe> cutting(ResourceLocation id) {
         return new ProcessingRecipeBuilder<>(CuttingRecipe::new, id);
     }

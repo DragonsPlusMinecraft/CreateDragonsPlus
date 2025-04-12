@@ -28,11 +28,9 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.config.FeaturesConfig.ConfigFeature;
 
 public class CDPConditions {
-    private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS =
-            DeferredRegister.create(NeoForgeRegistries.CONDITION_SERIALIZERS, CDPCommon.ID);
+    private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.CONDITION_SERIALIZERS, CDPCommon.ID);
 
-    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigFeature>> CONFIG_FEATURE =
-            CONDITION_CODECS.register("config_feature", () -> ConfigFeature.CODEC);
+    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigFeature>> CONFIG_FEATURE = CONDITION_CODECS.register("config_feature", () -> ConfigFeature.CODEC);
 
     public static void register(IEventBus modBus) {
         CONDITION_CODECS.register(modBus);

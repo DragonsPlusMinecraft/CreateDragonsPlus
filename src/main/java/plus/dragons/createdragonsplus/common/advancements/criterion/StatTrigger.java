@@ -100,8 +100,7 @@ public class StatTrigger implements CriterionTrigger<Instance> {
     public record Instance(Stat<?> stat, MinMaxBounds.Ints bounds) implements CriterionTriggerInstance {
         public static final Codec<Instance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 CDPCodecs.STAT.forGetter(Instance::stat),
-                MinMaxBounds.Ints.CODEC.fieldOf("bounds").forGetter(Instance::bounds)
-        ).apply(instance, Instance::new));
+                MinMaxBounds.Ints.CODEC.fieldOf("bounds").forGetter(Instance::bounds)).apply(instance, Instance::new));
 
         @Override
         public void validate(CriterionValidator validator) {}

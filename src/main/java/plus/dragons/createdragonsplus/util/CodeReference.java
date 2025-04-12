@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * is referenced from other methods from the classes defined in {@link #value}
  * with their names defined in {@link #targets}.
  */
-@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.CLASS)
 @Repeatable(CodeReference.List.class)
 public @interface CodeReference {
@@ -45,6 +45,7 @@ public @interface CodeReference {
      * For class and method reference, define the referenced classes.
      * <p>
      * Use {@link #targets} if the referenced class is not available at compile.
+     * 
      * @return the referenced classes
      */
     Class<?>[] value() default {};
@@ -56,6 +57,7 @@ public @interface CodeReference {
      * <p>
      * For method reference, defines the name of the referenced method,
      * full name should be used if {@link #value} is not available.
+     * 
      * @return the name of the referenced targets
      */
     String[] targets() default {};
@@ -63,6 +65,7 @@ public @interface CodeReference {
     /**
      * Defines the referenced open-source software,
      * could be a simple name of the software, or a link to the source.
+     * 
      * @return the referenced open-source software
      */
     String[] source();
@@ -70,6 +73,7 @@ public @interface CodeReference {
     /**
      * Defines the open-source license of the open-source software,
      * could be a spdx license identifier, or a link to the license file.
+     * 
      * @return the open-source license of the open-source software.
      */
     String[] license();
@@ -80,7 +84,7 @@ public @interface CodeReference {
      * Programmers generally do not need to write this. It is created by Java when a programmer
      * writes more than one {@link CodeReference} annotation at the same location.
      */
-    @Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
+    @Target({ ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD })
     @Retention(RetentionPolicy.CLASS)
     @interface List {
         CodeReference[] value();

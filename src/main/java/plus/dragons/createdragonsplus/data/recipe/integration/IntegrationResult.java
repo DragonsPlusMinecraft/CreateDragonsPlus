@@ -33,8 +33,8 @@ public record IntegrationResult(ItemStack delegate, ResourceLocation id) {
                     .forGetter(result -> Math.max(result.delegate.getCount(), 1)),
             DataComponentPatch.CODEC
                     .optionalFieldOf("components", DataComponentPatch.EMPTY)
-                    .forGetter(result -> result.delegate.getComponentsPatch())
-    ).apply(instance, (id, count, components) -> {
-        throw new UnsupportedOperationException("Can not decode with encode-only codec");
-    }));
+                    .forGetter(result -> result.delegate.getComponentsPatch()))
+            .apply(instance, (id, count, components) -> {
+                throw new UnsupportedOperationException("Can not decode with encode-only codec");
+            }));
 }

@@ -24,29 +24,23 @@ public class CDPFeaturesConfig extends FeaturesConfig {
     public final ConfigFeature dyeFluids = feature(
             true,
             "dye_fluids",
-            Comments.dyeFluids
-    );
+            Comments.dyeFluids);
     public final ConfigFeature fluidHatch = feature(
             true,
             "fluid_hatch",
-            Comments.fluidHatch
-    );
+            Comments.fluidHatch);
     public final ConfigFeature blazeUpgradeSmithingTemplate = feature(
             false,
             "blaze_upgrade_smithing_template",
-            Comments.blazeUpgradeSmithingTemplate
-    );
+            Comments.blazeUpgradeSmithingTemplate);
 
     public CDPFeaturesConfig() {
         super(CDPCommon.ID);
     }
 
     static class Comments {
-        static final String dyeFluids =
-                "If Dye Fluids should be enabled and craftable from Dyes";
-        static final String fluidHatch =
-                "If Fluid Hatch should be enabled";
-        static final String blazeUpgradeSmithingTemplate =
-                "If Blaze Upgrade Smithing Template should be enabled and generated in loot";
+        static final String dyeFluids = "If Dye Fluids should be enabled and craftable from Dyes";
+        static final String fluidHatch = "If Fluid Hatch should be enabled";
+        static final String blazeUpgradeSmithingTemplate = "If Blaze Upgrade Smithing Template should be enabled and generated in loot";
     }
 }

@@ -54,20 +54,20 @@ import plus.dragons.createdragonsplus.util.ErrorMessages;
  * The owner player should be set using {@link #setPlacedBy(Level, BlockPos, LivingEntity)} in
  * {@link Block#setPlacedBy(Level, BlockPos, BlockState, LivingEntity, ItemStack)}. <br>
  * Stats will be stored if owner player is not available, and will add to next success award. <br>
+ * 
  * @see BuiltinTrigger
  * @see StatTrigger
  */
 public class AdvancementBehaviour extends BlockEntityBehaviour {
-    public static final BehaviourType<AdvancementBehaviour> TYPE =
-            new BehaviourType<>(CDPCommon.asResource("advancement").toString());
+    public static final BehaviourType<AdvancementBehaviour> TYPE = new BehaviourType<>(CDPCommon.asResource("advancement").toString());
     protected static final String TYPE_KEY = TYPE.getName();
     protected static final String OWNER_KEY = "Owner";
     protected static final String STATS_COUNTER_KEY = "StatsCounter";
     protected static final Codec<Object2IntMap<Stat<?>>> STATS_COUNTER_CODEC = RecordCodecBuilder
             .<Pair<Stat<?>, Integer>>create(instance -> instance.group(
                     CDPCodecs.STAT.forGetter(Pair::getFirst),
-                    Codec.INT.fieldOf("count").forGetter(Pair::getSecond)
-            ).apply(instance, Pair::of)).listOf().xmap(
+                    Codec.INT.fieldOf("count").forGetter(Pair::getSecond)).apply(instance, Pair::of))
+            .listOf().xmap(
                     list -> {
                         Object2IntMap<Stat<?>> map = new Object2IntOpenHashMap<>();
                         list.forEach(entry -> map.put(entry.getFirst(), entry.getSecond().intValue()));
@@ -77,8 +77,7 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
                         ImmutableList.Builder<Pair<Stat<?>, Integer>> builder = ImmutableList.builder();
                         map.forEach((stat, count) -> builder.add(Pair.of(stat, count)));
                         return builder.build();
-                    }
-            );
+                    });
     private static final Logger LOGGER = LogUtils.getLogger();
     protected @Nullable UUID owner;
     protected Object2IntMap<Stat<?>> statsCounter = new Object2IntOpenHashMap<>();

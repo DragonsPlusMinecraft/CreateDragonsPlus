@@ -30,6 +30,6 @@ public class ProcessingRecipeMixin {
     @WrapWithCondition(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/recipe/ProcessingRecipe;validate(Lnet/minecraft/resources/ResourceLocation;)V"))
     private boolean init$skipValidateForCustom(ProcessingRecipe<?> instance, ResourceLocation recipeTypeId) {
         //noinspection ConstantValue
-        return !((Object) this instanceof CustomProcessingRecipe<?,?>);
+        return !((Object) this instanceof CustomProcessingRecipe<?, ?>);
     }
 }

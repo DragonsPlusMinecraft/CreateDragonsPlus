@@ -40,8 +40,7 @@ public class DyeFluidOpenPipeEffect implements OpenPipeEffectHandler {
     public void apply(Level level, AABB area, FluidStack fluid) {
         var type = CDPFanProcessingTypes.COLORING.get(this.color).get();
         var entities = level.getEntities((Entity) null, area,
-                entity -> entity instanceof ItemEntity || entity instanceof LivingEntity
-        );
+                entity -> entity instanceof ItemEntity || entity instanceof LivingEntity);
         for (var entity : entities) {
             if (entity instanceof ItemEntity itemEntity) {
                 FanProcessingAccessor.invokeApplyProcessing(itemEntity, type);

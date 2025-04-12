@@ -28,6 +28,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 
 /**
  * Base class for custom {@link ProcessingRecipe processing recipe} with custom {@link ProcessingRecipeParams params}.
+ * 
  * @param <I> {@link RecipeInput input} type of the recipe
  * @param <P> {@link ProcessingRecipeParams params} type of the recipe
  * @see CustomProcessingRecipeParams

@@ -89,8 +89,7 @@ public class CDPItems {
                     Tooltips.BLAZE_UPGRADE_ADDITIONS_SLOT,
                     CDPGuiTextures.BLAZE_UPGRADE_BASE_SLOT_ICONS,
                     CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS,
-                    CDPConfig.features().blazeUpgradeSmithingTemplate
-            ))
+                    CDPConfig.features().blazeUpgradeSmithingTemplate))
             .lang("Smithing Template")
             .recipe((ctx, prov) -> shaped()
                     .output(ctx.get(), 2)
@@ -124,8 +123,7 @@ public class CDPItems {
                 event.insertAfter(
                         new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
                         BLAZE_UPGRADE_SMITHING_TEMPLATE.asStack(),
-                        TabVisibility.PARENT_AND_SEARCH_TABS
-                );
+                        TabVisibility.PARENT_AND_SEARCH_TABS);
             }
         }
     }
@@ -141,28 +139,22 @@ public class CDPItems {
     }
 
     public static class Tooltips {
-        private static final ResourceLocation BLAZE_UPGRADE_SMITHING_TEMPLATE =
-                CDPCommon.asResource("smithing_template.blaze_upgrade");
+        private static final ResourceLocation BLAZE_UPGRADE_SMITHING_TEMPLATE = CDPCommon.asResource("smithing_template.blaze_upgrade");
         public static final Component BLAZE_UPGRADE_APPLIES_TO = REGISTRATE.addLang("item",
                 BLAZE_UPGRADE_SMITHING_TEMPLATE.withSuffix(".applies_to"),
-                "Blaze Burner"
-        ).withStyle(ChatFormatting.BLUE);
+                "Blaze Burner").withStyle(ChatFormatting.BLUE);
         public static final Component BLAZE_UPGRADE_INGREDIENTS = REGISTRATE.addLang("item",
                 BLAZE_UPGRADE_SMITHING_TEMPLATE.withSuffix(".ingredients"),
-                "Working blocks for Blaze"
-        ).withStyle(ChatFormatting.BLUE);
+                "Working blocks for Blaze").withStyle(ChatFormatting.BLUE);
         public static final Component BLAZE_UPGRADE = REGISTRATE.addLang("upgrade",
                 CDPCommon.asResource("blaze_upgrade"),
-                "Blaze Upgrade"
-        ).withStyle(ChatFormatting.GRAY);
+                "Blaze Upgrade").withStyle(ChatFormatting.GRAY);
         public static final Component BLAZE_UPGRADE_BASE_SLOT = REGISTRATE.addLang("item",
                 BLAZE_UPGRADE_SMITHING_TEMPLATE.withSuffix(".base_slot_description"),
-                "Add Blaze Burner"
-        );
+                "Add Blaze Burner");
         public static final Component BLAZE_UPGRADE_ADDITIONS_SLOT = REGISTRATE.addLang("item",
                 BLAZE_UPGRADE_SMITHING_TEMPLATE.withSuffix(".additions_slot_description"),
-                "Add working blocks for Blaze"
-        );
+                "Add working blocks for Blaze");
     }
 
     public static class CommonTags extends ItemTagRegistry {

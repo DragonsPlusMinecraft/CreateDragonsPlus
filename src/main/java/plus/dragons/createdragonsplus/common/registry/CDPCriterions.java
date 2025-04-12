@@ -27,8 +27,7 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger;
 
 public class CDPCriterions {
-    private static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES =
-            DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, CDPCommon.ID);
+    private static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, CDPCommon.ID);
     public static final DeferredHolder<CriterionTrigger<?>, StatTrigger> STAT = TRIGGER_TYPES
             .register("stat", StatTrigger::new);
 
