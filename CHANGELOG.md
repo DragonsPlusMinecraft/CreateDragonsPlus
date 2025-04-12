@@ -1,4 +1,4 @@
-### Create: Dragons Plus 1.2.2
+### Create: Dragons Plus 1.3.1
 
 #### Fix
 
