@@ -28,6 +28,7 @@ import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.api.registry.registrate.SimpleBuilder;
 import com.simibubi.create.content.fluids.VirtualFluid;
+import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 import com.simibubi.create.foundation.data.CreateBlockEntityBuilder;
 import com.simibubi.create.foundation.data.CreateEntityBuilder;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -87,6 +88,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import plus.dragons.createdragonsplus.common.registrate.builder.ArmInteractionPointBuilder;
 import plus.dragons.createdragonsplus.common.registrate.builder.CustomStatBuilder;
 import plus.dragons.createdragonsplus.data.lang.ForeignLanguageProvider;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
@@ -372,5 +374,9 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public CustomStatBuilder<CDPRegistrate> customStat(String name, Supplier<ResourceLocation> supplier) {
         return this.entry(name, callback -> new CustomStatBuilder<>(this, this, name, callback, supplier));
+    }
+
+    public <T extends ArmInteractionPointType> ArmInteractionPointBuilder<T,CDPRegistrate> armInteractionPoint(String name, Supplier<T> supplier) {
+        return this.entry(name, callback -> new ArmInteractionPointBuilder<>(this, this, name, callback, supplier));
     }
 }
