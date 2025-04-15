@@ -213,7 +213,7 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public CDPRegistrate registerExtraLocalization(Consumer<BiConsumer<String, String>> provideLang) {
         this.addDataGenerator(ProviderType.LANG,
-                provider ->{
+                provider -> {
                     BiConsumer<String, String> langConsumer = provider::add;
                     provideLang.accept(langConsumer);
                 });
@@ -376,7 +376,7 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
         return this.entry(name, callback -> new CustomStatBuilder<>(this, this, name, callback, supplier));
     }
 
-    public <T extends ArmInteractionPointType> ArmInteractionPointBuilder<T,CDPRegistrate> armInteractionPoint(String name, Supplier<T> supplier) {
+    public <T extends ArmInteractionPointType> ArmInteractionPointBuilder<T, CDPRegistrate> armInteractionPoint(String name, Supplier<T> supplier) {
         return this.entry(name, callback -> new ArmInteractionPointBuilder<>(this, this, name, callback, supplier));
     }
 }

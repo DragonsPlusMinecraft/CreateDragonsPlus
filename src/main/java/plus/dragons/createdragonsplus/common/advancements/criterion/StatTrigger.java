@@ -25,7 +25,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
-
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
@@ -107,12 +106,12 @@ public class StatTrigger implements CriterionTrigger<Instance> {
                 CDPCodecs.STAT.forGetter(Instance::stat),
                 MinMaxBounds.Ints.CODEC.fieldOf("bounds").forGetter(Instance::bounds)).apply(instance, Instance::new));
 
-        public static Criterion<Instance> of(Stat<?> stat, MinMaxBounds.Ints bounds){
-            return CDPCriterions.STAT.get().createCriterion(new Instance(stat,bounds));
+        public static Criterion<Instance> of(Stat<?> stat, MinMaxBounds.Ints bounds) {
+            return CDPCriterions.STAT.get().createCriterion(new Instance(stat, bounds));
         }
 
-        public static Criterion<Instance> of(ResourceLocation stat, MinMaxBounds.Ints bounds){
-            return CDPCriterions.STAT.get().createCriterion(new Instance(Stats.CUSTOM.get(stat),bounds));
+        public static Criterion<Instance> of(ResourceLocation stat, MinMaxBounds.Ints bounds) {
+            return CDPCriterions.STAT.get().createCriterion(new Instance(Stats.CUSTOM.get(stat), bounds));
         }
 
         @Override

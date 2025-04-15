@@ -130,7 +130,7 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
     }
 
     public void awardStat(ResourceLocation stat, int count) {
-        awardStat(Stats.CUSTOM.get(stat),count);
+        awardStat(Stats.CUSTOM.get(stat), count);
     }
 
     public void resetStat(Stat<?> stat) {

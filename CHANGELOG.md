@@ -1,5 +1,5 @@
-### Create: Dragons Plus 1.3.1
+### Create: Dragons Plus 1.3.2
 
-#### Fix
-
-- Fix crash on trying to award stat with non-player placed blocks
+#### Update
+- add Japanese Translation by @YukkuriOfuton
+- add Russian Translation by @Korben

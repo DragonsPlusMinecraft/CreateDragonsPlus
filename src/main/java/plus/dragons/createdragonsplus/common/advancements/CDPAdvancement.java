@@ -1,8 +1,30 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.common.advancements;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -26,11 +48,6 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import plus.dragons.createdragonsplus.common.advancements.criterion.BuiltinTrigger;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger;
 import plus.dragons.createdragonsplus.util.CodeReference;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 @CodeReference(value = CreateAdvancement.class, source = "create", license = "mit")
 public abstract class CDPAdvancement {
@@ -68,6 +85,7 @@ public abstract class CDPAdvancement {
      * You should make your own BuiltinTrigger registration after Advancement Registration,
      * or it will throw unregistered problem. </br>
      * You can check {@link AllTriggers#register()} and {@link com.simibubi.create.Create#onRegister(RegisterEvent)}. <br>
+     * 
      * @return A BuiltinTrigger
      */
     protected abstract BuiltinTrigger add(ResourceLocation id);
@@ -99,14 +117,14 @@ public abstract class CDPAdvancement {
                 .isDone();
     }
 
-    public BuiltinTrigger builtinTrigger(){
+    public BuiltinTrigger builtinTrigger() {
         if (builtinTrigger == null)
             throw new UnsupportedOperationException(
                     "Advancement " + id + " uses external Triggers");
         return builtinTrigger;
     }
 
-    private ResourceLocation asResource(String id){
+    private ResourceLocation asResource(String id) {
         return ResourceLocation.fromNamespaceAndPath(namespace(), id);
     }
 
@@ -141,7 +159,6 @@ public abstract class CDPAdvancement {
     }
 
     public enum TaskType {
-
         SILENT(AdvancementType.TASK, false, false, false),
         NORMAL(AdvancementType.TASK, true, false, false),
         NOISY(AdvancementType.TASK, true, true, false),
@@ -162,7 +179,6 @@ public abstract class CDPAdvancement {
     }
 
     public class Builder {
-
         private CDPAdvancement.TaskType type = CDPAdvancement.TaskType.NORMAL;
         private boolean externalTrigger;
         private int keyIndex;
@@ -225,7 +241,7 @@ public abstract class CDPAdvancement {
         }
 
         public CDPAdvancement.Builder whenStatReach(Stat<?> stat, MinMaxBounds.Ints bounds) {
-            return externalTrigger(StatTrigger.Instance.of(stat,bounds));
+            return externalTrigger(StatTrigger.Instance.of(stat, bounds));
         }
 
         public CDPAdvancement.Builder whenItemCollected(TagKey<Item> tag) {
