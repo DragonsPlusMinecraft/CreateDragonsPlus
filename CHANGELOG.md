@@ -1,5 +1,4 @@
-### Create: Dragons Plus 1.3.2
+### Create: Dragons Plus 1.3.3
 
-#### Update
-- add Japanese Translation by @YukkuriOfuton
-- add Russian Translation by @Korben
+#### Fix
+- Fix item in hands does not be processed by bulk coloring correctly

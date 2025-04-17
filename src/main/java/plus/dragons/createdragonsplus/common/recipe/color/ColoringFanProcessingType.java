@@ -175,7 +175,10 @@ public class ColoringFanProcessingType implements FanProcessingType {
                 ItemStack stack = entity.getItemBySlot(slot);
                 if (stack.isEmpty())
                     continue;
-                this.applyColoring(stack, level).ifPresent(it -> entity.setItemSlot(slot, it));
+                this.applyColoring(stack, level).ifPresent(it -> {
+                    it.setCount(stack.getCount());
+                    entity.setItemSlot(slot, it);
+                });
             }
         }
     }
