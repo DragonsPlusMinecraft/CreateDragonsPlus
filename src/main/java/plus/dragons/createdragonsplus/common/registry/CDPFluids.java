@@ -22,6 +22,9 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.api.event.PipeCollisionEvent;
+import com.simibubi.create.content.fluids.VirtualFluid;
+import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
@@ -30,6 +33,7 @@ import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -38,8 +42,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -55,6 +63,7 @@ import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketItem;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
@@ -70,6 +79,27 @@ public class CDPFluids {
             map -> {
                 for (var color : DyeColors.ALL) map.put(color, dye(color));
             });
+    public static final FluidEntry<VirtualFluid> DRAGONS_BREATH = REGISTRATE.virtualFluid("dragons_breath")
+            .lang("Dragon's Breath")
+            .properties(properties -> properties
+                    .lightLevel(15)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL))
+            .setData(ProviderType.RECIPE, (ctx, prov) -> {
+                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragons_breath_from_item"))
+                        .require(Items.DRAGON_BREATH)
+                        .output(ctx.get(), 250)
+                        .output(Items.GLASS_BOTTLE)
+                        .withCondition(CDPConfig.features().liquidDragonsBreath)
+                        .build(prov);
+                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragons_breath_from_fluid"))
+                        .require(ctx.get(), 250)
+                        .require(Items.GLASS_BOTTLE)
+                        .output(Items.DRAGON_BREATH)
+                        .withCondition(CDPConfig.features().liquidDragonsBreath)
+                        .build(prov);
+            })
+            .register();
 
     public static void register(IEventBus modBus) {
         modBus.register(CDPFluids.class);
@@ -194,6 +224,14 @@ public class CDPFluids {
 
         static void registerOpenPipeEffects() {
             DYES_BY_COLOR.forEach((color, entry) -> OpenPipeEffectHandler.REGISTRY.register(entry.getSource(), new DyeFluidOpenPipeEffect(color)));
+            OpenPipeEffectHandler.REGISTRY.register(DRAGONS_BREATH.getSource(), (level, area, fluid) -> {
+                if (level.getGameTime() % 10 != 0)
+                    return;
+                List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
+                for (LivingEntity entity : entities) {
+                    entity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
+                }
+            });
         }
     }
 }

@@ -1,4 +1,4 @@
-### Create: Dragons Plus 1.3.3
+### Create: Dragons Plus 1.3.4
 
-#### Fix
-- Fix item in hands does not be processed by bulk coloring correctly
+#### Update
+- Add Liquid Dragon's Breath

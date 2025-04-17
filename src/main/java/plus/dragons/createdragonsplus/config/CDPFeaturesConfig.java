@@ -33,6 +33,10 @@ public class CDPFeaturesConfig extends FeaturesConfig {
             false,
             "blaze_upgrade_smithing_template",
             Comments.blazeUpgradeSmithingTemplate);
+    public final ConfigFeature liquidDragonsBreath = feature(
+            true,
+            "liquid_dragons_breath",
+            Comments.liquidDragonsBreath);
 
     public CDPFeaturesConfig() {
         super(CDPCommon.ID);
@@ -42,5 +46,6 @@ public class CDPFeaturesConfig extends FeaturesConfig {
         static final String dyeFluids = "If Dye Fluids should be enabled and craftable from Dyes";
         static final String fluidHatch = "If Fluid Hatch should be enabled";
         static final String blazeUpgradeSmithingTemplate = "If Blaze Upgrade Smithing Template should be enabled and generated in loot";
+        static final String liquidDragonsBreath = "If Liquid Dragon's Breath should be enabled and craftable from Dragon's Breath item";
     }
 }

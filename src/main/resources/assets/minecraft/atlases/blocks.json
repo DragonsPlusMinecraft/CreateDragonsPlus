@@ -7,6 +7,14 @@
     {
       "type": "single",
       "resource": "create_dragons_plus:fluid/dye_flow"
+    },
+    {
+      "type": "single",
+      "resource": "create_dragons_plus:fluid/dragons_breath_still"
+    },
+    {
+      "type": "single",
+      "resource": "create_dragons_plus:fluid/dragons_breath_flow"
     }
   ]
 }
