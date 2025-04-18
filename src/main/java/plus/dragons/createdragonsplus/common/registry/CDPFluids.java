@@ -97,8 +97,8 @@ public class CDPFluids {
                         .require(Items.GLASS_BOTTLE)
                         .output(Items.DRAGON_BREATH)
                         .withCondition(CDPConfig.features().liquidDragonsBreath)
-                        .build(prov);
-            })
+                        .build(prov);})
+            .tag(COMMON_TAGS.dragonsBreath)
             .register();
 
     public static void register(IEventBus modBus) {
@@ -166,6 +166,7 @@ public class CDPFluids {
                 addTag(this.dyes, tag);
             }
         });
+        public final TagKey<Fluid> dragonsBreath = tag("dragons_breath", "Dragon's Breath");
 
         protected CommonTags() {
             super("c", Registries.FLUID);
