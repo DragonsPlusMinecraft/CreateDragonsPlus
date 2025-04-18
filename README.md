@@ -46,6 +46,7 @@ with reliable orders.
 
 ### Gameplay
 - Dye Fluids and Bulk Coloring
+- Dragon's Breath Fluid
 
 ## Contribute
 Feel free to open a PR to either provide localization or to add another feature! All help is appreciated!
