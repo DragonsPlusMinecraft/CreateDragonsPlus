@@ -1,4 +1,5 @@
-### Create: Dragons Plus 1.3.4
+### Create: Dragons Plus 1.3.5
 
 #### Update
-- Add Liquid Dragon's Breath
+- Update Russian Translation
+- Add Common MovementBehavior for Blaze BlockEntity
