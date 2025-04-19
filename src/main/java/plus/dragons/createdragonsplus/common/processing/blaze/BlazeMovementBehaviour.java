@@ -9,10 +9,12 @@ import net.createmod.catnip.animation.LerpedFloat;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
@@ -36,6 +38,7 @@ public class BlazeMovementBehaviour implements MovementBehaviour {
                 headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), getTargetAngle(context)), .5f,
                 quickTurn ? LerpedFloat.Chaser.EXP : LerpedFloat.Chaser.exp(5));
         headAngle.tickChaser();
+        spawnParticles(context.world,context.position,BlazeBlock.getHeatLevelOf(context.state));
     }
 
     private LerpedFloat getHeadAngle(MovementContext context) {
@@ -46,6 +49,14 @@ public class BlazeMovementBehaviour implements MovementBehaviour {
     }
 
     private float getTargetAngle(MovementContext context) {
+        if (!Mth.equal(context.relativeMotion.length(), 0)
+                && context.contraption.entity instanceof CarriageContraptionEntity cce) {
+
+            float angle = AngleHelper.deg(-Mth.atan2(context.relativeMotion.x, context.relativeMotion.z));
+            return cce.getInitialOrientation()
+                    .getAxis() == Direction.Axis.X ? angle + 180 : angle;
+        }
+
         Entity player = Minecraft.getInstance().cameraEntity;
         if (player != null && !player.isInvisible() && context.position != null) {
             Vec3 applyRotation = context.contraption.entity.reverseRotation(player.position()
@@ -55,5 +66,35 @@ public class BlazeMovementBehaviour implements MovementBehaviour {
             return AngleHelper.deg(-Mth.atan2(dz, dx)) - 90;
         }
         return 0;
+    }
+
+    protected void spawnParticles(Level level, Vec3 pos, BlazeBurnerBlock.HeatLevel heatLevel) {
+        assert level != null;
+        if (heatLevel == BlazeBurnerBlock.HeatLevel.NONE)
+            return;
+
+        RandomSource random = level.getRandom();
+
+        Vec3 smokePos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, random, .125f)
+                .multiply(1, 0, 1));
+
+        if (random.nextInt(4) != 0)
+            return;
+
+        if (random.nextInt(8) == 0)
+            level.addParticle(ParticleTypes.LARGE_SMOKE, smokePos.x, smokePos.y, smokePos.z, 0, 0, 0);
+
+        double yMotion = random.nextDouble() * .0125f;
+        Vec3 flamePos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, random, .5f)
+                        .multiply(1, .25f, 1)
+                        .normalize()
+                        .scale(.5 + random.nextDouble() * .25f))
+                .add(0, .5, 0);
+
+        if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING)) {
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, flamePos.x, flamePos.y, flamePos.z, 0, yMotion, 0);
+        } else if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)) {
+            level.addParticle(ParticleTypes.FLAME, flamePos.x, flamePos.y, flamePos.z, 0, yMotion, 0);
+        }
     }
 }
