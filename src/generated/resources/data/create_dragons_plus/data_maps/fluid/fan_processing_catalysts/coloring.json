@@ -15,6 +15,294 @@
     "#c:dyes/purple": "purple",
     "#c:dyes/red": "red",
     "#c:dyes/white": "white",
-    "#c:dyes/yellow": "yellow"
+    "#c:dyes/yellow": "yellow",
+    "garnished:black_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "black"
+    },
+    "garnished:blue_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "blue"
+    },
+    "garnished:brown_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "brown"
+    },
+    "garnished:cyan_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "cyan"
+    },
+    "garnished:flowing_black_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "black"
+    },
+    "garnished:flowing_blue_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "blue"
+    },
+    "garnished:flowing_brown_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "brown"
+    },
+    "garnished:flowing_cyan_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "cyan"
+    },
+    "garnished:flowing_gray_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "gray"
+    },
+    "garnished:flowing_green_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "green"
+    },
+    "garnished:flowing_light_blue_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "light_blue"
+    },
+    "garnished:flowing_light_gray_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "light_gray"
+    },
+    "garnished:flowing_lime_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "lime"
+    },
+    "garnished:flowing_magenta_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "magenta"
+    },
+    "garnished:flowing_orange_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "orange"
+    },
+    "garnished:flowing_pink_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "pink"
+    },
+    "garnished:flowing_purple_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "purple"
+    },
+    "garnished:flowing_red_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "red"
+    },
+    "garnished:flowing_white_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "white"
+    },
+    "garnished:flowing_yellow_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "yellow"
+    },
+    "garnished:gray_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "gray"
+    },
+    "garnished:green_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "green"
+    },
+    "garnished:light_blue_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "light_blue"
+    },
+    "garnished:light_gray_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "light_gray"
+    },
+    "garnished:lime_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "lime"
+    },
+    "garnished:magenta_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "magenta"
+    },
+    "garnished:orange_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "orange"
+    },
+    "garnished:pink_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "pink"
+    },
+    "garnished:purple_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "purple"
+    },
+    "garnished:red_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "red"
+    },
+    "garnished:white_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "white"
+    },
+    "garnished:yellow_mastic_resin": {
+      "neoforge:conditions": [
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "garnished"
+        }
+      ],
+      "neoforge:value": "yellow"
+    }
   }
 }

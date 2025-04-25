@@ -21,7 +21,9 @@ package plus.dragons.createdragonsplus.common.recipe.color;
 import static plus.dragons.createdragonsplus.common.CDPCommon.PERSISTENT_DATA_KEY;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,7 @@ import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.sounds.SoundEvents;
@@ -47,26 +50,36 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
+import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeColor color;
     private final Vector3f rgb;
+    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> garnishedRecipe;
 
     public ColoringFanProcessingType(DyeColor color) {
         this.color = color;
         this.rgb = new Color(this.color.getTextureDiffuseColor()).asVectorF();
+        this.garnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE,
+                ModIntegration.GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
     }
 
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
+        if (!CDPConfig.recipes().enableBulkColoring.get())
+            return false;
         if (level.getFluidState(pos).holder().getData(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS) == this.color)
             return true;
         return level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_FAN_COLORING_CATALYSTS) == this.color;
@@ -79,17 +92,38 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
-        var input = new ColoringRecipeInput(this.color, stack);
-        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), input, level);
-        return recipe.isPresent() || this.processCrafting(stack, level).isPresent();
+        var recipeManager = level.getRecipeManager();
+        Optional<? extends RecipeHolder<?>> recipe;
+        recipe = recipeManager.getRecipeFor(
+                CDPRecipes.COLORING.getType(),
+                new ColoringRecipeInput(this.color, stack),
+                level);
+        if (recipe.isEmpty() && garnishedRecipe.isBound())
+            recipe = recipeManager.getRecipeFor(
+                    garnishedRecipe.get(),
+                    new SingleRecipeInput(stack),
+                    level);
+        if (recipe.isPresent())
+            return true;
+        return this.processCrafting(stack, level).isPresent();
     }
 
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
-        var input = new ColoringRecipeInput(this.color, stack);
-        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), input, level);
-        return recipe.map(it -> it.value().assemble(input, level.registryAccess()))
-                .or(() -> this.processCrafting(stack, level))
+        var recipeManager = level.getRecipeManager();
+        Optional<? extends RecipeHolder<?>> recipe;
+        recipe = recipeManager.getRecipeFor(
+                CDPRecipes.COLORING.getType(),
+                new ColoringRecipeInput(this.color, stack),
+                level);
+        if (recipe.isEmpty() && garnishedRecipe.isBound())
+            recipe = recipeManager.getRecipeFor(
+                    garnishedRecipe.get(),
+                    new SingleRecipeInput(stack),
+                    level);
+        if (recipe.isPresent())
+            return RecipeApplier.applyRecipeOn(level, stack, recipe.get());
+        return this.processCrafting(stack, level)
                 .map(result -> ItemHelper.multipliedOutput(stack, result))
                 .orElse(null);
     }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.common.processing.blaze;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
@@ -38,7 +56,7 @@ public class BlazeMovementBehaviour implements MovementBehaviour {
                 headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), getTargetAngle(context)), .5f,
                 quickTurn ? LerpedFloat.Chaser.EXP : LerpedFloat.Chaser.exp(5));
         headAngle.tickChaser();
-        spawnParticles(context.world,context.position,BlazeBlock.getHeatLevelOf(context.state));
+        spawnParticles(context.world, context.position, BlazeBlock.getHeatLevelOf(context.state));
     }
 
     private LerpedFloat getHeadAngle(MovementContext context) {
@@ -86,9 +104,9 @@ public class BlazeMovementBehaviour implements MovementBehaviour {
 
         double yMotion = random.nextDouble() * .0125f;
         Vec3 flamePos = pos.add(VecHelper.offsetRandomly(Vec3.ZERO, random, .5f)
-                        .multiply(1, .25f, 1)
-                        .normalize()
-                        .scale(.5 + random.nextDouble() * .25f))
+                .multiply(1, .25f, 1)
+                .normalize()
+                .scale(.5 + random.nextDouble() * .25f))
                 .add(0, .5, 0);
 
         if (heatLevel.isAtLeast(BlazeBurnerBlock.HeatLevel.SEETHING)) {

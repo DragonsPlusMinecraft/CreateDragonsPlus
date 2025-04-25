@@ -20,34 +20,33 @@ package plus.dragons.createdragonsplus.config;
 
 import net.minecraft.Util;
 import net.minecraft.util.Unit;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig.Type;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import plus.dragons.createdragonsplus.common.CDPCommon;
 
-@Mod(CDPCommon.ID)
 public class CDPConfig {
+    private static final CDPCommonConfig COMMON_CONFIG = new CDPCommonConfig();
+    private static final CDPClientConfig CLIENT_CONFIG = new CDPClientConfig();
+    private static final CDPServerConfig SERVER_CONFIG = new CDPServerConfig();
     private static ModConfigSpec COMMON_SPEC;
-    private static CDPCommonConfig COMMON_CONFIG;
     private static ModConfigSpec CLIENT_SPEC;
-    private static CDPClientConfig CLIENT_CONFIG;
+    private static ModConfigSpec SERVER_SPEC;
 
-    public CDPConfig(IEventBus modBus, ModContainer container) {
+    public CDPConfig(ModContainer container) {
         COMMON_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
-            COMMON_CONFIG = new CDPCommonConfig();
             COMMON_CONFIG.registerAll(builder);
             return Unit.INSTANCE;
         }).getValue(), spec -> container.registerConfig(Type.COMMON, spec));
         CLIENT_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
-            CLIENT_CONFIG = new CDPClientConfig();
             CLIENT_CONFIG.registerAll(builder);
             return Unit.INSTANCE;
         }).getValue(), spec -> container.registerConfig(Type.CLIENT, spec));
-        modBus.register(this);
+        SERVER_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
+            SERVER_CONFIG.registerAll(builder);
+            return Unit.INSTANCE;
+        }).getValue(), spec -> container.registerConfig(Type.SERVER, spec));
     }
 
     public static CDPCommonConfig common() {
@@ -58,8 +57,16 @@ public class CDPConfig {
         return CLIENT_CONFIG;
     }
 
+    public static CDPServerConfig server() {
+        return SERVER_CONFIG;
+    }
+
     public static CDPFeaturesConfig features() {
         return COMMON_CONFIG.features;
+    }
+
+    public static CDPRecipesConfig recipes() {
+        return SERVER_CONFIG.recipes;
     }
 
     @SubscribeEvent
@@ -69,6 +76,8 @@ public class CDPConfig {
             COMMON_CONFIG.onLoad();
         else if (spec == CLIENT_SPEC)
             CLIENT_CONFIG.onLoad();
+        else if (spec == SERVER_SPEC)
+            SERVER_CONFIG.onLoad();
     }
 
     @SubscribeEvent
@@ -78,5 +87,7 @@ public class CDPConfig {
             COMMON_CONFIG.onReload();
         else if (spec == CLIENT_SPEC)
             CLIENT_CONFIG.onReload();
+        else if (spec == SERVER_SPEC)
+            SERVER_CONFIG.onReload();
     }
 }

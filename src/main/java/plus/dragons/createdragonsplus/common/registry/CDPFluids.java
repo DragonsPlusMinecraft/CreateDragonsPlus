@@ -63,7 +63,6 @@ import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
-import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketItem;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
@@ -97,7 +96,8 @@ public class CDPFluids {
                         .require(Items.GLASS_BOTTLE)
                         .output(Items.DRAGON_BREATH)
                         .withCondition(CDPConfig.features().liquidDragonsBreath)
-                        .build(prov);})
+                        .build(prov);
+            })
             .tag(COMMON_TAGS.dragonsBreath)
             .register();
 

@@ -53,7 +53,7 @@ public class CDPJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         this.categories.clear();
-        if (CDPConfig.features().dyeFluids.get()) {
+        if (CDPConfig.recipes().enableBulkColoring.get()) {
             this.categories.add(FanColoringCategory.create());
         }
         registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));

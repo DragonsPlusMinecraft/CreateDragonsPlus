@@ -20,6 +20,7 @@ package plus.dragons.createdragonsplus.data;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
+import com.tterrag.registrate.providers.ProviderType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPSounds;
+import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataMaps;
 
 @Mod(CDPCommon.ID)
 public class CDPData {
@@ -38,6 +40,7 @@ public class CDPData {
         REGISTRATE.registerBuiltinLocalization("tooltips");
         REGISTRATE.registerPonderLocalization(CDPPonderPlugin::new);
         REGISTRATE.registerForeignLocalization();
+        REGISTRATE.addDataGenerator(ProviderType.DATA_MAP, new CDPRegistrateDataMaps());
         modBus.register(this);
     }
 

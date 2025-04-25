@@ -23,8 +23,11 @@ import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPConditions;
@@ -35,6 +38,8 @@ import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.common.registry.CDPSounds;
+import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 @Mod(CDPCommon.ID)
 public class CDPCommon {
@@ -43,7 +48,7 @@ public class CDPCommon {
     public static final CDPRegistrate REGISTRATE = new CDPRegistrate(ID)
             .setTooltipModifier(item -> new ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE));
 
-    public CDPCommon(IEventBus modBus) {
+    public CDPCommon(IEventBus modBus, ModContainer modContainer) {
         REGISTRATE.registerEventListeners(modBus);
         CDPBlockEntities.register(modBus);
         CDPBlocks.register(modBus);
@@ -56,10 +61,32 @@ public class CDPCommon {
         CDPRecipes.register(modBus);
         CDPSounds.register(modBus);
         modBus.register(this);
+        modBus.register(new CDPConfig(modContainer));
     }
 
     @SubscribeEvent
-    public void setup(final FMLCommonSetupEvent event) {}
+    public void onConstructMod(final FMLConstructModEvent event) {
+        for (ModIntegration integration : ModIntegration.values()) {
+            if (integration.enabled())
+                event.enqueueWork(integration::onConstructMod);
+        }
+    }
+
+    @SubscribeEvent
+    public void onCommonSetup(final FMLCommonSetupEvent event) {
+        for (ModIntegration integration : ModIntegration.values()) {
+            if (integration.enabled())
+                event.enqueueWork(integration::onCommonSetup);
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientSetup(final FMLClientSetupEvent event) {
+        for (ModIntegration integration : ModIntegration.values()) {
+            if (integration.enabled())
+                event.enqueueWork(integration::onClientSetup);
+        }
+    }
 
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(ID, path);

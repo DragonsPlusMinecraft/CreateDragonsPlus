@@ -13,7 +13,9 @@
     "accessor.ExistingFileHelperAccessor",
     "accessor.FanProcessingAccessor",
     "accessor.ProcessingRecipeAccessor",
-    "accessor.SequencedAssemblyRecipeBuilderAccessor"
+    "accessor.SequencedAssemblyRecipeBuilderAccessor",
+    "garnished.GarnishedDyeBlowingFanProcessingMixin",
+    "garnished.GarnishedJEIMixin"
   ],
   "client": [
     "PonderIndexMixin"
