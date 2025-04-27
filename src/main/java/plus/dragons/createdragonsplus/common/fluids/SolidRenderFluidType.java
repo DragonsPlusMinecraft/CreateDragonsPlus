@@ -31,7 +31,6 @@ import plus.dragons.createdragonsplus.util.CodeReference;
 
 @CodeReference(targets = "com.simibubi.create.AllFluids.SolidRenderedPlaceableFluidType", source = "create", license = "mit")
 public class SolidRenderFluidType extends AllFluids.TintedFluidType {
-    protected static final int ALPHA = 0xff00000;
     protected static final int NO_ALPHA = 0x00ffffff;
     private final int tintColor;
     private final int blockTintColor;

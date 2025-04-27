@@ -47,7 +47,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import plus.dragons.createdragonsplus.mixin.accessor.ExistingFileHelperAccessor;
+import plus.dragons.createdragonsplus.mixin.neoforge.ExistingFileHelperAccessor;
 
 public class ForeignLanguageProvider implements DataProvider {
     private final String modid;

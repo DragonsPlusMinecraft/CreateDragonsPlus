@@ -27,10 +27,12 @@ import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.recipe.color.ColoringFanProcessingType;
+import plus.dragons.createdragonsplus.common.recipe.freeze.FreezingFanProcessingType;
 
 public class CDPFanProcessingTypes {
     private static final DeferredRegister<FanProcessingType> TYPES = DeferredRegister
@@ -45,6 +47,8 @@ public class CDPFanProcessingTypes {
         }
         return builder.build();
     });
+    public static final DeferredHolder<FanProcessingType, FreezingFanProcessingType> FREEZING = TYPES
+            .register("freezing", FreezingFanProcessingType::new);
 
     public static void register(IEventBus modBus) {
         TYPES.register(modBus);

@@ -29,15 +29,16 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
+import plus.dragons.createdragonsplus.common.registry.CDPBlockFreezers;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPConditions;
+import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
 import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
-import plus.dragons.createdragonsplus.common.registry.CDPSounds;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
@@ -50,16 +51,16 @@ public class CDPCommon {
 
     public CDPCommon(IEventBus modBus, ModContainer modContainer) {
         REGISTRATE.registerEventListeners(modBus);
-        CDPBlockEntities.register(modBus);
-        CDPBlocks.register(modBus);
-        CDPConditions.register(modBus);
-        CDPCriterions.register(modBus);
-        CDPDataMaps.register(modBus);
-        CDPFanProcessingTypes.register(modBus);
         CDPFluids.register(modBus);
+        CDPBlocks.register(modBus);
+        CDPBlockEntities.register(modBus);
         CDPItems.register(modBus);
+        CDPCreativeModeTabs.register(modBus);
+        CDPCriterions.register(modBus);
         CDPRecipes.register(modBus);
-        CDPSounds.register(modBus);
+        CDPConditions.register(modBus);
+        CDPFanProcessingTypes.register(modBus);
+        CDPDataMaps.register(modBus);
         modBus.register(this);
         modBus.register(new CDPConfig(modContainer));
     }
@@ -74,6 +75,7 @@ public class CDPCommon {
 
     @SubscribeEvent
     public void onCommonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(CDPBlockFreezers::register);
         for (ModIntegration integration : ModIntegration.values()) {
             if (integration.enabled())
                 event.enqueueWork(integration::onCommonSetup);

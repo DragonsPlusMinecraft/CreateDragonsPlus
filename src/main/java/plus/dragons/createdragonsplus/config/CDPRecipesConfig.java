@@ -24,6 +24,9 @@ public class CDPRecipesConfig extends ConfigBase {
     public final ConfigBool enableBulkColoring = b(true,
             "enableBulkColoring",
             Comments.enableBulkColoring);
+    public final ConfigBool enableBulkFreezing = b(true,
+            "enableBulkFreezing",
+            Comments.enableBulkFreezing);
 
     @Override
     public String getName() {
@@ -32,5 +35,6 @@ public class CDPRecipesConfig extends ConfigBase {
 
     static class Comments {
         static final String enableBulkColoring = "If Bulk Coloring should be enabled";
+        static final String enableBulkFreezing = "If Bulk Freezing should be enabled";
     }
 }

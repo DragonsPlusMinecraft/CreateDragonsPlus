@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
-import plus.dragons.createdragonsplus.mixin.accessor.FanProcessingAccessor;
+import plus.dragons.createdragonsplus.mixin.create.FanProcessingAccessor;
 
 public class DyeFluidOpenPipeEffect implements OpenPipeEffectHandler {
     private final DyeColor color;

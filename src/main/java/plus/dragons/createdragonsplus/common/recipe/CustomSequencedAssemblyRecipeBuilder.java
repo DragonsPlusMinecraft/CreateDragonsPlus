@@ -31,7 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import plus.dragons.createdragonsplus.mixin.accessor.SequencedAssemblyRecipeBuilderAccessor;
+import plus.dragons.createdragonsplus.mixin.create.SequencedAssemblyRecipeBuilderAccessor;
 
 /**
  * Custom extension of {@link SequencedAssemblyRecipeBuilder} supporting {@link CustomProcessingRecipeBuilder}.

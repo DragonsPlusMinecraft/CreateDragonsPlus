@@ -31,7 +31,7 @@ public class CDPRegistrateDataMaps implements NonNullConsumer<RegistrateDataMapP
         var fanColoringCatalystFluids = provider.builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS);
         var garnishedLoaded = new ModLoadedCondition("garnished");
         for (var color : DyeColors.ALL) {
-            var still = ModIntegration.GARNISHED.asResource(color.getSerializedName() + "_mastic_resin");
+            var still = ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_mastic_resin");
             var flowing = still.withPrefix("flowing_");
             fanColoringCatalystFluids.add(still, color, false, garnishedLoaded);
             fanColoringCatalystFluids.add(flowing, color, false, garnishedLoaded);

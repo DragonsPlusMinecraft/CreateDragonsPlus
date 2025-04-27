@@ -1,4 +1,5 @@
 {
+  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "Чёрный краситель",
   "block.create_dragons_plus.blue_dye": "Синий краситель",
   "block.create_dragons_plus.brown_dye": "Коричневый краситель",
@@ -62,8 +63,12 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "Рабочие блоки для всполоха",
   "item.create_dragons_plus.white_dye_bucket": "Ведро белого красителя",
   "item.create_dragons_plus.yellow_dye_bucket": "Ведро жёлтого красителя",
+  "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "recipe.create_dragons_plus.fan_coloring": "Массовая окраска",
   "recipe.create_dragons_plus.fan_coloring.fan": "Вентилятор за жидким красителем",
+  "recipe.create_dragons_plus.fan_freezing": "Bulk Freezing",
+  "recipe.create_dragons_plus.fan_freezing.fan": "Fan behind Powder Snow",
+  "tag.block.create_dragons_plus.passive_block_freezers": "Passive Block Freezers",
   "tag.fluid.c.dragons_breath": "Драконье дыхание",
   "tag.fluid.c.dyes": "Красители",
   "tag.fluid.c.dyes.black": "Чёрные красители",

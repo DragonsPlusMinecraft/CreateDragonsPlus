@@ -14,10 +14,15 @@ dependencies {
 }
 ```
 
-## Features
+## Development Features
 
 ### Register
 - `CDPRegistrate`: Registrate with Create related builders and other advanced functions, with builder for more registries.
+
+### 
+
+### Resource
+- `RuntimePackResource`: Runtime resource pack implementation supporting datagen.
 
 ### Tag
 - `TagRegistry`: Instance based, easily seperates tags under different namespaces.
@@ -27,6 +32,7 @@ dependencies {
 - Full support for custom processing recipe with custom params, including builder, serializer 
   and sequenced assembly support.
 - Custom builder for vanilla recipe types, supporting integration output (output that might not exist at runtime).
+- `RecipeConverter`: Supports cached recipe conversion.
 
 ### Advancement
 - `AdvancementBehaviour`: `BlockEntityBehaviour` for awarding owner player advancements by stats and builtin trigger.
@@ -44,9 +50,12 @@ dependencies {
 - Ponder plugins are made to be sorted by mod dependency order, allowing addons to register scenes to existing components 
 with reliable orders.
 
-### Gameplay
-- Dye Fluids and Bulk Coloring
-- Dragon's Breath Fluid
+## Gameplay Elements
+- Fluid Hatch
+- Dye Fluids
+- Dragon's Breath (Fluid)
+- Bulk Coloring (Compatible with Create: Garnished)
+- Bulk Freezing (Compatible with Create: Garnished)
 
 ## Contribute
 Feel free to open a PR to either provide localization or to add another feature! All help is appreciated!

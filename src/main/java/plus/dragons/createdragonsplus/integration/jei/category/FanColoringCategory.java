@@ -124,16 +124,13 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
     private static List<RecipeHolder<ColoringRecipe>> getAllRecipes() {
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
-        var allColoring = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
+        var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
         for (var color : DyeColors.ALL) {
-            DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> type = DeferredHolder.create(
-                    Registries.RECIPE_TYPE,
-                    ModIntegration.GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
-            if (!type.isBound())
+            DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
+            if (!createGarnishedRecipe.isBound())
                 continue;
-            manager.getAllRecipesFor(type.get()).forEach(holder -> allColoring.add(new RecipeHolder<>(
-                    holder.id().withSuffix("_as_coloring"),
-                    ColoringRecipe.builder(holder.id(), color)
+            manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes
+                    .add(new RecipeHolder<>(holder.id(), ColoringRecipe.builder(holder.id(), color)
                             .withItemIngredients(holder.value().getIngredients())
                             .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
                             .build())));
@@ -146,18 +143,18 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             var result = crafting.getResultItem(level.registryAccess());
             if (crafting.canCraftInDimensions(2, 1) && ingredients.size() == 2 && result.getCount() == 1) {
                 for (var color : DyeColors.ALL) {
-                    convert2x1(holder.id().withSuffix("_as_coloring"), color, ingredients, result).ifPresent(allColoring::add);
+                    convert2x1(holder.id().withSuffix("_as_coloring"), color, ingredients, result).ifPresent(recipes::add);
                 }
             } else if (crafting.canCraftInDimensions(3, 3) && ingredients.size() == 9 && result.getCount() == 8) {
                 for (var color : DyeColors.ALL) {
-                    convert3x3(holder.id().withSuffix("_as_coloring"), color, ingredients, result).ifPresent(allColoring::add);
+                    convert3x3(holder.id().withSuffix("_as_coloring"), color, ingredients, result).ifPresent(recipes::add);
                 }
             }
         }
-        allColoring.sort(Comparator
+        recipes.sort(Comparator
                 .<RecipeHolder<ColoringRecipe>, DyeColor>comparing(holder -> holder.value().getColor(), DyeColors.creativeModeTabOrder())
                 .thenComparing(RecipeHolder::id));
-        return allColoring;
+        return recipes;
     }
 
     private static Optional<RecipeHolder<ColoringRecipe>> convert2x1(ResourceLocation id, DyeColor color, List<Ingredient> ingredients, ItemStack result) {

@@ -22,9 +22,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 public enum ModIntegration {
-    GARNISHED(Constants.GARNISHED);
+    CREATE_GARNISHED(Constants.CREATE_GARNISHED),
+    //TODO: Wait Create: Dreams 2 Desires add back Fan Processing
+    CREATE_D2D(Constants.CREATE_D2D);
 
     private final String id;
 
@@ -32,8 +35,20 @@ public enum ModIntegration {
         this.id = id;
     }
 
+    public String id() {
+        return id;
+    }
+
     public boolean enabled() {
         return ModList.get().isLoaded(id);
+    }
+
+    public ResourceLocation asResource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(id, path);
+    }
+
+    public ModLoadedCondition condition() {
+        return new ModLoadedCondition(id);
     }
 
     public void onConstructMod() {}
@@ -43,11 +58,8 @@ public enum ModIntegration {
     @OnlyIn(Dist.CLIENT)
     public void onClientSetup() {}
 
-    public ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(id, path);
-    }
-
     public static class Constants {
-        public static final String GARNISHED = "garnished";
+        public static final String CREATE_GARNISHED = "garnished";
+        public static final String CREATE_D2D = "create_d2d";
     }
 }

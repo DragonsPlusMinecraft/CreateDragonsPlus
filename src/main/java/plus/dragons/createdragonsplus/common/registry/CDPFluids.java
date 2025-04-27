@@ -63,7 +63,6 @@ import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketItem;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
@@ -81,21 +80,23 @@ public class CDPFluids {
     public static final FluidEntry<VirtualFluid> DRAGONS_BREATH = REGISTRATE.virtualFluid("dragons_breath")
             .lang("Dragon's Breath")
             .properties(properties -> properties
+                    .fallDistanceModifier(0f)
                     .lightLevel(15)
+                    .supportsBoating(true)
                     .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
                     .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL))
             .setData(ProviderType.RECIPE, (ctx, prov) -> {
-                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragons_breath_from_item"))
+                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragons_breath"))
                         .require(Items.DRAGON_BREATH)
                         .output(ctx.get(), 250)
                         .output(Items.GLASS_BOTTLE)
-                        .withCondition(CDPConfig.features().liquidDragonsBreath)
+                        .withCondition(CDPConfig.features().dragonsBreathFluid)
                         .build(prov);
-                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragons_breath_from_fluid"))
+                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragons_breath"))
                         .require(ctx.get(), 250)
                         .require(Items.GLASS_BOTTLE)
                         .output(Items.DRAGON_BREATH)
-                        .withCondition(CDPConfig.features().liquidDragonsBreath)
+                        .withCondition(CDPConfig.features().dragonsBreathFluid)
                         .build(prov);
             })
             .tag(COMMON_TAGS.dragonsBreath)
@@ -123,14 +124,14 @@ public class CDPFluids {
                         .fallDistanceModifier(0f)
                         .canExtinguish(true)
                         .supportsBoating(true)
-                        .sound(SoundActions.BUCKET_EMPTY, CDPSounds.BUCKET_EMPTY_DYE.get())
-                        .sound(SoundActions.BUCKET_FILL, CDPSounds.BUCKET_FILL_DYE.get())
+                        .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                        .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                         .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH))
                 .fluidProperties(properties -> properties.explosionResistance(100))
                 .block((fluid, prop) -> new DyeLiquidBlock(color, fluid, prop))
                 .build()
                 .source(BaseFlowingFluid.Source::new)
-                .bucket(DyeBucketItem::new)
+                .bucket()
                 .tag(CDPItems.COMMON_TAGS.dyeBucketsByColor.get(color))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
                 .color(() -> SimpleItemColors.singleLayer(tintColor))

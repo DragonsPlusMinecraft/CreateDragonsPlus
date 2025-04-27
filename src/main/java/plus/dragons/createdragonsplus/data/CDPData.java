@@ -28,7 +28,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.registry.CDPSounds;
+import plus.dragons.createdragonsplus.data.internal.CDPRecipeProvider;
 import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataMaps;
 
 @Mod(CDPCommon.ID)
@@ -51,6 +51,7 @@ public class CDPData {
         var generator = event.getGenerator();
         var output = generator.getPackOutput();
         var existingFileHelper = event.getExistingFileHelper();
-        generator.addProvider(client, new CDPSounds.DefinitionsProvider(output, existingFileHelper));
+        var registries = event.getLookupProvider();
+        generator.addProvider(server, new CDPRecipeProvider(output, registries));
     }
 }

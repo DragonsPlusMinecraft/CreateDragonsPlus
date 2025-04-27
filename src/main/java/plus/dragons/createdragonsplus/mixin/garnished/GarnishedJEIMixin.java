@@ -26,18 +26,24 @@ import java.util.stream.Collectors;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.dakotapride.garnished.registry.JEI.DyeBlowingFanCategory;
+import net.dakotapride.garnished.registry.JEI.FreezingFanCategory;
 import net.dakotapride.garnished.registry.JEI.GarnishedJEI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration.Constants;
 
-@Restriction(require = @Condition(Constants.GARNISHED))
+@Restriction(require = @Condition(Constants.CREATE_GARNISHED))
 @Mixin(GarnishedJEI.class)
 public class GarnishedJEIMixin {
     @ModifyReceiver(method = "registerCategories", at = @At(value = "INVOKE", target = "Ljava/util/List;toArray(Ljava/util/function/IntFunction;)[Ljava/lang/Object;"))
     private List<CreateRecipeCategory<?>> disableCategories(List<CreateRecipeCategory<?>> categories, IntFunction<CreateRecipeCategory<?>[]> intFunction) {
         return categories.stream()
+                .filter(category -> {
+                    if (category instanceof FreezingFanCategory)
+                        return !CDPConfig.recipes().enableBulkFreezing.get();
+                    return true;
+                })
                 .filter(category -> {
                     if (category instanceof DyeBlowingFanCategory<?>)
                         return !CDPConfig.recipes().enableBulkColoring.get();

@@ -6,6 +6,16 @@
     }
   ],
   "criteria": {
+    "has_item_drain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:item_drain"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "create_dragons_plus:fluid_hatch"
@@ -15,7 +25,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_item_drain"
     ]
   ],
   "rewards": {

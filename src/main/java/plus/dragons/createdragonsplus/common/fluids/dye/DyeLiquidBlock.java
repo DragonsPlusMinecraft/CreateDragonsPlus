@@ -27,13 +27,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
-import plus.dragons.createdragonsplus.common.features.ConfigFeatureElement;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
-import plus.dragons.createdragonsplus.config.CDPConfig;
-import plus.dragons.createdragonsplus.config.FeaturesConfig.ConfigFeature;
-import plus.dragons.createdragonsplus.mixin.accessor.FanProcessingAccessor;
+import plus.dragons.createdragonsplus.mixin.create.FanProcessingAccessor;
 
-public class DyeLiquidBlock extends LiquidBlock implements ConfigFeatureElement {
+public class DyeLiquidBlock extends LiquidBlock {
     private final DyeColor color;
 
     public DyeLiquidBlock(DyeColor color, FlowingFluid fluid, Properties properties) {
@@ -49,10 +46,5 @@ public class DyeLiquidBlock extends LiquidBlock implements ConfigFeatureElement 
         } else if (entity instanceof LivingEntity livingEntity) {
             type.applyColoring(livingEntity, level);
         }
-    }
-
-    @Override
-    public ConfigFeature getFeatureConfig() {
-        return CDPConfig.features().dyeFluids;
     }
 }

@@ -1,0 +1,13 @@
+{
+  "type": "create_dragons_plus:freezing",
+  "ingredients": [
+    {
+      "item": "minecraft:magma_cream"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:slime_ball"
+    }
+  ]
+}

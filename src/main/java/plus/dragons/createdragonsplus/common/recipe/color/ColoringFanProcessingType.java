@@ -50,7 +50,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
@@ -67,13 +66,12 @@ import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeColor color;
     private final Vector3f rgb;
-    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> garnishedRecipe;
+    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe;
 
     public ColoringFanProcessingType(DyeColor color) {
         this.color = color;
         this.rgb = new Color(this.color.getTextureDiffuseColor()).asVectorF();
-        this.garnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE,
-                ModIntegration.GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
+        this.createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
     }
 
     @Override
@@ -92,39 +90,23 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
-        var recipeManager = level.getRecipeManager();
-        Optional<? extends RecipeHolder<?>> recipe;
-        recipe = recipeManager.getRecipeFor(
-                CDPRecipes.COLORING.getType(),
-                new ColoringRecipeInput(this.color, stack),
-                level);
-        if (recipe.isEmpty() && garnishedRecipe.isBound())
-            recipe = recipeManager.getRecipeFor(
-                    garnishedRecipe.get(),
-                    new SingleRecipeInput(stack),
-                    level);
+        var recipe = level.getRecipeManager()
+                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level);
         if (recipe.isPresent())
             return true;
-        return this.processCrafting(stack, level).isPresent();
+        if (canProcessByCreateGarnished(stack, level))
+            return true;
+        return this.processByCrafting(stack, level).isPresent();
     }
 
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
-        var recipeManager = level.getRecipeManager();
-        Optional<? extends RecipeHolder<?>> recipe;
-        recipe = recipeManager.getRecipeFor(
-                CDPRecipes.COLORING.getType(),
-                new ColoringRecipeInput(this.color, stack),
-                level);
-        if (recipe.isEmpty() && garnishedRecipe.isBound())
-            recipe = recipeManager.getRecipeFor(
-                    garnishedRecipe.get(),
-                    new SingleRecipeInput(stack),
-                    level);
-        if (recipe.isPresent())
-            return RecipeApplier.applyRecipeOn(level, stack, recipe.get());
-        return this.processCrafting(stack, level)
-                .map(result -> ItemHelper.multipliedOutput(stack, result))
+        return level.getRecipeManager()
+                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level)
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe))
+                .or(() -> processByCreateGarnished(stack, level))
+                .or(() -> processByCrafting(stack, level)
+                        .map(result -> ItemHelper.multipliedOutput(stack, result)))
                 .orElse(null);
     }
 
@@ -158,8 +140,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
             return;
         if (entity instanceof LivingEntity livingEntity)
             this.applyColoring(livingEntity, level);
-        if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM
-                || entity.getType() == EntityType.BLAZE) {
+        if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM || entity.getType() == EntityType.BLAZE) {
             entity.hurt(entity.damageSources().drown(), 2);
         }
         if (entity.isOnFire()) {
@@ -169,7 +150,23 @@ public class ColoringFanProcessingType implements FanProcessingType {
         }
     }
 
-    private Optional<ItemStack> processCrafting(ItemStack stack, Level level) {
+    private boolean canProcessByCreateGarnished(ItemStack stack, Level level) {
+        if (!createGarnishedRecipe.isBound())
+            return false;
+        return level.getRecipeManager()
+                .getRecipeFor(createGarnishedRecipe.get(), new SingleRecipeInput(stack), level)
+                .isPresent();
+    }
+
+    private Optional<List<ItemStack>> processByCreateGarnished(ItemStack stack, Level level) {
+        if (!createGarnishedRecipe.isBound())
+            return Optional.empty();
+        return level.getRecipeManager()
+                .getRecipeFor(createGarnishedRecipe.get(), new SingleRecipeInput(stack), level)
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe));
+    }
+
+    private Optional<ItemStack> processByCrafting(ItemStack stack, Level level) {
         // 1 Dye + 1 Colorless = 1 Dyed
         var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
         var optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
@@ -251,6 +248,6 @@ public class ColoringFanProcessingType implements FanProcessingType {
             ItemStack result = coloringRecipe.get().value().assemble(coloringInput, level.registryAccess());
             return Optional.of(result);
         }
-        return this.processCrafting(stack, level);
+        return this.processByCrafting(stack, level);
     }
 }

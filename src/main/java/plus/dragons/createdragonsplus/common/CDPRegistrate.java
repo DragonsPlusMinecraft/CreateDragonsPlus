@@ -94,7 +94,7 @@ import plus.dragons.createdragonsplus.data.lang.ForeignLanguageProvider;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.TagRegistry;
-import plus.dragons.createdragonsplus.mixin.accessor.ExistingFileHelperAccessor;
+import plus.dragons.createdragonsplus.mixin.neoforge.ExistingFileHelperAccessor;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
 @CodeReference(value = CreateRegistrate.class, source = "create", license = "mit")

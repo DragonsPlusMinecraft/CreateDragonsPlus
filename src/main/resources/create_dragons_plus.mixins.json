@@ -1,24 +1,25 @@
 {
   "required": true,
   "package": "plus.dragons.createdragonsplus.mixin",
-  "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfig",
+  "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin",
   "compatibilityLevel": "JAVA_21",
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
-    "BlockEntityBehaviourMixin",
-    "IngredientValueMixin",
-    "OpenEndFluidHandlerMixin",
-    "ProcessingRecipeMixin",
-    "SequencedRecipeMixin",
-    "accessor.ExistingFileHelperAccessor",
-    "accessor.FanProcessingAccessor",
-    "accessor.ProcessingRecipeAccessor",
-    "accessor.SequencedAssemblyRecipeBuilderAccessor",
-    "garnished.GarnishedDyeBlowingFanProcessingMixin",
+    "create.BlockEntityBehaviourMixin",
+    "minecraft.IngredientValueMixin",
+    "create.OpenEndFluidHandlerMixin",
+    "create.ProcessingRecipeMixin",
+    "create.SequencedRecipeMixin",
+    "neoforge.ExistingFileHelperAccessor",
+    "create.FanProcessingAccessor",
+    "create.ProcessingRecipeAccessor",
+    "create.SequencedAssemblyRecipeBuilderAccessor",
+    "garnished.DyeBlowingFanProcessingMixin",
+    "garnished.FreezingFanProcessingTypeMixin",
     "garnished.GarnishedJEIMixin"
   ],
   "client": [
-    "PonderIndexMixin"
+    "ponder.PonderIndexMixin"
   ],
   "injectors": {
     "defaultRequire": 1

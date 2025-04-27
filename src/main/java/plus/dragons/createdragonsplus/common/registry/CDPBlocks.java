@@ -20,35 +20,53 @@ package plus.dragons.createdragonsplus.common.registry;
 
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
-import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shapeless;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.Tags;
-import plus.dragons.createdragonsplus.common.features.ConfigFeatureBlockItem;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.hatch.FluidHatchBlock;
-import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPBlocks {
+    public static final ModTags MOD_TAGS = new ModTags();
+
     public static final BlockEntry<FluidHatchBlock> FLUID_HATCH = REGISTRATE
             .block("fluid_hatch", FluidHatchBlock::new)
             .initialProperties(SharedProperties::copperMetal)
             .properties(p -> p.mapColor(MapColor.COLOR_GRAY))
             .transform(pickaxeOnly())
             .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), AssetLookup.standardModel(ctx, prov)))
-            .item(ConfigFeatureBlockItem::new)
-            .recipe((ctx, prov) -> shapeless()
-                    .output(ctx.get())
-                    .require(Tags.Items.INGOTS_COPPER)
-                    .require(AllBlocks.ITEM_DRAIN)
-                    .withCondition(CDPConfig.features().fluidHatch)
-                    .accept(prov))
-            .build()
+            .simpleItem()
             .register();
 
-    public static void register(IEventBus modBus) {}
+    public static void register(IEventBus modBus) {
+        REGISTRATE.registerBlockTags(MOD_TAGS);
+    }
+
+    public static class ModTags extends IntrinsicTagRegistry<Block, IntrinsicImpl<Block>> {
+        public final TagKey<Block> passiveBlockFreezers = tag("passive_block_freezers", "Passive Block Freezers");
+
+        public ModTags() {
+            super(CDPCommon.ID, Registries.BLOCK);
+        }
+
+        @Override
+        public void generate(IntrinsicImpl<Block> provider) {
+            provider.addTag(passiveBlockFreezers).add(
+                    Blocks.SNOW_BLOCK,
+                    Blocks.POWDER_SNOW,
+                    Blocks.FROSTED_ICE,
+                    Blocks.ICE,
+                    Blocks.PACKED_ICE,
+                    Blocks.BLUE_ICE);
+        }
+    }
 }

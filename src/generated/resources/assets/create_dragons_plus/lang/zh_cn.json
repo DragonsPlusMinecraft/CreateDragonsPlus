@@ -1,4 +1,5 @@
 {
+  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "黑色染料",
   "block.create_dragons_plus.blue_dye": "蓝色染料",
   "block.create_dragons_plus.brown_dye": "棕色染料",
@@ -62,8 +63,12 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "烈焰人工作方块",
   "item.create_dragons_plus.white_dye_bucket": "白色染料桶",
   "item.create_dragons_plus.yellow_dye_bucket": "黄色染料桶",
+  "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "recipe.create_dragons_plus.fan_coloring": "批量染色",
   "recipe.create_dragons_plus.fan_coloring.fan": "在液态染料后放置鼓风机",
+  "recipe.create_dragons_plus.fan_freezing": "批量冷冻",
+  "recipe.create_dragons_plus.fan_freezing.fan": "在细雪后放置鼓风机",
+  "tag.block.create_dragons_plus.passive_block_freezers": "被动方块冷源",
   "tag.fluid.c.dragons_breath": "龙息",
   "tag.fluid.c.dyes": "染料",
   "tag.fluid.c.dyes.black": "黑色染料",

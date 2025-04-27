@@ -19,14 +19,12 @@
 package plus.dragons.createdragonsplus.common.registry;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
-import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shaped;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import java.util.EnumMap;
@@ -37,24 +35,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.CreativeModeTab.TabVisibility;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SmithingTemplateItem;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.features.ConfigFeatureSmithingTemplateItem;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeBucketFluidHandler;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
-import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 
 public class CDPItems {
@@ -80,62 +68,20 @@ public class CDPItems {
                     .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
                     .texture("2", prov.modLoc("item/package/rare_marble_gate")))
             .register();
-    public static final ItemEntry<ConfigFeatureSmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
-            .item("blaze_upgrade_smithing_template", prop -> new ConfigFeatureSmithingTemplateItem(
+    public static final ItemEntry<SmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
+            .item("blaze_upgrade_smithing_template", prop -> new SmithingTemplateItem(
                     Tooltips.BLAZE_UPGRADE_APPLIES_TO,
                     Tooltips.BLAZE_UPGRADE_INGREDIENTS,
                     Tooltips.BLAZE_UPGRADE,
                     Tooltips.BLAZE_UPGRADE_BASE_SLOT,
                     Tooltips.BLAZE_UPGRADE_ADDITIONS_SLOT,
                     CDPGuiTextures.BLAZE_UPGRADE_BASE_SLOT_ICONS,
-                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS,
-                    CDPConfig.features().blazeUpgradeSmithingTemplate))
+                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS))
             .lang("Smithing Template")
-            .recipe((ctx, prov) -> shaped()
-                    .output(ctx.get(), 2)
-                    .define('t', ctx.get())
-                    .define('n', Items.NETHERRACK)
-                    .define('b', Items.BLAZE_ROD)
-                    .pattern("btb")
-                    .pattern("bnb")
-                    .pattern("bbb")
-                    .unlockedBy("has_template", RegistrateRecipeProvider.has(ctx.get()))
-                    .withCondition(CDPConfig.features().blazeUpgradeSmithingTemplate)
-                    .accept(prov))
             .register();
 
     public static void register(IEventBus modBus) {
         REGISTRATE.registerItemTags(COMMON_TAGS);
-        modBus.register(CDPItems.class);
-    }
-
-    @SubscribeEvent
-    public static void buildCreativeModeTab(final BuildCreativeModeTabContentsEvent event) {
-        var tab = event.getTabKey();
-        if (tab == CreativeModeTabs.COLORED_BLOCKS) {
-            if (CDPConfig.features().dyeFluids.get()) {
-                for (var color : DyeColors.CREATIVE_MODE_TAB) {
-                    CDPFluids.DYES_BY_COLOR.get(color).getBucket().ifPresent(event::accept);
-                }
-            }
-        } else if (tab == CreativeModeTabs.INGREDIENTS) {
-            if (CDPConfig.features().blazeUpgradeSmithingTemplate.get()) {
-                event.insertAfter(
-                        new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
-                        BLAZE_UPGRADE_SMITHING_TEMPLATE.asStack(),
-                        TabVisibility.PARENT_AND_SEARCH_TABS);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        for (var entry : CDPFluids.DYES_BY_COLOR.values()) {
-            var bucket = entry.getBucket();
-            if (bucket.isEmpty())
-                continue;
-            event.registerItem(FluidHandler.ITEM, (stack, ctx) -> new DyeBucketFluidHandler(stack), bucket.get());
-        }
     }
 
     public static class Tooltips {

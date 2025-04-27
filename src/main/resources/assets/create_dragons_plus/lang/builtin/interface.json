@@ -1,4 +1,7 @@
 {
+  "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "recipe.create_dragons_plus.fan_coloring": "Bulk Coloring",
-  "recipe.create_dragons_plus.fan_coloring.fan": "Fan behind Liquid Dye"
+  "recipe.create_dragons_plus.fan_coloring.fan": "Fan behind Liquid Dye",
+  "recipe.create_dragons_plus.fan_freezing": "Bulk Freezing",
+  "recipe.create_dragons_plus.fan_freezing.fan": "Fan behind Powder Snow"
 }

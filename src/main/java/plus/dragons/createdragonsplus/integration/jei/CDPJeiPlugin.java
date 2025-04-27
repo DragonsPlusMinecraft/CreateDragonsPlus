@@ -38,6 +38,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.jei.category.FanColoringCategory;
+import plus.dragons.createdragonsplus.integration.jei.category.FanFreezingCategory;
 import plus.dragons.createdragonsplus.util.ErrorMessages;
 
 @JeiPlugin
@@ -53,9 +54,10 @@ public class CDPJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         this.categories.clear();
-        if (CDPConfig.recipes().enableBulkColoring.get()) {
+        if (CDPConfig.recipes().enableBulkColoring.get())
             this.categories.add(FanColoringCategory.create());
-        }
+        if (CDPConfig.recipes().enableBulkFreezing.get())
+            this.categories.add(FanFreezingCategory.create());
         registration.addRecipeCategories(categories.toArray(IRecipeCategory[]::new));
     }
 
