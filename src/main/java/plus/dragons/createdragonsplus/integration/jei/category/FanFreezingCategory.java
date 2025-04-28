@@ -64,7 +64,7 @@ public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe
 
     @Override
     protected void renderAttachedBlock(GuiGraphics graphics) {
-        GuiGameElement.of(Blocks.POWDER_SNOW)
+        GuiGameElement.of(Blocks.POWDER_SNOW.defaultBlockState())
                 .scale(SCALE)
                 .atLocal(0, 0, 2)
                 .lighting(AnimatedKinetics.DEFAULT_LIGHTING)
