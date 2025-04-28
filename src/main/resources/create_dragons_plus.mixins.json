@@ -6,17 +6,18 @@
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
     "create.BlockEntityBehaviourMixin",
-    "minecraft.IngredientValueMixin",
-    "create.OpenEndFluidHandlerMixin",
-    "create.ProcessingRecipeMixin",
-    "create.SequencedRecipeMixin",
-    "neoforge.ExistingFileHelperAccessor",
+    "create.ContraptionMixin",
     "create.FanProcessingAccessor",
+    "create.OpenEndFluidHandlerMixin",
     "create.ProcessingRecipeAccessor",
+    "create.ProcessingRecipeMixin",
     "create.SequencedAssemblyRecipeBuilderAccessor",
+    "create.SequencedRecipeMixin",
     "garnished.DyeBlowingFanProcessingMixin",
     "garnished.FreezingFanProcessingTypeMixin",
-    "garnished.GarnishedJEIMixin"
+    "garnished.GarnishedJEIMixin",
+    "minecraft.IngredientValueMixin",
+    "neoforge.ExistingFileHelperAccessor"
   ],
   "client": [
     "ponder.PonderIndexMixin"
