@@ -1,7 +1,8 @@
 ### Create: Dragons Plus 1.4.1
 
-#### Gameplay Update
+#### Update
 - Add Ponder for Bulk Freezing
+- Update Russian Translation by @Korben
 
 #### Fix
 - Fix Bulk Freezing JEI Plugin doesn't render correctly
