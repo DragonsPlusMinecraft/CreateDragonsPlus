@@ -1,5 +1,4 @@
 {
-  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "黑色染料",
   "block.create_dragons_plus.blue_dye": "蓝色染料",
   "block.create_dragons_plus.brown_dye": "棕色染料",
@@ -25,6 +24,8 @@
   "create_dragons_plus.ponder.bulk_coloring.text_2": "与批量熔炼和批量烟熏相同，批量染色自动兼容符合条件的需要染料的合成配方",
   "create_dragons_plus.ponder.bulk_coloring.text_3": "染色气流也能影响实体，改变其颜色",
   "create_dragons_plus.ponder.bulk_coloring.text_4": "装备在身上的盔甲也会被染色",
+  "create_dragons_plus.ponder.bulk_freezing.header": "批量冷冻",
+  "create_dragons_plus.ponder.bulk_freezing.text_1": "当气流吹过细雪后，便可用于冷冻物品",
   "fluid.create_dragons_plus.black_dye": "黑色染料",
   "fluid.create_dragons_plus.blue_dye": "蓝色染料",
   "fluid.create_dragons_plus.brown_dye": "棕色染料",
@@ -63,7 +64,7 @@
   "item.create_dragons_plus.smithing_template.blaze_upgrade.ingredients": "烈焰人工作方块",
   "item.create_dragons_plus.white_dye_bucket": "白色染料桶",
   "item.create_dragons_plus.yellow_dye_bucket": "黄色染料桶",
-  "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
+  "itemGroup.create_dragons_plus.base": "机械动力：龙+",
   "recipe.create_dragons_plus.fan_coloring": "批量染色",
   "recipe.create_dragons_plus.fan_coloring.fan": "在液态染料后放置鼓风机",
   "recipe.create_dragons_plus.fan_freezing": "批量冷冻",

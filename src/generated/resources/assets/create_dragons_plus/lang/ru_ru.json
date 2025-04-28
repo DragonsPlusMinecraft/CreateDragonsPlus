@@ -25,6 +25,8 @@
   "create_dragons_plus.ponder.bulk_coloring.text_2": "Как и массовая плавление и массовое копчение, массовая окраска автоматически совместима с определёнными рецептами создания, использующими красители",
   "create_dragons_plus.ponder.bulk_coloring.text_3": "Окрашивающий воздушный поток также может воздействовать на сущности, изменяя их цвет.",
   "create_dragons_plus.ponder.bulk_coloring.text_4": "Надетая броня также будет окрашена.",
+  "create_dragons_plus.ponder.bulk_freezing.header": "Bulk Freezing",
+  "create_dragons_plus.ponder.bulk_freezing.text_1": "Air Flows passing through Powder Snow creates a Freezing Setup",
   "fluid.create_dragons_plus.black_dye": "Чёрный краситель",
   "fluid.create_dragons_plus.blue_dye": "Синий краситель",
   "fluid.create_dragons_plus.brown_dye": "Коричневый краситель",
