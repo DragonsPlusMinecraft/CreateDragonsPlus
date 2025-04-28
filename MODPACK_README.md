@@ -8,7 +8,13 @@
 * `c:buckets` for Bucket Item, which includes `c:buckets/dye`
 
 ## Recipes
-`Bulk Coloring` Supports every 1:1 and 1:8 dyeing crafting recipe, and entity coloring.
+### Bulk Coloring
+`Bulk Coloring` of Fan processing supports custom coloring recipe. It has similar format as the recipe of Create, with type `create_dragons_plus:coloring`. Bulk Coloring recipe requires extra `color` field as dye fluid color.   
+`Bulk Coloring` also supports every 1:1 and 1:8 dyeing crafting recipe.
+### Bulk Freezing
+`Bulk Freezing` recipe is the recipe of Fan Freezing. It has similar format as the recipe of Create, with type `create_dragons_plus:freezing`.
+### Compat with Create: Garnished
+`Bulk Coloring` and `Bulk Freezing` supports all Fan processing recipes of Create: Garnished.
 
 ## Feature Flags
 If you want to use C:DP only and want to disable some feature, you can configure it in common config.  
