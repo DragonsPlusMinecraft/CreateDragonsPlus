@@ -18,6 +18,8 @@
 
 package plus.dragons.createdragonsplus.mixin.create;
 
+import static plus.dragons.createdragonsplus.common.fluids.WaterAndLavaLoggedBlock.FLUID;
+
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.contraptions.Contraption;
 import net.minecraft.core.BlockPos;
@@ -33,8 +35,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import plus.dragons.createdragonsplus.common.fluids.WaterAndLavaLoggedBlock;
-
-import static plus.dragons.createdragonsplus.common.fluids.WaterAndLavaLoggedBlock.FLUID;
 
 @Mixin(Contraption.class)
 public abstract class ContraptionMixin {

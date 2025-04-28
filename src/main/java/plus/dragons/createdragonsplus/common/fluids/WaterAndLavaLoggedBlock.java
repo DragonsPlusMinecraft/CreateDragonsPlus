@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.common.fluids;
 
+import java.util.Optional;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -36,8 +37,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public interface WaterAndLavaLoggedBlock extends BucketPickup, LiquidBlockContainer {
     EnumProperty<ContainedFluid> FLUID = EnumProperty.create("fluid", ContainedFluid.class);

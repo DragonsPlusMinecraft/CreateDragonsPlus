@@ -24,7 +24,6 @@ import com.simibubi.create.content.decoration.placard.PlacardBlock;
 import com.simibubi.create.content.decoration.placard.PlacardBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import java.util.List;
-
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
@@ -42,7 +41,6 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
@@ -182,10 +180,10 @@ public class CDPFanScenes {
         scene.world().showSection(util.select().fromTo(2, 2, 5, 2, 2, 7), Direction.DOWN);
         scene.idle(10);
 
-        scene.world().setKineticSpeed(util.select().fromTo(2, 2, 5, 2, 2, 6),-8);
-        scene.world().setKineticSpeed(util.select().position(3, 0,0),4);
+        scene.world().setKineticSpeed(util.select().fromTo(2, 2, 5, 2, 2, 6), -8);
+        scene.world().setKineticSpeed(util.select().position(3, 0, 0), 4);
         scene.idle(10);
-        scene.overlay().showControls(util.vector().centerOf(2,3,4), Pointing.DOWN,20).withItem(Items.POWDER_SNOW_BUCKET.getDefaultInstance()).rightClick();
+        scene.overlay().showControls(util.vector().centerOf(2, 3, 4), Pointing.DOWN, 20).withItem(Items.POWDER_SNOW_BUCKET.getDefaultInstance()).rightClick();
         scene.idle(30);
 
         var airCurrent = util.select().fromTo(2, 2, 1, 2, 2, 4);
@@ -198,8 +196,8 @@ public class CDPFanScenes {
                 .attachKeyFrame()
                 .text("Air Flows passing through Powder Snow creates a Freezing Setup");
 
-        var belt = util.select().fromTo(0, 1, 2, 5, 1, 2).add(util.select().fromTo(4,1,1,4,1,0));
-        scene.world().setKineticSpeed(belt,-4);
+        var belt = util.select().fromTo(0, 1, 2, 5, 1, 2).add(util.select().fromTo(4, 1, 1, 4, 1, 0));
+        scene.world().setKineticSpeed(belt, -4);
         scene.world().showSection(belt, Direction.DOWN);
         var transported = scene.world().createItemOnBelt(util.grid().at(1, 1, 2), Direction.DOWN, Items.BLAZE_ROD.getDefaultInstance());
         scene.idle(160);
