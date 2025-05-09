@@ -22,7 +22,6 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.api.event.PipeCollisionEvent;
-import com.simibubi.create.content.fluids.VirtualFluid;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
 import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
@@ -33,7 +32,6 @@ import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,16 +40,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -63,6 +60,10 @@ import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
+import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonBreathFluidType;
+import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragondBreathLiquidBlock;
+import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonsBreathOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
@@ -71,39 +72,74 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
+    public static final ModTags MOD_TAGS = new ModTags();
     public static final CommonTags COMMON_TAGS = new CommonTags();
     public static final EnumMap<DyeColor, FluidEntry<BaseFlowingFluid.Flowing>> DYES_BY_COLOR = Util.make(
             new EnumMap<>(DyeColor.class),
             map -> {
                 for (var color : DyeColors.ALL) map.put(color, dye(color));
             });
-    public static final FluidEntry<VirtualFluid> DRAGONS_BREATH = REGISTRATE.virtualFluid("dragons_breath")
+    public static final FluidEntry<BaseFlowingFluid.Flowing> DRAGON_BREATH = REGISTRATE
+            .fluid("dragon_breath",
+                    REGISTRATE.asResource("fluid/dragon_breath_still"),
+                    REGISTRATE.asResource("fluid/dragon_breath_flow"),
+                    DragonBreathFluidType.create())
             .lang("Dragon's Breath")
             .properties(properties -> properties
-                    .fallDistanceModifier(0f)
+                    .rarity(Rarity.UNCOMMON)
+                    .density(3000)
+                    .viscosity(6000)
                     .lightLevel(15)
-                    .supportsBoating(true)
-                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL))
+                    .motionScale(0.07)
+                    .canSwim(false)
+                    .canDrown(false)
+                    .pathType(PathType.DAMAGE_OTHER)
+                    .adjacentPathType(null)
+                    .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.DRAGON_FIREBALL_EXPLODE)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_LAVA))
+            .fluidProperties(properties -> properties
+                    .explosionResistance(100F)
+                    .levelDecreasePerBlock(2)
+                    .slopeFindDistance(2)
+                    .tickRate(30))
+            .source(BaseFlowingFluid.Source::new)
+            .onRegister(flowing -> {
+                BuiltInRegistries.FLUID.addAlias(
+                        REGISTRATE.asResource("dragons_breath"),
+                        REGISTRATE.asResource("dragon_breath"));
+                BuiltInRegistries.FLUID.addAlias(
+                        REGISTRATE.asResource("flowing_dragons_breath"),
+                        REGISTRATE.asResource("flowing_dragon_breath"));
+            })
+            .tag(COMMON_TAGS.dragonBreath, MOD_TAGS.fanEndingCatalysts)
+            .block(DragondBreathLiquidBlock::new)
+            .lang("Dragon's Breath")
+            .build()
+            .bucket()
+            .properties(properties -> properties.rarity(Rarity.UNCOMMON))
+            .lang("Dragon's Breath Bucket")
+            .tag(CDPItems.COMMON_TAGS.dragonBreathBuckets)
+            .build()
             .setData(ProviderType.RECIPE, (ctx, prov) -> {
-                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragons_breath"))
+                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragon_breath"))
                         .require(Items.DRAGON_BREATH)
                         .output(ctx.get(), 250)
                         .output(Items.GLASS_BOTTLE)
-                        .withCondition(CDPConfig.features().dragonsBreathFluid)
+                        .withCondition(CDPConfig.features().dragonBreathFluid)
                         .build(prov);
-                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragons_breath"))
+                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragon_breath"))
                         .require(ctx.get(), 250)
                         .require(Items.GLASS_BOTTLE)
                         .output(Items.DRAGON_BREATH)
-                        .withCondition(CDPConfig.features().dragonsBreathFluid)
+                        .withCondition(CDPConfig.features().dragonBreathFluid)
                         .build(prov);
             })
-            .tag(COMMON_TAGS.dragonsBreath)
             .register();
 
     public static void register(IEventBus modBus) {
         modBus.register(CDPFluids.class);
+        REGISTRATE.registerFluidTags(MOD_TAGS);
         REGISTRATE.registerFluidTags(COMMON_TAGS);
     }
 
@@ -158,6 +194,14 @@ public class CDPFluids {
                 .register();
     }
 
+    public static class ModTags extends IntrinsicTagRegistry<Fluid, IntrinsicImpl<Fluid>> {
+        public final TagKey<Fluid> fanEndingCatalysts = tag("fan_processing_catalysts/ending", "Bulk Ending Catalysts");
+
+        public ModTags() {
+            super(CDPCommon.ID, Registries.FLUID);
+        }
+    }
+
     public static class CommonTags extends IntrinsicTagRegistry<Fluid, IntrinsicImpl<Fluid>> {
         public final TagKey<Fluid> dyes = tag("dyes", "Dyes");
         public final EnumMap<DyeColor, TagKey<Fluid>> dyesByColor = Util.make(new EnumMap<>(DyeColor.class), map -> {
@@ -167,7 +211,7 @@ public class CDPFluids {
                 addTag(this.dyes, tag);
             }
         });
-        public final TagKey<Fluid> dragonsBreath = tag("dragons_breath", "Dragon's Breath");
+        public final TagKey<Fluid> dragonBreath = tag("dragon_breath", "Dragon's Breath");
 
         protected CommonTags() {
             super("c", Registries.FLUID);
@@ -217,23 +261,23 @@ public class CDPFluids {
                 if (block == Blocks.AIR)
                     return;
                 LAVA_INTERACTIONS.put(type, block.defaultBlockState());
-                FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(type,
+                FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
+                        type,
                         fluidState -> fluidState.isSource()
                                 ? Blocks.OBSIDIAN.defaultBlockState()
                                 : block.defaultBlockState()));
             });
+            LAVA_INTERACTIONS.put(DRAGON_BREATH.getType(), Blocks.END_STONE.defaultBlockState());
+            FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
+                    DRAGON_BREATH.getType(),
+                    fluidState -> fluidState.isSource()
+                            ? Blocks.OBSIDIAN.defaultBlockState()
+                            : Blocks.END_STONE.defaultBlockState()));
         }
 
         static void registerOpenPipeEffects() {
             DYES_BY_COLOR.forEach((color, entry) -> OpenPipeEffectHandler.REGISTRY.register(entry.getSource(), new DyeFluidOpenPipeEffect(color)));
-            OpenPipeEffectHandler.REGISTRY.register(DRAGONS_BREATH.getSource(), (level, area, fluid) -> {
-                if (level.getGameTime() % 10 != 0)
-                    return;
-                List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
-                for (LivingEntity entity : entities) {
-                    entity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
-                }
-            });
+            OpenPipeEffectHandler.REGISTRY.register(DRAGON_BREATH.getSource(), new DragonsBreathOpenPipeEffect());
         }
     }
 }

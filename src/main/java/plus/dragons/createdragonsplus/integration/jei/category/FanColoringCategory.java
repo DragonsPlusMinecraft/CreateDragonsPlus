@@ -18,11 +18,9 @@
 
 package plus.dragons.createdragonsplus.integration.jei.category;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
@@ -30,13 +28,11 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.tterrag.registrate.util.entry.FluidEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
@@ -55,17 +51,19 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
-import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
+import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.CDPLang;
+import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<ColoringRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.COLORING.getId(), ColoringRecipe.class);
 
-    protected FanColoringCategory(Info<ColoringRecipe> info) {
+    private FanColoringCategory(Info<ColoringRecipe> info) {
         super(info);
     }
 
@@ -75,7 +73,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var background = new EmptyBackground(178, 72);
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component());
+        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, List.of(() -> catalyst));
         return new FanColoringCategory(info);
     }
@@ -201,46 +199,20 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         return Optional.of(new RecipeHolder<>(id, recipe));
     }
 
-    protected static class Icon implements IDrawable {
-        private final ItemStack propeller = AllItems.PROPELLER.asStack();
-        private final ItemStack[] buckets = Arrays.stream(DyeColors.CREATIVE_MODE_TAB)
-                .map(CDPFluids.DYES_BY_COLOR::get)
-                .map(FluidEntry::getBucket)
-                .flatMap(Optional::stream)
-                .map(ItemStack::new)
-                .toArray(ItemStack[]::new);
+    @FieldsNullabilityUnknownByDefault
+    protected static class Icon extends FanProcessingIcon {
+        private ItemStack[] catalystStacks;
 
         @Override
-        public int getWidth() {
-            return 18;
-        }
-
-        @Override
-        public int getHeight() {
-            return 18;
-        }
-
-        @Override
-        public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
-            PoseStack poseStack = graphics.pose();
-
-            RenderSystem.enableDepthTest();
-            poseStack.pushPose();
-            poseStack.translate(xOffset, yOffset, 0);
-
-            poseStack.pushPose();
-            poseStack.translate(1, 1, 0);
-            GuiGameElement.of(this.propeller).render(graphics);
-            poseStack.popPose();
-
-            poseStack.pushPose();
-            poseStack.translate(10, 10, 100);
-            poseStack.scale(.5f, .5f, .5f);
-            int index = (AnimationTickHolder.getTicks() / 20) % this.buckets.length;
-            GuiGameElement.of(this.buckets[index]).render(graphics);
-            poseStack.popPose();
-
-            poseStack.popPose();
+        protected ItemStack getCatalyst() {
+            if (catalystStacks == null) {
+                catalystStacks = Arrays.stream(DyeColors.ALL)
+                        .map(CDPFluids.DYES_BY_COLOR::get)
+                        .flatMap(entry -> entry.getBucket().stream())
+                        .map(ItemStack::new)
+                        .toArray(ItemStack[]::new);
+            }
+            return catalystStacks[(AnimationTickHolder.getTicks() / 20) % catalystStacks.length];
         }
     }
 }

@@ -26,6 +26,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import plus.dragons.createdragonsplus.client.model.CDPPartialModels;
 import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 @Mod(CDPCommon.ID)
 public class CDPClient {
@@ -37,5 +38,9 @@ public class CDPClient {
     public void setup(final FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new CDPPonderPlugin());
         CDPPartialModels.register();
+        for (ModIntegration integration : ModIntegration.values()) {
+            if (integration.enabled())
+                event.enqueueWork(integration::onClientSetup);
+        }
     }
 }

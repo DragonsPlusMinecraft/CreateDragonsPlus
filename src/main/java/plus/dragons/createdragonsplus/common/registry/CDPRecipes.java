@@ -26,12 +26,14 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipeParams;
+import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeParams;
 import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeSerializer;
 import plus.dragons.createdragonsplus.common.recipe.RecipeTypeInfo;
-import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipe;
-import plus.dragons.createdragonsplus.common.recipe.color.ColoringRecipeParams;
-import plus.dragons.createdragonsplus.common.recipe.freeze.FreezingRecipe;
 
 public class CDPRecipes {
     private static final DeferredRegister<RecipeType<?>> TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, CDPCommon.ID);
@@ -43,6 +45,14 @@ public class CDPRecipes {
             ColoringRecipeParams.STREAM_CODEC));
     public static final RecipeTypeInfo<FreezingRecipe> FREEZING = register("freezing", () -> new CustomProcessingRecipeSerializer<>(
             FreezingRecipe::new,
+            CustomProcessingRecipeParams.CODEC,
+            CustomProcessingRecipeParams.STREAM_CODEC));
+    public static final RecipeTypeInfo<SandingRecipe> SANDING = register("sanding", () -> new CustomProcessingRecipeSerializer<>(
+            SandingRecipe::new,
+            CustomProcessingRecipeParams.CODEC,
+            CustomProcessingRecipeParams.STREAM_CODEC));
+    public static final RecipeTypeInfo<EndingRecipe> ENDING = register("ending", () -> new CustomProcessingRecipeSerializer<>(
+            EndingRecipe::new,
             CustomProcessingRecipeParams.CODEC,
             CustomProcessingRecipeParams.STREAM_CODEC));
 

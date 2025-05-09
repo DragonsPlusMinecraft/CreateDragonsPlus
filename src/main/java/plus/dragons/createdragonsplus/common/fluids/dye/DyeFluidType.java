@@ -31,10 +31,10 @@ import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.fluids.SolidRenderFluidType;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
-public class DyeFluidType extends SolidRenderFluidType {
-    protected final DyeColor color;
+public final class DyeFluidType extends SolidRenderFluidType {
+    private final DyeColor color;
 
-    protected DyeFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier, DyeColor color) {
+    private DyeFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier, DyeColor color) {
         super(properties, stillTexture, flowingTexture, tintColor, fogColor, fogDistanceModifier);
         this.color = color;
     }
@@ -47,11 +47,11 @@ public class DyeFluidType extends SolidRenderFluidType {
                 flowingTexture,
                 tintColor,
                 fogColor,
-                DyeFluidType::getDyeFluidVisibility,
+                DyeFluidType::getVisibility,
                 color);
     }
 
-    private static float getDyeFluidVisibility() {
+    private static float getVisibility() {
         return CDPConfig.client().dyeVisionMultiplier.getF() / 256;
     }
 

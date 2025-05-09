@@ -24,6 +24,9 @@ public class CDPClientConfig extends ConfigBase {
     public final ConfigFloat dyeVisionMultiplier = f(1f, 1f, 256f,
             "dyeVisionMultiplier",
             Comments.dyeVisionMultiplier);
+    public final ConfigFloat dragonBreathVisionMultiplier = f(1f, 1f, 256f,
+            "dragonBreathVisionMultiplier",
+            Comments.dragonBreathVisionMultiplier);
 
     @Override
     public String getName() {
@@ -31,6 +34,7 @@ public class CDPClientConfig extends ConfigBase {
     }
 
     static class Comments {
-        static final String dyeVisionMultiplier = "The vision range through dye fluids will be multiplied by this factor";
+        static final String dyeVisionMultiplier = "The vision range through Dye Fluids will be multiplied by this factor";
+        static final String dragonBreathVisionMultiplier = "The vision range through Dragon's Breath Fluid will be multiplied by this factor";
     }
 }

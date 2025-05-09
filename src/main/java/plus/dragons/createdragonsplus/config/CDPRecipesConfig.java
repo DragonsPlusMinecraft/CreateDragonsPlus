@@ -27,6 +27,12 @@ public class CDPRecipesConfig extends ConfigBase {
     public final ConfigBool enableBulkFreezing = b(true,
             "enableBulkFreezing",
             Comments.enableBulkFreezing);
+    public final ConfigBool enableBulkSanding = b(true,
+            "enableBulkSanding",
+            Comments.enableBulkSanding);
+    public final ConfigBool enableBulkEnding = b(true,
+            "enableBulkEnding",
+            Comments.enableBulkEnding);
 
     @Override
     public String getName() {
@@ -36,5 +42,7 @@ public class CDPRecipesConfig extends ConfigBase {
     static class Comments {
         static final String enableBulkColoring = "If Bulk Coloring should be enabled";
         static final String enableBulkFreezing = "If Bulk Freezing should be enabled";
+        static final String enableBulkSanding = "If Bulk Sanding should be enabled";
+        static final String enableBulkEnding = "If Bulk Ending should be enabled";
     }
 }

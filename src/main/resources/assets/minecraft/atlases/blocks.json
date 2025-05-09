@@ -10,11 +10,11 @@
     },
     {
       "type": "single",
-      "resource": "create_dragons_plus:fluid/dragons_breath_still"
+      "resource": "create_dragons_plus:fluid/dragon_breath_still"
     },
     {
       "type": "single",
-      "resource": "create_dragons_plus:fluid/dragons_breath_flow"
+      "resource": "create_dragons_plus:fluid/dragon_breath_flow"
     }
   ]
 }

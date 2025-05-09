@@ -22,7 +22,7 @@ import com.simibubi.create.api.registry.SimpleRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import plus.dragons.createdragonsplus.common.recipe.freeze.BlockFreezer;
+import plus.dragons.createdragonsplus.common.processing.freeze.BlockFreezer;
 
 public class CDPBlockFreezers {
     public static void register() {

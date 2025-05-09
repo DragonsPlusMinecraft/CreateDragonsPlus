@@ -26,13 +26,21 @@ import static plus.dragons.createdragonsplus.common.registry.CDPItems.BLAZE_UPGR
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shaped;
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shapeless;
 
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
-import plus.dragons.createdragonsplus.common.recipe.freeze.FreezingRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class CDPRecipeProvider extends RegistrateRecipeProvider {
@@ -45,6 +53,7 @@ public class CDPRecipeProvider extends RegistrateRecipeProvider {
         buildMachineRecipes(output);
         buildMaterialRecipes(output);
         buildFreezingRecipes(output);
+        buildEndingRecipes(output);
     }
 
     private void buildMachineRecipes(RecipeOutput output) {
@@ -70,21 +79,35 @@ public class CDPRecipeProvider extends RegistrateRecipeProvider {
     }
 
     private void buildFreezingRecipes(RecipeOutput output) {
-        FreezingRecipe.builder(REGISTRATE.asResource("packed_ice_from_ice"))
-                .require(ICE)
-                .output(PACKED_ICE)
-                .build(output);
-        FreezingRecipe.builder(REGISTRATE.asResource("blue_ice_from_packed_ice"))
-                .require(PACKED_ICE)
-                .output(BLUE_ICE)
-                .build(output);
-        FreezingRecipe.builder(REGISTRATE.asResource("slime_ball_from_magma_cream"))
-                .require(MAGMA_CREAM)
-                .output(SLIME_BALL)
-                .build(output);
-        FreezingRecipe.builder(REGISTRATE.asResource("breeze_rod_from_blaze_rod"))
-                .require(BLAZE_ROD)
-                .output(BREEZE_ROD)
-                .build(output);
+        Function<ResourceLocation, FreezingRecipe.Builder> freezing = FreezingRecipe::builder;
+        conversion(freezing, ICE, PACKED_ICE).build(output);
+        conversion(freezing, PACKED_ICE, BLUE_ICE).build(output);
+        conversion(freezing, MAGMA_CREAM, SLIME_BALL).build(output);
+        conversion(freezing, BLAZE_ROD, BREEZE_ROD).build(output);
+    }
+
+    private void buildEndingRecipes(RecipeOutput output) {
+        Function<ResourceLocation, EndingRecipe.Builder> ending = EndingRecipe::builder;
+        conversion(ending, COBBLESTONE, END_STONE).build(output);
+        conversion(ending, STONE_BRICKS, END_STONE_BRICKS).build(output);
+        conversion(ending, STONE_BRICK_WALL, END_STONE_BRICK_WALL).build(output);
+        conversion(ending, STONE_BRICK_STAIRS, END_STONE_BRICK_STAIRS).build(output);
+        conversion(ending, STONE_BRICK_SLAB, END_STONE_BRICK_SLAB).build(output);
+        conversion(ending, APPLE, CHORUS_FRUIT).build(output);
+        conversion(ending, Tags.Items.LEATHERS, PHANTOM_MEMBRANE).build(output);
+    }
+
+    private <T extends ProcessingRecipe<?>> ProcessingRecipeBuilder<T> conversion(
+            Function<ResourceLocation, ? extends ProcessingRecipeBuilder<T>> factory,
+            ItemLike input, ItemLike output) {
+        var recipeId = REGISTRATE.asResource("%s_from_%s".formatted(safeName(output), safeName(input)));
+        return factory.apply(recipeId).require(input).output(output);
+    }
+
+    private <T extends ProcessingRecipe<?>> ProcessingRecipeBuilder<T> conversion(
+            Function<ResourceLocation, ? extends ProcessingRecipeBuilder<T>> factory,
+            TagKey<Item> input, ItemLike output) {
+        var recipeId = REGISTRATE.asResource("%s_from_%s".formatted(safeName(output), safeName(input.location())));
+        return factory.apply(recipeId).require(input).output(output);
     }
 }

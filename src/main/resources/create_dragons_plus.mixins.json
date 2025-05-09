@@ -5,21 +5,32 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "create_dragons_plus.refmap.json",
   "mixins": [
+    "create.AirCurrentMixin",
+    "create.AirCurrentMixin$AirCurrentSegmentMixin",
     "create.BlockEntityBehaviourMixin",
     "create.ContraptionMixin",
     "create.FanProcessingAccessor",
+    "create.FluidFillingBehaviourMixin",
+    "create.MechacialMixerBlockEntityMixin",
+    "create.OpenEndedPipeMixin",
     "create.OpenEndFluidHandlerMixin",
+    "create.PotionMixingRecipesMixin",
     "create.ProcessingRecipeAccessor",
     "create.ProcessingRecipeMixin",
     "create.SequencedAssemblyRecipeBuilderAccessor",
     "create.SequencedRecipeMixin",
+    "garnished.DyeBlowingFanCategoryMixin",
     "garnished.DyeBlowingFanProcessingMixin",
+    "garnished.FreezingFanCategoryMixin",
     "garnished.FreezingFanProcessingTypeMixin",
-    "garnished.GarnishedJEIMixin",
+    "minecraft.BottleItemMixin",
     "minecraft.IngredientValueMixin",
+    "minecraft.RecipeManagerAccessor",
+    "minecraft.ReloadableServerResourcesMixin",
     "neoforge.ExistingFileHelperAccessor"
   ],
   "client": [
+    "create.AirFlowParticleMixin",
     "ponder.PonderIndexMixin"
   ],
   "injectors": {

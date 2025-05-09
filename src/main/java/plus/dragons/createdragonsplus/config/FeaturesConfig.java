@@ -85,6 +85,11 @@ public class FeaturesConfig extends ConfigBase {
             return id;
         }
 
+        public ConfigFeature addAlias(String name) {
+            FEATURES.put(ResourceLocation.fromNamespaceAndPath(modid, name), this);
+            return this;
+        }
+
         @Override
         public Boolean get() {
             return override == null ? super.get() : override;

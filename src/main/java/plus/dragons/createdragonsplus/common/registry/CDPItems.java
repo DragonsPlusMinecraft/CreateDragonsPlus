@@ -112,10 +112,12 @@ public class CDPItems {
                 addTag(this.dyeBuckets, tag);
             }
         });
+        public final TagKey<Item> dragonBreathBuckets = tag("buckets/dragon_breath", "Dragon Breath Buckets");
 
         protected CommonTags() {
             super("c");
             addTag(Tags.Items.BUCKETS, dyeBuckets);
+            addTag(Tags.Items.BUCKETS, dragonBreathBuckets);
         }
     }
 }

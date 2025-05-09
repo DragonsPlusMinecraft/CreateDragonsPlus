@@ -96,12 +96,12 @@ dependencies {
         }
     }
 
-    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${flywheel_minecraft_version}:${flywheel_version}")
+    compileOnlyApi("dev.engine-room.flywheel:flywheel-neoforge-api-${flywheel_minecraft_version}:${flywheel_version}")
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_minecraft_version}:${flywheel_version}")
     runtimeOnly("dev.engine-room.vanillin:vanillin-neoforge-${flywheel_minecraft_version}:${vanillin_version}")
-    implementation("com.tterrag.registrate:Registrate:${registrate_version}")
-    implementation("net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}")
-    implementation("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive false }
+    api("com.tterrag.registrate:Registrate:${registrate_version}")
+    api("net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}")
+    api("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive false }
 
     compileOnly("mezz.jei:jei-${jei_minecraft_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${jei_minecraft_version}-neoforge-api:${jei_version}")
@@ -110,7 +110,7 @@ dependencies {
     compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
     localRuntime("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
 
-    localImplementation("maven.modrinth:create-garnished:${create_garnished_version}")
+    compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "create_dragons_plus:config_feature",
-      "feature": "create_dragons_plus:fluid_hatch"
+      "feature": "create_dragons_plus:block/fluid_hatch"
     }
   ],
   "criteria": {

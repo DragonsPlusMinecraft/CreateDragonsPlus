@@ -1,0 +1,13 @@
+{
+  "type": "create_dragons_plus:ending",
+  "ingredients": [
+    {
+      "item": "minecraft:stone_brick_slab"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:end_stone_brick_slab"
+    }
+  ]
+}

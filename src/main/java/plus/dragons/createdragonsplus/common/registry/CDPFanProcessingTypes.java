@@ -31,8 +31,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
-import plus.dragons.createdragonsplus.common.recipe.color.ColoringFanProcessingType;
-import plus.dragons.createdragonsplus.common.recipe.freeze.FreezingFanProcessingType;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
+import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingFanProcessingType;
+import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingFanProcessingType;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProcessingType;
 
 public class CDPFanProcessingTypes {
     private static final DeferredRegister<FanProcessingType> TYPES = DeferredRegister
@@ -49,6 +51,10 @@ public class CDPFanProcessingTypes {
     });
     public static final DeferredHolder<FanProcessingType, FreezingFanProcessingType> FREEZING = TYPES
             .register("freezing", FreezingFanProcessingType::new);
+    public static final DeferredHolder<FanProcessingType, SandingFanProcessingType> SANDING = TYPES
+            .register("sanding", SandingFanProcessingType::new);
+    public static final DeferredHolder<FanProcessingType, EndingFanProcessingType> ENDING = TYPES
+            .register("ending", EndingFanProcessingType::new);
 
     public static void register(IEventBus modBus) {
         TYPES.register(modBus);

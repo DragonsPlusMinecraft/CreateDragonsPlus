@@ -1,0 +1,13 @@
+{
+  "type": "create_dragons_plus:ending",
+  "ingredients": [
+    {
+      "tag": "c:leathers"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:phantom_membrane"
+    }
+  ]
+}

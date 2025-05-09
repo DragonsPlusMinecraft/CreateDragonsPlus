@@ -21,11 +21,13 @@ package plus.dragons.createdragonsplus.common.registry;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -53,6 +55,8 @@ public class CDPBlocks {
 
     public static class ModTags extends IntrinsicTagRegistry<Block, IntrinsicImpl<Block>> {
         public final TagKey<Block> passiveBlockFreezers = tag("passive_block_freezers", "Passive Block Freezers");
+        public final TagKey<Block> fanSandingCatalysts = tag("fan_processing_catalysts/sanding", "Bulk Sanding Catalysts");
+        public final TagKey<Block> fanEndingCatalysts = tag("fan_processing_catalysts/ending", "Bulk Ending Catalysts");
 
         public ModTags() {
             super(CDPCommon.ID, Registries.BLOCK);
@@ -67,6 +71,12 @@ public class CDPBlocks {
                     Blocks.ICE,
                     Blocks.PACKED_ICE,
                     Blocks.BLUE_ICE);
+            provider.addTag(fanSandingCatalysts)
+                    .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "quicksands"));
+            provider.addTag(fanEndingCatalysts);
+            provider.addTag(AllBlockTags.FAN_TRANSPARENT.tag)
+                    .add(Blocks.DRAGON_HEAD)
+                    .add(Blocks.DRAGON_WALL_HEAD);
         }
     }
 }

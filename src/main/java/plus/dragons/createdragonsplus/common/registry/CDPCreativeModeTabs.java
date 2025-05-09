@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 import static plus.dragons.createdragonsplus.common.registry.CDPBlocks.*;
 import static plus.dragons.createdragonsplus.common.registry.CDPItems.*;
 
@@ -32,7 +33,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.config.CDPConfig;
-import plus.dragons.createdragonsplus.util.CDPLang;
 
 public class CDPCreativeModeTabs {
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister
@@ -45,7 +45,7 @@ public class CDPCreativeModeTabs {
 
     private static CreativeModeTab base(ResourceLocation id) {
         return CreativeModeTab.builder()
-                .title(CDPLang.description("itemGroup", id).component())
+                .title(REGISTRATE.addLang("itemGroup", id, CDPCommon.NAME))
                 .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())
                 .icon(RARE_MARBLE_GATE_PACKAGE::asStack)
                 .displayItems(CDPCreativeModeTabs::buildBaseContents)
@@ -61,6 +61,8 @@ public class CDPCreativeModeTabs {
             for (var color : DyeColors.CREATIVE_MODE_TAB) {
                 CDPFluids.DYES_BY_COLOR.get(color).getBucket().ifPresent(output::accept);
             }
+        if (CDPConfig.features().dragonBreathFluid.get())
+            CDPFluids.DRAGON_BREATH.getBucket().ifPresent(output::accept);
         output.accept(RARE_BLAZE_PACKAGE, TabVisibility.SEARCH_TAB_ONLY);
         output.accept(RARE_MARBLE_GATE_PACKAGE, TabVisibility.SEARCH_TAB_ONLY);
     }

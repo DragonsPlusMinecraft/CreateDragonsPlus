@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.integration.jei.category;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
@@ -38,7 +39,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.recipe.freeze.FreezingRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
@@ -47,7 +48,7 @@ import plus.dragons.createdragonsplus.util.CDPLang;
 public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<FreezingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.FREEZING.getId(), FreezingRecipe.class);
 
-    protected FanFreezingCategory(Info<FreezingRecipe> info) {
+    private FanFreezingCategory(Info<FreezingRecipe> info) {
         super(info);
     }
 
@@ -55,9 +56,9 @@ public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe
         var id = CDPCommon.asResource("fan_freezing");
         var title = CDPLang.description("recipe", id).component();
         var background = new EmptyBackground(178, 72);
-        var icon = new DoubleItemIcon(AllBlocks.ENCASED_FAN::asStack, Items.POWDER_SNOW_BUCKET::getDefaultInstance);
+        var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, Items.POWDER_SNOW_BUCKET::getDefaultInstance);
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component());
+        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, List.of(() -> catalyst));
         return new FanFreezingCategory(info);
     }

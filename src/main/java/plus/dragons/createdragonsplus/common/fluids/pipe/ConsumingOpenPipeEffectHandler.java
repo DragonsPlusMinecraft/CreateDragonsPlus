@@ -26,7 +26,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
-    int consume(Level level, AABB aoe, FluidStack contained);
+    int consume(Level level, AABB area, FluidStack fluid);
 
     @Internal
     static FluidStack getRemainder(ConsumingOpenPipeEffectHandler handler, OpenEndedPipe pipe, FluidStack fluid) {
