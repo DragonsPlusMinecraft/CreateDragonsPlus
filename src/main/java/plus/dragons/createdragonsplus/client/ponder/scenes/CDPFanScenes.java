@@ -174,16 +174,21 @@ public class CDPFanScenes {
     public static void bulkFreezing(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("bulk_freezing", "Bulk Freezing");
-        scene.configureBasePlate(1, 0, 5);
+        scene.configureBasePlate(0, 1, 5);
         scene.world().showSection(util.select().layer(0).add(util.select().fromTo(2, 1, 4, 2, 1, 5)), Direction.UP);
         scene.idle(5);
         scene.world().showSection(util.select().fromTo(2, 2, 5, 2, 2, 7), Direction.DOWN);
         scene.idle(10);
 
-        scene.world().setKineticSpeed(util.select().fromTo(2, 2, 5, 2, 2, 6), -8);
-        scene.world().setKineticSpeed(util.select().position(3, 0, 0), 4);
-        scene.idle(10);
         scene.overlay().showControls(util.vector().centerOf(2, 3, 4), Pointing.DOWN, 20).withItem(Items.POWDER_SNOW_BUCKET.getDefaultInstance()).rightClick();
+
+        // Temporary solution for Powder Snow does not render in ponder.
+        // See https://github.com/Creators-of-Create/Ponder/issues/26
+        var snow = scene.world().showIndependentSection(util.select().position(2,3,4), Direction.DOWN);
+        scene.world().moveSection(snow,new Vec3(0,-1,0),0);
+
+        scene.world().setKineticSpeed(util.select().position(3, 0, 0), 4);
+        scene.world().setKineticSpeed(util.select().fromTo(2, 2, 5, 2, 2, 6), -8);
         scene.idle(30);
 
         var airCurrent = util.select().fromTo(2, 2, 1, 2, 2, 4);
