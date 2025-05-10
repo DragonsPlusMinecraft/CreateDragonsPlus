@@ -38,7 +38,7 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
-import plus.dragons.createdragonsplus.util.CDPLang;
+import plus.dragons.createdragonsplus.data.lang.CDPLang;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault

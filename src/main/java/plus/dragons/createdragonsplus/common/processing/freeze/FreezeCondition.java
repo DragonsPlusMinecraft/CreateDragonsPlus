@@ -25,7 +25,7 @@ import net.createmod.catnip.lang.Lang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
-import plus.dragons.createdragonsplus.util.CDPLang;
+import plus.dragons.createdragonsplus.data.lang.CDPLang;
 
 public enum FreezeCondition implements StringRepresentable {
     PASSIVE(0xFFFFFF),
