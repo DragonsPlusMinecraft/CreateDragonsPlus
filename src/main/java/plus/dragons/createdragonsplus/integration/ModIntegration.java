@@ -25,9 +25,12 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 public enum ModIntegration {
+    //TODO: Keep an eye on Create Garnished 2
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     //TODO: Wait Create: Dreams 2 Desires add back Fan Processing
-    CREATE_D2D(Constants.CREATE_D2D);
+    CREATE_D2D(Constants.CREATE_D2D),
+    QUICKSAND(Constants.QUICKSAND);
+    ;
 
     private final String id;
 
@@ -61,5 +64,6 @@ public enum ModIntegration {
     public static class Constants {
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_D2D = "create_d2d";
+        public static final String QUICKSAND = "quicksand";
     }
 }

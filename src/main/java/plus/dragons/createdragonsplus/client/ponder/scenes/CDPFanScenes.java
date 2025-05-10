@@ -22,6 +22,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.decoration.placard.PlacardBlock;
 import com.simibubi.create.content.decoration.placard.PlacardBlockEntity;
+import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import java.util.List;
 import net.createmod.catnip.math.Pointing;
@@ -78,7 +79,7 @@ public class CDPFanScenes {
                 .showText(80)
                 .pointAt(util.vector().topOf(2, 1, 2))
                 .attachKeyFrame()
-                .text("Air Flows passing through Liquid Dye creates a Coloring Setup");
+                .text("Air Flows passing through Liquid Dye create a Coloring Setup");
         scene.idle(80);
         scene.world().changeBeltItemTo(transported, limeWool);
         scene.idle(80);
@@ -175,8 +176,9 @@ public class CDPFanScenes {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
         scene.title("bulk_freezing", "Bulk Freezing");
         scene.configureBasePlate(0, 1, 5);
-        scene.world().showSection(util.select().layer(0).add(util.select().fromTo(2, 1, 4, 2, 1, 5)), Direction.UP);
+        scene.world().showSection(util.select().layer(0), Direction.DOWN);
         scene.idle(5);
+        scene.world().showSection(util.select().fromTo(2, 1, 4, 2, 1, 5), Direction.UP);
         scene.world().showSection(util.select().fromTo(2, 2, 5, 2, 2, 7), Direction.DOWN);
         scene.idle(10);
 
@@ -184,8 +186,8 @@ public class CDPFanScenes {
 
         // Temporary solution for Powder Snow does not render in ponder.
         // See https://github.com/Creators-of-Create/Ponder/issues/26
-        var snow = scene.world().showIndependentSection(util.select().position(2,3,4), Direction.DOWN);
-        scene.world().moveSection(snow,new Vec3(0,-1,0),0);
+        var snow = scene.world().showIndependentSection(util.select().position(2, 3, 4), Direction.DOWN);
+        scene.world().moveSection(snow, new Vec3(0, -1, 0), 0);
 
         scene.world().setKineticSpeed(util.select().position(3, 0, 0), 4);
         scene.world().setKineticSpeed(util.select().fromTo(2, 2, 5, 2, 2, 6), -8);
@@ -199,7 +201,7 @@ public class CDPFanScenes {
                 .showText(80)
                 .pointAt(util.vector().topOf(2, 1, 2))
                 .attachKeyFrame()
-                .text("Air Flows passing through Powder Snow creates a Freezing Setup");
+                .text("Air Flows passing through Powder Snow create a Freezing Setup");
 
         var belt = util.select().fromTo(0, 1, 2, 5, 1, 2).add(util.select().fromTo(4, 1, 1, 4, 1, 0));
         scene.world().setKineticSpeed(belt, -4);
@@ -208,5 +210,45 @@ public class CDPFanScenes {
         scene.idle(160);
         scene.world().changeBeltItemTo(transported, Items.BREEZE_ROD.getDefaultInstance());
         scene.idle(30);
+    }
+
+    public static void bulkEnding(SceneBuilder builder, SceneBuildingUtil util) {
+        CreateSceneBuilder scene = new CreateSceneBuilder(builder);
+        scene.title("bulk_ending", "Bulk Ending");
+        scene.configureBasePlate(0, 0, 5);
+        scene.world().showSection(util.select().layer(0).substract(util.select().position(1, 0, 5)), Direction.DOWN);
+        scene.idle(5);
+        scene.world().showSection(util.select().fromTo(3, 1, 3, 3, 1, 4), Direction.UP);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(1, 1, 3, 1, 1, 4), Direction.UP);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(3, 2, 3, 3, 2, 4), Direction.DOWN);
+        scene.idle(3);
+        scene.world().showSection(util.select().fromTo(1, 2, 3, 1, 2, 4), Direction.DOWN);
+        scene.idle(10);
+
+        scene.world().showSection(util.select().fromTo(0, 0, 5, 4, 2, 5), Direction.NORTH);
+        scene.idle(5);
+        var bigCog = util.select().position(2, 1, 5);
+        scene.world().setKineticSpeed(bigCog, 4);
+        scene.world().setKineticSpeed(util.select().everywhere().substract(bigCog), -8);
+        scene.idle(5);
+
+        var airCurrent = util.select().fromTo(1, 2, 0, 1, 2, 3).add(util.select().fromTo(3, 2, 0, 3, 2, 3));
+        scene.overlay().showOutline(PonderPalette.BLACK, airCurrent, airCurrent, 20);
+        scene.idle(40);
+
+        scene.overlay()
+                .showText(80)
+                .pointAt(util.vector().topOf(1, 1, 1))
+                .attachKeyFrame()
+                .text("Air Flows passing through Dragon Head or Dragon Breath create a Ending Setup");
+        scene.world().showSection(util.select().position(1, 1, 1).add(util.select().position(3, 1, 1)), Direction.DOWN);
+        scene.idle(10);
+        scene.world().modifyBlockEntity(util.grid().at(1, 1, 1), DepotBlockEntity.class, depot -> depot.setHeldItem(Items.COBBLESTONE.getDefaultInstance()));
+        scene.world().modifyBlockEntity(util.grid().at(3, 1, 1), DepotBlockEntity.class, depot -> depot.setHeldItem(Items.LEATHER.getDefaultInstance()));
+        scene.idle(80);
+        scene.world().modifyBlockEntity(util.grid().at(1, 1, 1), DepotBlockEntity.class, depot -> depot.setHeldItem(Items.END_STONE.getDefaultInstance()));
+        scene.world().modifyBlockEntity(util.grid().at(3, 1, 1), DepotBlockEntity.class, depot -> depot.setHeldItem(Items.PHANTOM_MEMBRANE.getDefaultInstance()));
     }
 }

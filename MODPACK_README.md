@@ -9,10 +9,15 @@
 
 ## Recipes
 ### Bulk Coloring
-`Bulk Coloring` of Fan processing supports custom coloring recipe. It has similar format as the recipe of Create, with type `create_dragons_plus:coloring`. Bulk Coloring recipe requires extra `color` field as dye fluid color.   
-`Bulk Coloring` also supports every 1:1 and 1:8 dyeing crafting recipe.
+`Bulk Coloring` recipe is the recipe of Fan Bulk Coloring. It has similar format as the recipe of Create, with type `create_dragons_plus:coloring`, and Bulk Coloring recipe requires extra `color` field as dye fluid color.   
+`Bulk Coloring` supports every 1:1 and 1:8 dyeing crafting recipe.
 ### Bulk Freezing
-`Bulk Freezing` recipe is the recipe of Fan Freezing. It has similar format as the recipe of Create, with type `create_dragons_plus:freezing`.
+`Bulk Freezing` recipe is the recipe of Fan Bulk Freezing. It has similar format as the recipe of Create, with type `create_dragons_plus:freezing`.
+### Bulk Ending
+`Bulk Ending` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:ending`.
+### Bulk Sanding (Require Quicksand Mod)
+`Bulk Sanding` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:sanding`.
+`Bulk Sanding` supports every Sand Paper Polishing recipe.
 ### Compat with Create: Garnished
 `Bulk Coloring` and `Bulk Freezing` supports all Fan processing recipes of Create: Garnished.
 

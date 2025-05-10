@@ -9,6 +9,10 @@
 - Added block and bucket for Dragon's Breath (Fluid).
 - Added Automated Brewing recipes for Dragon's Breath (Fluid).
 
+#### Update
+- Add French Translation by @fabien-gigante
+- Update Japanese Translation by @YukkuriOfuton
+
 #### Compatibility
 - Incompatible with Create: Central Kitchen < 2.1 due to breaking change,
 please update Create: Central Kitchen to 2.1+.
