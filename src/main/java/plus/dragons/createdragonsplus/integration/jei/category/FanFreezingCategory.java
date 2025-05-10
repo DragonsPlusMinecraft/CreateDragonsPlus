@@ -43,7 +43,7 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecip
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
-import plus.dragons.createdragonsplus.data.lang.CDPLang;
+import plus.dragons.createdragonsplus.data.internal.CDPLang;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<FreezingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.FREEZING.getId(), FreezingRecipe.class);
