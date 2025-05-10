@@ -90,7 +90,7 @@ repositories {
 }
 
 dependencies {
-    jarJar(api("me.fallenbreath:conditional-mixin-neoforge")) {
+    jarJar(implementation("me.fallenbreath:conditional-mixin-neoforge")) {
         version {
             strictly "[${conditional_mixin_version},)"
             prefer conditional_mixin_version
