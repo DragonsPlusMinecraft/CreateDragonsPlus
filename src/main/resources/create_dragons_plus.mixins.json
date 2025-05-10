@@ -11,7 +11,7 @@
     "create.ContraptionMixin",
     "create.FanProcessingAccessor",
     "create.FluidFillingBehaviourMixin",
-    "create.MechacialMixerBlockEntityMixin",
+    "create.MechanicalMixerBlockEntityMixin",
     "create.OpenEndedPipeMixin",
     "create.OpenEndFluidHandlerMixin",
     "create.PotionMixingRecipesMixin",

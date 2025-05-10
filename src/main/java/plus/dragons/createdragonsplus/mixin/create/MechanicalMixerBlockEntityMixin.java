@@ -30,7 +30,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,10 +37,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
-@Debug(export = true)
 @Mixin(MechanicalMixerBlockEntity.class)
-public abstract class MechacialMixerBlockEntityMixin extends BasinOperatingBlockEntity {
-    public MechacialMixerBlockEntityMixin(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBlockEntity {
+    public MechanicalMixerBlockEntityMixin(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
 
