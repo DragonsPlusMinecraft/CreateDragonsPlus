@@ -43,6 +43,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
+import plus.dragons.createdragonsplus.common.registry.CDPItemAttributes;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
@@ -75,6 +76,7 @@ public class CDPCommon {
         CDPRecipes.register(modBus);
         CDPConditions.register(modBus);
         CDPFanProcessingTypes.register(modBus);
+        CDPItemAttributes.register();
         CDPDataMaps.register(modBus);
         modBus.register(this);
         modBus.register(new CDPConfig(modContainer));

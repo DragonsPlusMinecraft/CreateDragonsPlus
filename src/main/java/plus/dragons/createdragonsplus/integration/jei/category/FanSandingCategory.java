@@ -42,9 +42,9 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
+import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
-import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault

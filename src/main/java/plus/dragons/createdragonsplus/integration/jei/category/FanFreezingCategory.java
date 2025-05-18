@@ -41,9 +41,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
+import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
-import plus.dragons.createdragonsplus.data.internal.CDPLang;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<FreezingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.FREEZING.getId(), FreezingRecipe.class);

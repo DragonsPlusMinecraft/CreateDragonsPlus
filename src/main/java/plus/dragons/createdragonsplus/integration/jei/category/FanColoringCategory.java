@@ -54,10 +54,10 @@ import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
+import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
-import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe> {
