@@ -29,6 +29,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -61,34 +62,44 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                     var baseId = polishedId.withPath(name -> name.replace("polished_", ""));
                     if (!BuiltInRegistries.BLOCK.containsKey(baseId))
                         return;
-                    var polished = holder.value();
-                    var base = BuiltInRegistries.BLOCK.get(baseId);
+                    var polishedItem = holder.value().asItem();
+                    var baseItem = BuiltInRegistries.BLOCK.get(baseId).asItem();
+                    if (polishedItem == Items.AIR || baseItem == Items.AIR)
+                        return;
                     var recipeId = CDPCommon.asResource(baseId.toString().replace(':', '/'));
                     new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
-                            .require(base)
-                            .output(polished)
+                            .require(baseItem)
+                            .output(polishedItem)
                             .build(output);
                 });
     }
 
     private static void buildOxidizedBlockRecipes(RecipeOutput output) {
         DataMapHooks.INVERSE_OXIDIZABLES_DATAMAP.forEach((oxidized, polished) -> {
+            var oxidizedItem = oxidized.asItem();
+            var polishedItem = polished.asItem();
+            if (oxidizedItem == Items.AIR || polishedItem == Items.AIR)
+                return;
             var oxidizedId = BuiltInRegistries.BLOCK.getKey(oxidized);
             var recipeId = CDPCommon.asResource(oxidizedId.toString().replace(':', '/'));
             new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
-                    .require(oxidized)
-                    .output(polished)
+                    .require(oxidizedItem)
+                    .output(polishedItem)
                     .build(output);
         });
     }
 
     private static void buildWaxedBlockRecipes(RecipeOutput output) {
         DataMapHooks.INVERSE_WAXABLES_DATAMAP.forEach((waxed, polished) -> {
+            var waxedItem = waxed.asItem();
+            var polishedItem = polished.asItem();
+            if (waxedItem == Items.AIR || polishedItem == Items.AIR)
+                return;
             var waxedId = BuiltInRegistries.BLOCK.getKey(waxed);
             var recipeId = CDPCommon.asResource(waxedId.toString().replace(':', '/'));
             new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
-                    .require(waxed)
-                    .output(polished)
+                    .require(waxedItem)
+                    .output(polishedItem)
                     .build(output);
         });
     }
