@@ -26,6 +26,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute
 import com.simibubi.create.content.logistics.item.filter.attribute.SingletonItemAttribute;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
@@ -54,5 +55,7 @@ public class CDPItemAttributes {
         return ITEM_ATTRIBUTES.register(name, () -> new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type, processingType.get()::canProcess, CDPCommon.ID + "." + name)));
     }
 
-    public static void register() {}
+    public static void register(IEventBus modBus) {
+        ITEM_ATTRIBUTES.register(modBus);
+    }
 }

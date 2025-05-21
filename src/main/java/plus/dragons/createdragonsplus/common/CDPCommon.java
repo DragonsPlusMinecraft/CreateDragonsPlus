@@ -76,7 +76,7 @@ public class CDPCommon {
         CDPRecipes.register(modBus);
         CDPConditions.register(modBus);
         CDPFanProcessingTypes.register(modBus);
-        CDPItemAttributes.register();
+        CDPItemAttributes.register(modBus);
         CDPDataMaps.register(modBus);
         modBus.register(this);
         modBus.register(new CDPConfig(modContainer));
