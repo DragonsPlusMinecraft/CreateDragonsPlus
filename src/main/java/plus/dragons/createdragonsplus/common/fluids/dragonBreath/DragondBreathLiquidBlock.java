@@ -36,7 +36,7 @@ public class DragondBreathLiquidBlock extends LiquidBlock {
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity && livingEntity.isAffectedByPotions() && entity.tickCount % 5 == 0) {
-            livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1, false, false, false));
         }
     }
 }

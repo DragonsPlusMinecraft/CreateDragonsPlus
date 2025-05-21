@@ -34,7 +34,7 @@ public class DragonsBreathOpenPipeEffect implements OpenPipeEffectHandler {
             return;
         List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, LivingEntity::isAffectedByPotions);
         for (LivingEntity entity : entities) {
-            entity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
+            entity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1, false, false, false));
         }
     }
 }
