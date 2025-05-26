@@ -4,15 +4,15 @@ A library mod for DragonsPlusMinecraft Create-addons.
 ## Add Depenency
 ```groovy
 repositories {
-    maven {
-        url "https://maven.dragons.plus/releases" // DragonsPlusMinecraft Maven
-    }
+    maven { url "https://maven.dragons.plus/releases" } // DragonsPlusMinecraft Maven
+    maven { url "https://maven.fallenbreath.me/releases" } // Conditional Mixin
 }
 
 dependencies {
     implementation("plus.dragons.createdragonsplus:create-dragons-plus-${minecraft_version}:${create_dragons_plus_version}")
 }
 ```
+Note that Create: Dragons Plus has exposed Create and it's dependencies as Gradle's `api` configuration, so you don't need specify them again in your dependencies block unless you wish to use another version of these artifacts.
 
 ## Development Features
 
@@ -30,7 +30,7 @@ dependencies {
 
 ### Recipe
 - Full support for custom processing recipe with custom params, including builder, serializer 
-  and sequenced assembly support.
+  and sequenced assembly support. (Will be superseded by Create 6.0.5)
 - Custom builder for vanilla recipe types, supporting integration output (output that might not exist at runtime).
 - `RecipeConverter`: Supports cached recipe conversion.
 
@@ -48,7 +48,7 @@ dependencies {
 
 ### Ponder
 - Ponder plugins are made to be sorted by mod dependency order, allowing addons to register scenes to existing components 
-with reliable orders.
+with reliable orders. (Will be superseded by Create 6.0.5)
 
 ## Gameplay Elements
 - Fluid Hatch
@@ -56,6 +56,8 @@ with reliable orders.
 - Dragon's Breath (Fluid)
 - Bulk Coloring (Compatible with Create: Garnished)
 - Bulk Freezing (Compatible with Create: Garnished)
+- Bulk Sanding (Needs Quicksand)
+- Bulk Ending
 
 ## Contribute
 Feel free to open a PR to either provide localization or to add another feature! All help is appreciated!
