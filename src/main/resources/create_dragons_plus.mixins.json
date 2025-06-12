@@ -15,10 +15,6 @@
     "create.OpenEndedPipeMixin",
     "create.OpenEndFluidHandlerMixin",
     "create.PotionMixingRecipesMixin",
-    "create.ProcessingRecipeAccessor",
-    "create.ProcessingRecipeMixin",
-    "create.SequencedAssemblyRecipeBuilderAccessor",
-    "create.SequencedRecipeMixin",
     "garnished.DyeBlowingFanCategoryMixin",
     "garnished.DyeBlowingFanProcessingMixin",
     "garnished.FreezingFanCategoryMixin",
@@ -30,8 +26,7 @@
     "neoforge.ExistingFileHelperAccessor"
   ],
   "client": [
-    "create.AirFlowParticleMixin",
-    "ponder.PonderIndexMixin"
+    "create.AirFlowParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1

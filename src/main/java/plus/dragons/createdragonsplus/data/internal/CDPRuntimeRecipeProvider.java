@@ -18,8 +18,6 @@
 
 package plus.dragons.createdragonsplus.data.internal;
 
-import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.Advancement.Builder;
 import net.minecraft.advancements.AdvancementHolder;
@@ -40,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.recipe.UpdateRecipesEvent;
 import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 
 @EventBusSubscriber
 public class CDPRuntimeRecipeProvider extends RecipeProvider {
@@ -67,7 +66,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                     if (polishedItem == Items.AIR || baseItem == Items.AIR)
                         return;
                     var recipeId = CDPCommon.asResource(baseId.toString().replace(':', '/'));
-                    new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
+                    CreateRecipeBuilders.polishing(recipeId)
                             .require(baseItem)
                             .output(polishedItem)
                             .build(output);
@@ -82,7 +81,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                 return;
             var oxidizedId = BuiltInRegistries.BLOCK.getKey(oxidized);
             var recipeId = CDPCommon.asResource(oxidizedId.toString().replace(':', '/'));
-            new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
+            CreateRecipeBuilders.polishing(recipeId)
                     .require(oxidizedItem)
                     .output(polishedItem)
                     .build(output);
@@ -97,7 +96,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                 return;
             var waxedId = BuiltInRegistries.BLOCK.getKey(waxed);
             var recipeId = CDPCommon.asResource(waxedId.toString().replace(':', '/'));
-            new ProcessingRecipeBuilder<>(SandPaperPolishingRecipe::new, recipeId)
+            CreateRecipeBuilders.polishing(recipeId)
                     .require(waxedItem)
                     .output(polishedItem)
                     .build(output);

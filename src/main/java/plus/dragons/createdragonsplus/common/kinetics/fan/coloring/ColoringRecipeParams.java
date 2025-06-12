@@ -20,28 +20,26 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import java.util.function.Function;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeParams;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
-public class ColoringRecipeParams extends CustomProcessingRecipeParams {
+public class ColoringRecipeParams extends ProcessingRecipeParams {
     public static final MapCodec<ColoringRecipeParams> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             codec(ColoringRecipeParams::new).forGetter(Function.identity()),
             DyeColor.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)).apply(instance, ColoringRecipeParams::setColor));
     public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipeParams> STREAM_CODEC = streamCodec(ColoringRecipeParams::new);
     protected DyeColor color;
 
-    protected ColoringRecipeParams(ResourceLocation id) {
-        super(id);
+    protected ColoringRecipeParams() {
+        super();
     }
 
-    public ColoringRecipeParams(ResourceLocation id, DyeColor color) {
-        super(id);
+    public ColoringRecipeParams(DyeColor color) {
         this.color = color;
     }
 

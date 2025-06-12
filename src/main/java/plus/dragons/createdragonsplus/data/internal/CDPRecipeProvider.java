@@ -26,8 +26,8 @@ import static plus.dragons.createdragonsplus.common.registry.CDPItems.BLAZE_UPGR
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shaped;
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shapeless;
 
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -79,7 +79,7 @@ public class CDPRecipeProvider extends RegistrateRecipeProvider {
     }
 
     private void buildFreezingRecipes(RecipeOutput output) {
-        Function<ResourceLocation, FreezingRecipe.Builder> freezing = FreezingRecipe::builder;
+        Function<ResourceLocation, StandardProcessingRecipe.Builder<FreezingRecipe>> freezing = FreezingRecipe::builder;
         conversion(freezing, ICE, PACKED_ICE).build(output);
         conversion(freezing, PACKED_ICE, BLUE_ICE).build(output);
         conversion(freezing, MAGMA_CREAM, SLIME_BALL).build(output);
@@ -87,7 +87,7 @@ public class CDPRecipeProvider extends RegistrateRecipeProvider {
     }
 
     private void buildEndingRecipes(RecipeOutput output) {
-        Function<ResourceLocation, EndingRecipe.Builder> ending = EndingRecipe::builder;
+        Function<ResourceLocation, StandardProcessingRecipe.Builder<EndingRecipe>> ending = EndingRecipe::builder;
         conversion(ending, COBBLESTONE, END_STONE).build(output);
         conversion(ending, STONE_BRICKS, END_STONE_BRICKS).build(output);
         conversion(ending, STONE_BRICK_WALL, END_STONE_BRICK_WALL).build(output);
@@ -97,15 +97,15 @@ public class CDPRecipeProvider extends RegistrateRecipeProvider {
         conversion(ending, Tags.Items.LEATHERS, PHANTOM_MEMBRANE).build(output);
     }
 
-    private <T extends ProcessingRecipe<?>> ProcessingRecipeBuilder<T> conversion(
-            Function<ResourceLocation, ? extends ProcessingRecipeBuilder<T>> factory,
+    private <B extends ProcessingRecipeBuilder<?, ?, B>> B conversion(
+            Function<ResourceLocation, B> factory,
             ItemLike input, ItemLike output) {
         var recipeId = REGISTRATE.asResource("%s_from_%s".formatted(safeName(output), safeName(input)));
         return factory.apply(recipeId).require(input).output(output);
     }
 
-    private <T extends ProcessingRecipe<?>> ProcessingRecipeBuilder<T> conversion(
-            Function<ResourceLocation, ? extends ProcessingRecipeBuilder<T>> factory,
+    private <B extends ProcessingRecipeBuilder<?, ?, B>> B conversion(
+            Function<ResourceLocation, B> factory,
             TagKey<Item> input, ItemLike output) {
         var recipeId = REGISTRATE.asResource("%s_from_%s".formatted(safeName(output), safeName(input.location())));
         return factory.apply(recipeId).require(input).output(output);

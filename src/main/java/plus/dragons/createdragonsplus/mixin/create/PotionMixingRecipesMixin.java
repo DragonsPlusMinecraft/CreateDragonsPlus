@@ -24,7 +24,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class PotionMixingRecipesMixin {
         if (CDPConfig.features().generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
             if (ingredient.test(new ItemStack(Items.DRAGON_BREATH))) {
                 var recipeId = CDPCommon.asResource(id + "_using_dragon_breath_fluid");
-                var recipe = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
+                var recipe = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
                         .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
                         .require(FluidIngredient.fromFluidStack(fromFluid))
                         .output(toFluid)

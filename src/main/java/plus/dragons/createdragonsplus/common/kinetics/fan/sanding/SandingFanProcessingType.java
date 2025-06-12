@@ -20,7 +20,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.List;
@@ -64,7 +64,7 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
         var recipeManager = level.getRecipeManager();
         var input = new SingleRecipeInput(stack);
         return recipeManager
-                .getRecipeFor((RecipeType<? extends ProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
+                .getRecipeFor((RecipeType<? extends StandardProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
                 .or(() -> recipeManager.getRecipeFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), input, level))
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
                 .isPresent();
@@ -75,7 +75,7 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
         var recipeManager = level.getRecipeManager();
         var input = new SingleRecipeInput(stack);
         return recipeManager
-                .getRecipeFor((RecipeType<? extends ProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
+                .getRecipeFor((RecipeType<? extends StandardProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
                 .or(() -> recipeManager.getRecipeFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), input, level))
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
                 .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe))

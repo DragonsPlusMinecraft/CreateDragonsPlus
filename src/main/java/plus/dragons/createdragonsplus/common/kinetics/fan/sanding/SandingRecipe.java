@@ -19,17 +19,16 @@
 package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeBuilder;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeParams;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class SandingRecipe extends CustomProcessingRecipe<SingleRecipeInput, CustomProcessingRecipeParams> {
-    public SandingRecipe(CustomProcessingRecipeParams params) {
+public class SandingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
+    public SandingRecipe(ProcessingRecipeParams params) {
         super(CDPRecipes.FREEZING, params);
     }
 
@@ -37,7 +36,7 @@ public class SandingRecipe extends CustomProcessingRecipe<SingleRecipeInput, Cus
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
                 original.id().getNamespace(),
                 original.id().getPath() + "_as_sanding");
-        SandingRecipe recipe = new Builder(id)
+        SandingRecipe recipe = builder(id)
                 .require(original.value().getIngredients().getFirst())
                 .output(original.value().getRollableResults().getFirst())
                 .build();
@@ -59,18 +58,7 @@ public class SandingRecipe extends CustomProcessingRecipe<SingleRecipeInput, Cus
         return getIngredients().getFirst().test(input.item());
     }
 
-    public static Builder builder(ResourceLocation id) {
-        return new Builder(id);
-    }
-
-    public static class Builder extends CustomProcessingRecipeBuilder<CustomProcessingRecipeParams, SandingRecipe> {
-        protected Builder(ResourceLocation id) {
-            super(SandingRecipe::new, id);
-        }
-
-        @Override
-        protected CustomProcessingRecipeParams createParams(ResourceLocation id) {
-            return new CustomProcessingRecipeParams(id);
-        }
+    public static StandardProcessingRecipe.Builder<SandingRecipe> builder(ResourceLocation id) {
+        return new StandardProcessingRecipe.Builder<>(SandingRecipe::new, id);
     }
 }

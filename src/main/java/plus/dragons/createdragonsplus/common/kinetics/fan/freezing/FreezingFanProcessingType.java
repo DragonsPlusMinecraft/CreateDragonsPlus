@@ -20,7 +20,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.freezing;
 
 import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +45,7 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class FreezingFanProcessingType implements FanProcessingType {
     private final DeferredHolder<FanProcessingType, FanProcessingType> createGarnishedType;
-    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe;
+    private final DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe;
 
     public FreezingFanProcessingType() {
         this.createGarnishedType = DeferredHolder.create(

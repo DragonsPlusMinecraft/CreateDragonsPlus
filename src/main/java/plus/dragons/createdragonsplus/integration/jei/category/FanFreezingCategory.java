@@ -25,7 +25,7 @@ import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import net.createmod.catnip.gui.element.GuiGameElement;
@@ -46,7 +46,7 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<FreezingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.FREEZING.getId(), FreezingRecipe.class);
+    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<FreezingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.FREEZING.getId());
 
     private FanFreezingCategory(Info<FreezingRecipe> info) {
         super(info);
@@ -76,7 +76,7 @@ public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.FREEZING.getType()));
-        DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource("freezing"));
+        DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource("freezing"));
         if (createGarnishedRecipe.isBound()) {
             manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes
                     .add(new RecipeHolder<>(holder.id(), FreezingRecipe.builder(holder.id())

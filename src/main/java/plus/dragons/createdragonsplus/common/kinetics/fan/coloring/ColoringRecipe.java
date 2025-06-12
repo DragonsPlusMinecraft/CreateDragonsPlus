@@ -18,14 +18,18 @@
 
 package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 
+import com.mojang.serialization.MapCodec;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipe;
-import plus.dragons.createdragonsplus.common.recipe.CustomProcessingRecipeBuilder;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class ColoringRecipe extends CustomProcessingRecipe<ColoringRecipeInput, ColoringRecipeParams> {
+public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, ColoringRecipeParams> {
     public ColoringRecipe(ColoringRecipeParams params) {
         super(CDPRecipes.COLORING, params);
     }
@@ -53,16 +57,40 @@ public class ColoringRecipe extends CustomProcessingRecipe<ColoringRecipeInput, 
         return 12;
     }
 
-    public static class Builder extends CustomProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe> {
+    public static class Builder extends ProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe, Builder> {
         protected Builder(ResourceLocation recipeId, DyeColor color) {
             super(ColoringRecipe::new, recipeId);
-            var params = (ColoringRecipeParams) this.params;
-            params.color = color;
+            this.params.color = color;
         }
 
         @Override
-        protected ColoringRecipeParams createParams(ResourceLocation id) {
-            return new ColoringRecipeParams(id);
+        protected ColoringRecipeParams createParams() {
+            return new ColoringRecipeParams();
+        }
+
+        @Override
+        public Builder self() {
+            return this;
+        }
+    }
+
+    public static class Serializer<R extends ColoringRecipe> implements RecipeSerializer<R> {
+        private final MapCodec<R> codec;
+        private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
+
+        public Serializer(ProcessingRecipe.Factory<ColoringRecipeParams, R> factory) {
+            this.codec = ProcessingRecipe.codec(factory, ColoringRecipeParams.CODEC);
+            this.streamCodec = ProcessingRecipe.streamCodec(factory, ColoringRecipeParams.STREAM_CODEC);
+        }
+
+        @Override
+        public MapCodec<R> codec() {
+            return codec;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
+            return streamCodec;
         }
     }
 }

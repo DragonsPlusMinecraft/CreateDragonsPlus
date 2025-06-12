@@ -26,7 +26,7 @@ import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<ColoringRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.COLORING.getId(), ColoringRecipe.class);
+    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<ColoringRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.COLORING.getId());
 
     private FanColoringCategory(Info<ColoringRecipe> info) {
         super(info);
@@ -124,7 +124,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
         for (var color : DyeColors.ALL) {
-            DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
+            DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
             if (!createGarnishedRecipe.isBound())
                 continue;
             manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes

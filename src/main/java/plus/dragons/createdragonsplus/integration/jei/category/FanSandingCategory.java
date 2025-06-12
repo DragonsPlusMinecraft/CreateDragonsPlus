@@ -49,7 +49,7 @@ import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
 public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<SandingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(CDPRecipes.SANDING.getId(), SandingRecipe.class);
+    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<SandingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.SANDING.getId());
     private HolderSet<Block> catalystBlocks;
     private BlockState[] catalystStates;
 
@@ -90,7 +90,7 @@ public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> 
     }
 
     @Override
-    public boolean isHandled(SandingRecipe recipe) {
+    public boolean isHandled(RecipeHolder<SandingRecipe> recipe) {
         var tag = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
         return tag.isPresent() && tag.get().size() > 0;
     }

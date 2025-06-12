@@ -81,6 +81,7 @@ public interface WaterAndLavaLoggedBlock extends BucketPickup, LiquidBlockContai
         return containedFluid == ContainedFluid.WATER ? new ItemStack(Items.WATER_BUCKET) : new ItemStack(Items.LAVA_BUCKET);
     }
 
+    @SuppressWarnings({ "deprecation", "RedundantSuppression" })
     @Override
     default Optional<SoundEvent> getPickupSound() {
         return Optional.empty();

@@ -66,7 +66,7 @@ import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeColor color;
     private final Vector3f rgb;
-    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe;
+    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
 
     public ColoringFanProcessingType(DyeColor color) {
         this.color = color;

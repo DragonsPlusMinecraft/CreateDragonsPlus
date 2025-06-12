@@ -22,11 +22,7 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.api.event.PipeCollisionEvent;
-import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
-import com.simibubi.create.content.fluids.transfer.FillingRecipe;
-import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -69,6 +65,7 @@ import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidOpenPipeEffect;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeFluidType;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeLiquidBlock;
 import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
 public class CDPFluids {
@@ -122,13 +119,13 @@ public class CDPFluids {
             .tag(CDPItems.COMMON_TAGS.dragonBreathBuckets)
             .build()
             .setData(ProviderType.RECIPE, (ctx, prov) -> {
-                new ProcessingRecipeBuilder<>(EmptyingRecipe::new, ctx.getId().withPath("dragon_breath"))
+                CreateRecipeBuilders.emptying(ctx.getId().withPath("dragon_breath"))
                         .require(Items.DRAGON_BREATH)
                         .output(ctx.get(), 250)
                         .output(Items.GLASS_BOTTLE)
                         .withCondition(CDPConfig.features().dragonBreathFluid)
                         .build(prov);
-                new ProcessingRecipeBuilder<>(FillingRecipe::new, ctx.getId().withPath("dragon_breath"))
+                CreateRecipeBuilders.filling(ctx.getId().withPath("dragon_breath"))
                         .require(ctx.get(), 250)
                         .require(Items.GLASS_BOTTLE)
                         .output(Items.DRAGON_BREATH)
@@ -175,13 +172,13 @@ public class CDPFluids {
                 .build()
                 .tag(tag)
                 .setData(ProviderType.RECIPE, (ctx, prov) -> {
-                    new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_item"))
+                    CreateRecipeBuilders.mixing(ctx.getId().withPath(name + "_from_item"))
                             .require(DyeItem.byColor(color))
                             .require(Fluids.WATER, 250)
                             .output(ctx.get(), 250)
                             .withCondition(CDPConfig.features().dyeFluids)
                             .build(prov);
-                    new ProcessingRecipeBuilder<>(MixingRecipe::new, ctx.getId().withPath(name + "_from_fluid"))
+                    CreateRecipeBuilders.mixing(ctx.getId().withPath(name + "_from_fluid"))
                             .require(ctx.get(), 250)
                             .output(DyeItem.byColor(color))
                             .requiresHeat(HeatCondition.HEATED)
