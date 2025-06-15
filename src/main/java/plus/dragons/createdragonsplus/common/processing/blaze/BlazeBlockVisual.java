@@ -65,7 +65,7 @@ public class BlazeBlockVisual<T extends BlazeBlockEntity> extends AbstractBlockE
 
     public BlazeBlockVisual(VisualizationContext ctx, T blockEntity, float partialTicks) {
         super(ctx, blockEntity, partialTicks);
-        this.heatLevel = blockEntity.getHeatLevel();
+        this.heatLevel = HeatLevel.SMOULDERING;
         this.active = blockEntity.isActive();
         PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, active);
         this.head = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(blazeModel)).createInstance();
@@ -80,7 +80,6 @@ public class BlazeBlockVisual<T extends BlazeBlockEntity> extends AbstractBlockE
         // Update head and rods
         if (active != this.active || heatLevel != this.heatLevel) {
             this.active = active;
-            this.heatLevel = heatLevel;
 
             PartialModel blazeModel = BlazeBurnerRenderer.getBlazeModel(heatLevel, active);
             instancerProvider()
@@ -112,6 +111,8 @@ public class BlazeBlockVisual<T extends BlazeBlockEntity> extends AbstractBlockE
                 smallRods = null;
                 largeRods = null;
             }
+
+            this.heatLevel = heatLevel;
         }
         // Update flame
         if (active && flame == null) {
