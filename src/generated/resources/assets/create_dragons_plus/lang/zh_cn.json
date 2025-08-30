@@ -27,6 +27,8 @@
   "create.item_attributes.create_dragons_plus.freezable.inverted": "不可被冷冻",
   "create.item_attributes.create_dragons_plus.sandable": "可被喷砂",
   "create.item_attributes.create_dragons_plus.sandable.inverted": "不可被喷砂",
+  "create.item_attributes.create_dragons_plus.stainable": "can be Stained",
+  "create.item_attributes.create_dragons_plus.stainable.inverted": "cannot be Stained",
   "create_dragons_plus.ponder.bulk_coloring.header": "批量染色",
   "create_dragons_plus.ponder.bulk_coloring.text_1": "当气流吹过液态染料后，便可用于染色物品",
   "create_dragons_plus.ponder.bulk_coloring.text_2": "与批量熔炼和批量烟熏相同，批量染色自动兼容符合条件的需要染料的合成配方",

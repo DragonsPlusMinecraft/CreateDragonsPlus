@@ -24,28 +24,33 @@ import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.logistics.item.filter.attribute.SingletonItemAttribute;
+
+import java.util.Collection;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
 
 public class CDPItemAttributes {
     private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister
             .create(CreateRegistries.ITEM_ATTRIBUTE_TYPE, CDPCommon.ID);
 
     public static final Holder<ItemAttributeType> FREEZABLE = fanProcessing("freezable",
-            "can be frozen",
-            "cannot be frozen",
+            "can be Frozen",
+            "cannot be Frozen",
             CDPFanProcessingTypes.FREEZING);
     public static final Holder<ItemAttributeType> SANDABLE = fanProcessing("sandable",
-            "can be sanded",
-            "cannot be sanded",
+            "can be Sanded",
+            "cannot be Sanded",
             CDPFanProcessingTypes.SANDING);
     public static final Holder<ItemAttributeType> ENDABLE = fanProcessing("endable",
-            "can be ended",
-            "cannot be ended",
+            "can be Ended",
+            "cannot be Ended",
             CDPFanProcessingTypes.ENDING);
+    public static final Holder<ItemAttributeType> STAINABLE = colorFanProcessing(
+            CDPFanProcessingTypes.COLORING.values());
 
     private static Holder<ItemAttributeType> fanProcessing(String name, String description, String invertedDescription, Supplier<? extends FanProcessingType> processingType) {
         String descriptionKey = "create.item_attributes." + CDPCommon.ID + "." + name;
@@ -53,6 +58,16 @@ public class CDPItemAttributes {
         REGISTRATE.addRawLang(descriptionKey, description);
         REGISTRATE.addRawLang(invertedDescriptionKey, invertedDescription);
         return ITEM_ATTRIBUTES.register(name, () -> new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type, processingType.get()::canProcess, CDPCommon.ID + "." + name)));
+    }
+
+    private static Holder<ItemAttributeType> colorFanProcessing(Collection<Supplier<ColoringFanProcessingType>> processingTypes) {
+        String descriptionKey = "create.item_attributes." + CDPCommon.ID + ".stainable";
+        String invertedDescriptionKey = descriptionKey + ".inverted";
+        REGISTRATE.addRawLang(descriptionKey, "can be Stained");
+        REGISTRATE.addRawLang(invertedDescriptionKey, "cannot be Stained");
+        return ITEM_ATTRIBUTES.register("stainable", () -> new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type,
+                (itemStack, level) -> processingTypes.stream()
+                        .anyMatch(s -> s.get().canProcess(itemStack, level)), CDPCommon.ID + ".stainable")));
     }
 
     public static void register(IEventBus modBus) {
