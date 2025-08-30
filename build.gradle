@@ -113,6 +113,8 @@ dependencies {
 
     compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
+
+    //localImplementation("maven.modrinth:create-dreams-and-desires:2.2c-BETA")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

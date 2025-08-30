@@ -30,21 +30,27 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -140,10 +146,32 @@ public class CDPFluids {
         REGISTRATE.registerFluidTags(COMMON_TAGS);
     }
 
+    public static void registerDispenserBehavior() {
+        DispenseItemBehavior fluidDispenserBehavior = new DefaultDispenseItemBehavior() {
+            private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+            public ItemStack execute(BlockSource source, ItemStack itemStack) {
+                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem)itemStack.getItem();
+                BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+                Level level = source.level();
+                if (dispensiblecontaineritem.emptyContents(null, level, blockpos, null, itemStack)) {
+                    dispensiblecontaineritem.checkExtraContent(null, level, itemStack, blockpos);
+                    return this.consumeWithRemainder(source, itemStack, new ItemStack(Items.BUCKET));
+                } else {
+                    return this.defaultDispenseItemBehavior.dispense(source, itemStack);
+                }
+            }
+        };
+        DYES_BY_COLOR.values().forEach(dyeFluid->{
+            DispenserBlock.registerBehavior(dyeFluid.getBucket().get(), fluidDispenserBehavior);
+        });
+        DispenserBlock.registerBehavior(DRAGON_BREATH.getBucket().get(), fluidDispenserBehavior);
+    }
+
     @SubscribeEvent
     public static void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(Reactions::registerFluidInteractions);
         event.enqueueWork(Reactions::registerOpenPipeEffects);
+        event.enqueueWork(CDPFluids::registerDispenserBehavior);
     }
 
     private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeColor color) {
