@@ -19,6 +19,7 @@
     "garnished.FreezingFanCategoryMixin",
     "garnished.FreezingFanProcessingTypeMixin",
     "minecraft.BottleItemMixin",
+    "minecraft.ConcretePowderBlockMixin",
     "minecraft.IngredientValueMixin",
     "minecraft.RecipeManagerAccessor",
     "minecraft.ReloadableServerResourcesMixin",
