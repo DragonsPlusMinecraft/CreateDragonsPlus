@@ -57,14 +57,16 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
     private static void buildPolishedBlockRecipes(RecipeOutput output) {
         BuiltInRegistries.BLOCK.holders()
                 .filter(holder -> holder.key().location().getPath().contains("polished_"))
-                .filter(holder -> !holder.is(CDPBlocks.MOD_TAGS.notApplicablePolishing))
                 .forEach(holder -> {
                     var polishedId = holder.key().location();
                     var baseId = polishedId.withPath(name -> name.replace("polished_", ""));
                     if (!BuiltInRegistries.BLOCK.containsKey(baseId))
                         return;
                     var polishedItem = holder.value().asItem();
-                    var baseItem = BuiltInRegistries.BLOCK.get(baseId).asItem();
+                    var baseBlock = BuiltInRegistries.BLOCK.getHolder(baseId);
+                    if (baseBlock.isEmpty() || baseBlock.get().is(CDPBlocks.MOD_TAGS.notApplicablePolishing))
+                        return;
+                    var baseItem = baseBlock.get().value().asItem();
                     if (polishedItem == Items.AIR || baseItem == Items.AIR)
                         return;
                     var recipeId = CDPCommon.asResource(baseId.toString().replace(':', '/'));
