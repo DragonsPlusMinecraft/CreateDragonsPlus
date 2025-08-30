@@ -90,6 +90,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
+        if (!CDPConfig.recipes().enableBulkColoring.get())
+            return false;
         var recipe = level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level);
         if (recipe.isPresent())

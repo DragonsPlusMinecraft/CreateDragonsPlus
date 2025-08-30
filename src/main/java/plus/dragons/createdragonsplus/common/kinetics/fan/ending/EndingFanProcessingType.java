@@ -58,6 +58,8 @@ public class EndingFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
+        if (!CDPConfig.recipes().enableBulkEnding.get())
+            return false;
         var recipeManager = level.getRecipeManager();
         var input = new SingleRecipeInput(stack);
         return recipeManager

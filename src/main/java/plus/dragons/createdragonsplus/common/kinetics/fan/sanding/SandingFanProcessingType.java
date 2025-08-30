@@ -61,6 +61,8 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
+        if (!CDPConfig.recipes().enableBulkSanding.get())
+            return false;
         var recipeManager = level.getRecipeManager();
         var input = new SingleRecipeInput(stack);
         return recipeManager

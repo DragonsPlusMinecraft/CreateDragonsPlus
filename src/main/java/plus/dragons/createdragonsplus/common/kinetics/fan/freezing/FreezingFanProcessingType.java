@@ -72,6 +72,8 @@ public class FreezingFanProcessingType implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
+        if (!CDPConfig.recipes().enableBulkFreezing.get())
+            return false;
         var recipe = level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level);
         if (recipe.isPresent())
