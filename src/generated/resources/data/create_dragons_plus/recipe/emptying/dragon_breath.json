@@ -13,11 +13,11 @@
   ],
   "results": [
     {
-      "amount": 250,
-      "id": "create_dragons_plus:dragon_breath"
+      "id": "minecraft:glass_bottle"
     },
     {
-      "id": "minecraft:glass_bottle"
+      "amount": 250,
+      "id": "create_dragons_plus:dragon_breath"
     }
   ]
 }

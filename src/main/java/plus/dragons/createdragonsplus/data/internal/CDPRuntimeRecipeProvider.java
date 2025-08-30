@@ -37,6 +37,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.recipe.UpdateRecipesEvent;
+import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 
@@ -56,6 +57,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
     private static void buildPolishedBlockRecipes(RecipeOutput output) {
         BuiltInRegistries.BLOCK.holders()
                 .filter(holder -> holder.key().location().getPath().contains("polished_"))
+                .filter(holder -> !holder.is(CDPBlocks.MOD_TAGS.notApplicablePolishing))
                 .forEach(holder -> {
                     var polishedId = holder.key().location();
                     var baseId = polishedId.withPath(name -> name.replace("polished_", ""));

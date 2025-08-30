@@ -91,6 +91,7 @@
   "recipe.create_dragons_plus.fan_sanding.fan": "Fan behind Quicksand",
   "tag.block.create_dragons_plus.fan_processing_catalysts.ending": "Bulk Ending Catalysts",
   "tag.block.create_dragons_plus.fan_processing_catalysts.sanding": "Bulk Sanding Catalysts",
+  "tag.block.create_dragons_plus.not_applicable_for_polishing": "Not applicable for automatic Polishing Block Sanding Recipe",
   "tag.block.create_dragons_plus.passive_block_freezers": "Blocs gelant passifs",
   "tag.fluid.c.dragon_breath": "Souffle du dragon",
   "tag.fluid.c.dyes": "Teintures",

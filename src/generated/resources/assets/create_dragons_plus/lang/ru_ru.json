@@ -91,6 +91,7 @@
   "recipe.create_dragons_plus.fan_sanding.fan": "Вентилятор за зыбучим песком",
   "tag.block.create_dragons_plus.fan_processing_catalysts.ending": "Катализаторы массового эндерирования",
   "tag.block.create_dragons_plus.fan_processing_catalysts.sanding": "Катализаторы массовой полировки",
+  "tag.block.create_dragons_plus.not_applicable_for_polishing": "Not applicable for automatic Polishing Block Sanding Recipe",
   "tag.block.create_dragons_plus.passive_block_freezers": "Блоки пассивного замораживания",
   "tag.fluid.c.dragon_breath": "Драконье дыхание",
   "tag.fluid.c.dyes": "Красители",

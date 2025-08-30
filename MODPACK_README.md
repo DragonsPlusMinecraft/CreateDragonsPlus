@@ -6,10 +6,16 @@
 * `c:buckets/dye` for Bucket of Dye Fluid and `c:buckets/dye/color`for specific color
 * `c:dyed/color` for specific color dyed item, which includes corresponding Bucket of Dye Fluid
 * `c:buckets` for Bucket Item, which includes `c:buckets/dye`
+#### Block
+* `create_dragons_plus:passiveBlockFreezers` for Passive Block Freezers
+* `create_dragons_plus:fan_processing_catalysts/sanding` for Bulk Sanding Catalysts
+* `create_dragons_plus:fan_processing_catalysts/ending` for Bulk Ending Catalysts
+* `create_dragons_plus:not_applicable_for_polishing` for Block that is not applicable for automatic Polishing Block Sanding Recipe support
 
 ## Recipes
 ### Bulk Coloring
 `Bulk Coloring` recipe is the recipe of Fan Bulk Coloring. It has similar format as the recipe of Create, with type `create_dragons_plus:coloring`, and Bulk Coloring recipe requires extra `color` field as dye fluid color.   
+
 `Bulk Coloring` supports every 1:1 and 1:8 dyeing crafting recipe.
 ### Bulk Freezing
 `Bulk Freezing` recipe is the recipe of Fan Bulk Freezing. It has similar format as the recipe of Create, with type `create_dragons_plus:freezing`.
@@ -17,7 +23,13 @@
 `Bulk Ending` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:ending`.
 ### Bulk Sanding (Require Quicksand Mod)
 `Bulk Sanding` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:sanding`.
+
 `Bulk Sanding` supports every Sand Paper Polishing recipe.
+
+`Bulk Sanding` supports de-oxidizing Oxidizables and unwaxing Waxables automatically by using Corresponding inverse datamap of NeoForge. There recipes will also be added to `Sandpaper Sanding`.
+
+`Bulk Sanding` supports polishing certain blocks to polished block automatically by identifying the item id. There recipes will also be added to `Sandpaper Sanding`. If a block shouldn't be applicable for this situation, add block to **block tag** `create_dragons_plus:not_applicable_for_polishing`.
+
 ### Compat with Create: Garnished
 `Bulk Coloring` and `Bulk Freezing` supports all Fan processing recipes of Create: Garnished.
 

@@ -1,4 +1,5 @@
 {
+  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "黑色染料",
   "block.create_dragons_plus.blue_dye": "蓝色染料",
   "block.create_dragons_plus.brown_dye": "棕色染料",
@@ -90,6 +91,7 @@
   "recipe.create_dragons_plus.fan_sanding.fan": "在流沙后放置鼓风机",
   "tag.block.create_dragons_plus.fan_processing_catalysts.ending": "批量终结触媒",
   "tag.block.create_dragons_plus.fan_processing_catalysts.sanding": "批量喷砂触媒",
+  "tag.block.create_dragons_plus.not_applicable_for_polishing": "Not applicable for automatic Polishing Block Sanding Recipe",
   "tag.block.create_dragons_plus.passive_block_freezers": "被动方块冷源",
   "tag.fluid.c.dragon_breath": "龙息",
   "tag.fluid.c.dyes": "染料",

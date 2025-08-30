@@ -29,7 +29,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
 public class SandingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
     public SandingRecipe(ProcessingRecipeParams params) {
-        super(CDPRecipes.FREEZING, params);
+        super(CDPRecipes.SANDING, params);
     }
 
     public static RecipeHolder<SandingRecipe> convertSandPaperPolishing(RecipeHolder<SandPaperPolishingRecipe> original) {

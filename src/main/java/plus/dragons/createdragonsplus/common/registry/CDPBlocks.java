@@ -57,6 +57,7 @@ public class CDPBlocks {
         public final TagKey<Block> passiveBlockFreezers = tag("passive_block_freezers", "Passive Block Freezers");
         public final TagKey<Block> fanSandingCatalysts = tag("fan_processing_catalysts/sanding", "Bulk Sanding Catalysts");
         public final TagKey<Block> fanEndingCatalysts = tag("fan_processing_catalysts/ending", "Bulk Ending Catalysts");
+        public final TagKey<Block> notApplicablePolishing = tag("not_applicable_for_polishing", "Not applicable for automatic Polishing Block Sanding Recipe");
 
         public ModTags() {
             super(CDPCommon.ID, Registries.BLOCK);
@@ -77,6 +78,7 @@ public class CDPBlocks {
             provider.addTag(AllBlockTags.FAN_TRANSPARENT.tag)
                     .add(Blocks.DRAGON_HEAD)
                     .add(Blocks.DRAGON_WALL_HEAD);
+            provider.addTag(notApplicablePolishing);
         }
     }
 }

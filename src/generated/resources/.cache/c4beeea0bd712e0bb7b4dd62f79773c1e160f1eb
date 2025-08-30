@@ -1,4 +1,4 @@
-// 1.21.1	2025-05-18T22:21:19.3716416	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2025-08-30T10:40:01.2998222	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 30944dc3840117f79d60ca7eca170ea5847ecb0d assets/create_dragons_plus/blockstates/black_dye.json
 5511ed73c7a82ef6ac5a79f7b21eeca34cc193de assets/create_dragons_plus/blockstates/blue_dye.json
 5d2b44ea68a4e18cecee4658da13110f5184a89d assets/create_dragons_plus/blockstates/brown_dye.json
@@ -17,8 +17,8 @@ f6efce45ed4b540e58a76fdef3bd8d539ac248f4 assets/create_dragons_plus/blockstates/
 f6cae37dc906804600744ebfddb3070a0640e16b assets/create_dragons_plus/blockstates/red_dye.json
 11b5d524a6d1e8d0922aac902b3b6007e3f30623 assets/create_dragons_plus/blockstates/white_dye.json
 b4b1473f3c75a619278b5493ba58805fd9723c38 assets/create_dragons_plus/blockstates/yellow_dye.json
-18fde036328af6a4da4b02304b1bea5ef64194bc assets/create_dragons_plus/lang/en_ud.json
-936393eb3c0aa6087ed8faa939aac4d543e722e3 assets/create_dragons_plus/lang/en_us.json
+fed88fcb532a1378ef26e7d6da9de1e6daadfc74 assets/create_dragons_plus/lang/en_ud.json
+25ffd01a7adb3f5ed54779f36acf19af582185ca assets/create_dragons_plus/lang/en_us.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/black_dye.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/blue_dye.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/brown_dye.json
@@ -61,7 +61,7 @@ eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/
 0e8f062c463db5fb917c92a0c36a9faa5396fc3a data/create/tags/item/packages.json
 ce0d2b3f52d587d18a04dcb9716b708866af8b04 data/create_dragons_plus/data_maps/fluid/fan_processing_catalysts/coloring.json
 39dc58062533ed5be7431eebec54780c04ef4541 data/create_dragons_plus/loot_table/blocks/fluid_hatch.json
-ccb86a52455d602b39835f588e7eac1891be2286 data/create_dragons_plus/recipe/emptying/dragon_breath.json
+5a96c3a36b29e105309f1aa428084bda375df5ed data/create_dragons_plus/recipe/emptying/dragon_breath.json
 6810eec898f1c32736e173dfc617b44767a903a3 data/create_dragons_plus/recipe/filling/dragon_breath.json
 b4dc589fa6e2f2eb49af17a2ceb3b9a37ed788db data/create_dragons_plus/recipe/mixing/black_dye_from_fluid.json
 c1ef0e53cd5fafd5f04622c5cf0e7f7f28b4f558 data/create_dragons_plus/recipe/mixing/black_dye_from_item.json
@@ -97,6 +97,7 @@ a67bd4afa13d8bf7ed40d2d3fc8b893d73f34b58 data/create_dragons_plus/recipe/mixing/
 74e1c22cafe121a9759b6a1ededb2d7ba2bf3828 data/create_dragons_plus/recipe/mixing/yellow_dye_from_item.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create_dragons_plus/tags/block/fan_processing_catalysts/ending.json
 81ec7cb08149ad25b109417ceae077f3de6820e9 data/create_dragons_plus/tags/block/fan_processing_catalysts/sanding.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/create_dragons_plus/tags/block/not_applicable_for_polishing.json
 4e7266ed2432ce7636452bcd53b167e08f03d236 data/create_dragons_plus/tags/block/passive_block_freezers.json
 c6955313644af159907087711431126de933b186 data/create_dragons_plus/tags/fluid/fan_processing_catalysts/ending.json
 c6955313644af159907087711431126de933b186 data/c/tags/fluid/dragon_breath.json
