@@ -280,17 +280,18 @@ public class CDPFluids {
         }
 
         static void registerFluidInteractions() {
+            var genConcrete = CDPConfig.common().features.dyeFluidsLavaInteractionGenerateColoredConcrete.get();
             DYES_BY_COLOR.forEach((color, entry) -> {
                 var type = entry.getType();
                 var block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(color.getName()).withSuffix("_concrete"));
                 if (block == Blocks.AIR)
                     return;
-                LAVA_INTERACTIONS.put(type, block.defaultBlockState());
+                LAVA_INTERACTIONS.put(type, genConcrete ? block.defaultBlockState(): Blocks.COBBLESTONE.defaultBlockState());
                 FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
                         type,
                         fluidState -> fluidState.isSource()
                                 ? Blocks.OBSIDIAN.defaultBlockState()
-                                : block.defaultBlockState()));
+                                : genConcrete ? block.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState()));
             });
             LAVA_INTERACTIONS.put(DRAGON_BREATH.getType(), Blocks.END_STONE.defaultBlockState());
             FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(

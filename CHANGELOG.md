@@ -2,10 +2,11 @@
 
 #### Update
 * Add Hungarian Translation (by @Batári Balázs László)
-* Add block tag for automatic polishing recipe generation denylist
 * Add Stainable attribute for the attribute filter
 * Bucket of Mod Fluids works properly with Dispenser
 * Liquid Dye now can solidify concrete powder
+* Add block tag for automatic polishing recipe generation denylist
+* Add config to disable colored concrete generation in lava interaction of Dye Fluid
 
 #### Change
 * Keep Bucket on Main Hand after filling from Fluid Hatch
