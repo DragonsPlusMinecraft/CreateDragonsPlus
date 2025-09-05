@@ -214,9 +214,9 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             fluidCopy.setAmount(requiredAmountForItem);
             capability.drain(fluidCopy, FluidAction.EXECUTE);
 
-            if (!player.isCreative()){
-                if(player.getItemInHand(hand).isEmpty())
-                    player.setItemInHand(hand,result);
+            if (!player.isCreative()) {
+                if (player.getItemInHand(hand).isEmpty())
+                    player.setItemInHand(hand, result);
                 else player.getInventory().placeItemBackInInventory(result);
             }
             blockEntity.setChanged();

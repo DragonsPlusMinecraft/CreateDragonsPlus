@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -41,7 +40,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -50,7 +48,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -149,8 +146,9 @@ public class CDPFluids {
     public static void registerDispenserBehavior() {
         DispenseItemBehavior fluidDispenserBehavior = new DefaultDispenseItemBehavior() {
             private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+
             public ItemStack execute(BlockSource source, ItemStack itemStack) {
-                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem)itemStack.getItem();
+                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem) itemStack.getItem();
                 BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
                 Level level = source.level();
                 if (dispensiblecontaineritem.emptyContents(null, level, blockpos, null, itemStack)) {
@@ -161,7 +159,7 @@ public class CDPFluids {
                 }
             }
         };
-        DYES_BY_COLOR.values().forEach(dyeFluid->{
+        DYES_BY_COLOR.values().forEach(dyeFluid -> {
             DispenserBlock.registerBehavior(dyeFluid.getBucket().get(), fluidDispenserBehavior);
         });
         DispenserBlock.registerBehavior(DRAGON_BREATH.getBucket().get(), fluidDispenserBehavior);
@@ -286,7 +284,7 @@ public class CDPFluids {
                 var block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(color.getName()).withSuffix("_concrete"));
                 if (block == Blocks.AIR)
                     return;
-                LAVA_INTERACTIONS.put(type, genConcrete ? block.defaultBlockState(): Blocks.COBBLESTONE.defaultBlockState());
+                LAVA_INTERACTIONS.put(type, genConcrete ? block.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState());
                 FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
                         type,
                         fluidState -> fluidState.isSource()

@@ -24,7 +24,6 @@ import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.logistics.item.filter.attribute.SingletonItemAttribute;
-
 import java.util.Collection;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
@@ -67,7 +66,8 @@ public class CDPItemAttributes {
         REGISTRATE.addRawLang(invertedDescriptionKey, "cannot be Stained");
         return ITEM_ATTRIBUTES.register("stainable", () -> new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type,
                 (itemStack, level) -> processingTypes.stream()
-                        .anyMatch(s -> s.get().canProcess(itemStack, level)), CDPCommon.ID + ".stainable")));
+                        .anyMatch(s -> s.get().canProcess(itemStack, level)),
+                CDPCommon.ID + ".stainable")));
     }
 
     public static void register(IEventBus modBus) {
