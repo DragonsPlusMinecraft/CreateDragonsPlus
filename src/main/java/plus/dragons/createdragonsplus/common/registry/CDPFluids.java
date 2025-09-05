@@ -30,10 +30,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -41,7 +37,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,6 +55,7 @@ import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInforma
 import net.neoforged.neoforge.fluids.FluidType;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.fluids.StandardDispenserBehaviour;
 import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonBreathFluidType;
 import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragondBreathLiquidBlock;
 import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonsBreathOpenPipeEffect;
@@ -144,25 +140,8 @@ public class CDPFluids {
     }
 
     public static void registerDispenserBehavior() {
-        DispenseItemBehavior fluidDispenserBehavior = new DefaultDispenseItemBehavior() {
-            private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
-
-            public ItemStack execute(BlockSource source, ItemStack itemStack) {
-                DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem) itemStack.getItem();
-                BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
-                Level level = source.level();
-                if (dispensiblecontaineritem.emptyContents(null, level, blockpos, null, itemStack)) {
-                    dispensiblecontaineritem.checkExtraContent(null, level, itemStack, blockpos);
-                    return this.consumeWithRemainder(source, itemStack, new ItemStack(Items.BUCKET));
-                } else {
-                    return this.defaultDispenseItemBehavior.dispense(source, itemStack);
-                }
-            }
-        };
-        DYES_BY_COLOR.values().forEach(dyeFluid -> {
-            DispenserBlock.registerBehavior(dyeFluid.getBucket().get(), fluidDispenserBehavior);
-        });
-        DispenserBlock.registerBehavior(DRAGON_BREATH.getBucket().get(), fluidDispenserBehavior);
+        DYES_BY_COLOR.values().forEach(dyeFluid -> DispenserBlock.registerBehavior(dyeFluid.getBucket().get(), StandardDispenserBehaviour.INSTANCE));
+        DispenserBlock.registerBehavior(DRAGON_BREATH.getBucket().get(), StandardDispenserBehaviour.INSTANCE);
     }
 
     @SubscribeEvent
