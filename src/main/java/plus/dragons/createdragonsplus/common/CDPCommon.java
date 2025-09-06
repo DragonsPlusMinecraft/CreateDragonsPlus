@@ -21,10 +21,10 @@ package plus.dragons.createdragonsplus.common;
 import com.simibubi.create.foundation.item.ItemDescription;
 import java.util.concurrent.CompletableFuture;
 import net.createmod.catnip.lang.FontHelper;
-import net.minecraft.Util;
-import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack.Position;
 import net.neoforged.bus.api.IEventBus;
@@ -104,7 +104,7 @@ public class CDPCommon {
         var type = event.getPackType();
         if (type == PackType.SERVER_DATA) {
             var pack = new RuntimePackResources("runtime", modContainer, type, Position.TOP, runtimePackTitle, runtimePackDescription);
-            var registries = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
+            var registries = CompletableFuture.<HolderLookup.Provider>completedFuture(RegistryLayer.createRegistryAccess().compositeAccess());
             pack.addDataProvider(new CDPRuntimeRecipeProvider(pack.getPackOutput(), registries));
             event.addRepositorySource(pack);
         }
