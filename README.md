@@ -55,9 +55,9 @@ with reliable orders. (Will be superseded by Create 6.0.5)
 - Dye Fluids
 - Dragon's Breath (Fluid)
 - Bulk Coloring (Compatible with Create: Garnished)
-- Bulk Freezing (Compatible with Create: Garnished)
-- Bulk Sanding (Needs Quicksand)
-- Bulk Ending
+- Bulk Freezing (Compatible with Create: Garnished, Create: D&D)
+- Bulk Sanding (Needs Quicksand. Compatible with Create: D&D)
+- Bulk Ending (Compatible with Create: D&D)
 
 ## Contribute
 Feel free to open a PR to either provide localization or to add another feature! All help is appreciated!

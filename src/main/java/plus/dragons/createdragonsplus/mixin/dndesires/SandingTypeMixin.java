@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.mixin.garnished;
+package plus.dragons.createdragonsplus.mixin.dndesires;
 
+import dev.lopyluna.dndesires.content.fan_types.SandingType;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.dakotapride.garnished.recipe.GarnishedFanProcessing.FreezingType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,12 +30,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration.Constants;
 
-@Restriction(require = @Condition(Constants.CREATE_GARNISHED))
-@Mixin(FreezingType.class)
-public class FreezingFanProcessingTypeMixin {
+@Restriction(require = @Condition(Constants.CREATE_DND))
+@Mixin(SandingType.class)
+public class SandingTypeMixin {
     @Inject(method = "isValidAt", at = @At("HEAD"), cancellable = true)
     private void disableBlowing(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (CDPConfig.recipes().enableBulkFreezing.get())
+        if (CDPConfig.recipes().enableBulkSanding.get())
             cir.setReturnValue(false);
     }
 }

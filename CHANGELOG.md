@@ -1,8 +1,8 @@
-## Create: Dragons Plus 1.7.1b
+## Create: Dragons Plus 1.8.0
 
-### Revert
-* Revert last patch for Placebo crash since the issue seems to be not on this side and current patch cause else issue.
+### Update
+Compatible with Create: Dreams & Desire.
 
-Please update from 1.7.1 to this version. 
+`Bulk Sanding`, `Bulk Ending` and `Bulk Freezing` supports all Fan processing recipes of Create: Dreams & Desires automatically.
 
-If you encounter another crash and also have Placebo installed, please inform me with complete log, thanks!
+Industrial Fan is supported.

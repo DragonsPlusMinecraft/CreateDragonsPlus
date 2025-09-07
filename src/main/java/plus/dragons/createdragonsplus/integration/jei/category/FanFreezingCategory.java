@@ -42,6 +42,7 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
+import plus.dragons.createdragonsplus.integration.CompatUtility;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
@@ -59,7 +60,7 @@ public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, Items.POWDER_SNOW_BUCKET::getDefaultInstance);
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
         catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
-        var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, List.of(() -> catalyst));
+        var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, CompatUtility.catalystWithIndustryFan(catalyst));
         return new FanFreezingCategory(info);
     }
 
@@ -73,12 +74,19 @@ public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe
     }
 
     private static List<RecipeHolder<FreezingRecipe>> getAllRecipes() {
-        var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.FREEZING.getType()));
         DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource("freezing"));
         if (createGarnishedRecipe.isBound()) {
             manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes
+                    .add(new RecipeHolder<>(holder.id(), FreezingRecipe.builder(holder.id())
+                            .withItemIngredients(holder.value().getIngredients())
+                            .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
+                            .build())));
+        }
+        DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createDNDRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_DND.asResource("freezing"));
+        if (createDNDRecipe.isBound()) {
+            manager.getAllRecipesFor(createDNDRecipe.get()).forEach(holder -> recipes
                     .add(new RecipeHolder<>(holder.id(), FreezingRecipe.builder(holder.id())
                             .withItemIngredients(holder.value().getIngredients())
                             .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))

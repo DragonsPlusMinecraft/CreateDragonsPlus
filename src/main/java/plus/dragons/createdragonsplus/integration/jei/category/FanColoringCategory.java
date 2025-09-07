@@ -55,6 +55,7 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecip
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
+import plus.dragons.createdragonsplus.integration.CompatUtility;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
@@ -74,7 +75,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
         catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
-        var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, List.of(() -> catalyst));
+        var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, CompatUtility.catalystWithIndustryFan(catalyst));
         return new FanColoringCategory(info);
     }
 

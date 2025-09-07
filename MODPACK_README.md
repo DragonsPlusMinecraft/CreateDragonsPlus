@@ -33,6 +33,9 @@
 ### Compat with Create: Garnished
 `Bulk Coloring` and `Bulk Freezing` supports all Fan processing recipes of Create: Garnished.
 
+### Compat with Create: Dreams & Desires
+`Bulk Sanding`, `Bulk Ending` and `Bulk Freezing` supports all Fan processing recipes of Create: Dreams & Desires.
+
 ## Feature Flags
 If you want to use C:DP only and want to disable some feature, you can configure it in common config.  
 Mods depending on certain features may forcibly enable/disable them, in that case, the corresponding config will be ignored.

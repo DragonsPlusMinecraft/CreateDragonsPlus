@@ -16,26 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.mixin.garnished;
+package plus.dragons.createdragonsplus.mixin.dndesires;
 
+import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
+import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import dev.lopyluna.dndesires.compat.jei.category.DragonBreathingCategory;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.dakotapride.garnished.recipe.GarnishedFanProcessing.FreezingType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration.Constants;
 
-@Restriction(require = @Condition(Constants.CREATE_GARNISHED))
-@Mixin(FreezingType.class)
-public class FreezingFanProcessingTypeMixin {
-    @Inject(method = "isValidAt", at = @At("HEAD"), cancellable = true)
-    private void disableBlowing(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (CDPConfig.recipes().enableBulkFreezing.get())
-            cir.setReturnValue(false);
+@Restriction(require = @Condition(Constants.CREATE_DND))
+@Mixin(DragonBreathingCategory.class)
+public abstract class DragonBreathingCategoryMixin<T extends StandardProcessingRecipe<?>> extends ProcessingViaFanCategory.MultiOutput<T> {
+    private DragonBreathingCategoryMixin(Info<T> info) {
+        super(info);
+    }
+
+    @Override
+    public boolean isHandled(RecipeHolder<T> recipe) {
+        return !CDPConfig.recipes().enableBulkEnding.get();
     }
 }
