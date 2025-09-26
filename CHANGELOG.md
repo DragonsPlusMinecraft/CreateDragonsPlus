@@ -1,4 +1,4 @@
-## Create: Dragons Plus 1.8.0b
+## Create: Dragons Plus 1.8.1
 
-### Translation
-* Add PT_BR localization, by PrincessStellar
+### Fix
+* Fix Break Fan Catalyst Tags of Create: Dreams & Desires. Catalyst Sails now should work correctly.
