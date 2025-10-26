@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.mixin.garnished;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -16,13 +34,10 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 @Restriction(require = @Condition(ModIntegration.Constants.CREATE_GARNISHED))
 @Mixin(FanProcessingType.class)
 public interface FanProcessingTypeMixinForGarnished {
-    @WrapOperation(
-            method = "getAt",
-            at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;isValidAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z")
-    )
+    @WrapOperation(method = "getAt", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;isValidAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
     private static boolean ignoreDisabledType(FanProcessingType instance, Level level, BlockPos blockPos, Operation<Boolean> original) {
         if (instance instanceof FreezingFanProcessingType && CDPConfig.recipes().enableBulkFreezing.get())
-           return false;
+            return false;
         return original.call(instance, level, blockPos);
     }
 }
