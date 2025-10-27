@@ -25,7 +25,6 @@ import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +34,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,7 +56,7 @@ public class PotionMixingRecipesMixin {
                 var recipeId = CDPCommon.asResource(id + "_using_dragon_breath_fluid");
                 var recipe = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
                         .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
-                        .require(FluidIngredient.fromFluidStack(fromFluid))
+                        .require(SizedFluidIngredient.of(fromFluid))
                         .output(toFluid)
                         .requiresHeat(HeatCondition.HEATED)
                         .build();

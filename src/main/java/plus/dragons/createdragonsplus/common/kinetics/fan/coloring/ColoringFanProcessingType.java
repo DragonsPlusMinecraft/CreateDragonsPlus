@@ -105,7 +105,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         return level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe))
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true))
                 .or(() -> processByCreateGarnished(stack, level))
                 .or(() -> processByCrafting(stack, level)
                         .map(result -> ItemHelper.multipliedOutput(stack, result)))
@@ -158,7 +158,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
             return Optional.empty();
         return level.getRecipeManager()
                 .getRecipeFor(createGarnishedRecipe.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe));
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true));
     }
 
     private Optional<ItemStack> processByCrafting(ItemStack stack, Level level) {
