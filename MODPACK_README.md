@@ -21,7 +21,7 @@
 `Bulk Freezing` recipe is the recipe of Fan Bulk Freezing. It has similar format as the recipe of Create, with type `create_dragons_plus:freezing`.
 ### Bulk Ending
 `Bulk Ending` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:ending`.
-### Bulk Sanding (Require Quicksand Mod)
+### Bulk Sanding (Require Quicksand Mod or C:DnD or valid bulk sanding catalyst)
 `Bulk Sanding` recipe is the recipe of Fan Bulk Sanding. It has similar format as the recipe of Create, with type `create_dragons_plus:sanding`.
 
 `Bulk Sanding` supports every Sand Paper Polishing recipe.
