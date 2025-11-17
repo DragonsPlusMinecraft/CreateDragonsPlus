@@ -36,6 +36,8 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -78,6 +80,8 @@ public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> 
     @Override
     protected void renderAttachedBlock(GuiGraphics graphics) {
         var optional = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
+        if (optional.isEmpty())
+            optional = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
         if (optional.isEmpty())
             return;
         if (catalystBlocks != optional.get()) {
