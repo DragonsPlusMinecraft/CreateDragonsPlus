@@ -173,8 +173,13 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
         ItemStack copy = stack.copy();
         emptying = GenericItemEmptying.emptyItem(level, copy, false);
+
+        // Prevent special cap behavior interrupting insert fluid.
+        int realFill = capability.fill(fluidStack.copy(), FluidAction.SIMULATE);
+        if(realFill == 0) return fluidStack;
         capability.fill(fluidStack.copy(), FluidAction.EXECUTE);
         blockEntity.setChanged();
+
         if (level instanceof ServerLevel serverLevel)
             serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
 
@@ -212,6 +217,11 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
             FluidStack fluidCopy = fluidStack.copy();
             fluidCopy.setAmount(requiredAmountForItem);
+
+            // Prevent special cap behavior interrupting draw fluid. Such as Mekanism.
+            FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
+            if(realDraw.isEmpty())
+                return FluidStack.EMPTY;
             capability.drain(fluidCopy, FluidAction.EXECUTE);
 
             if (!player.isCreative()) {
