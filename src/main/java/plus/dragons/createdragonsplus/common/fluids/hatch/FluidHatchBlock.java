@@ -176,7 +176,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
         // Prevent special cap behavior interrupting insert fluid.
         int realFill = capability.fill(fluidStack.copy(), FluidAction.SIMULATE);
-        if(realFill == 0) return fluidStack;
+        if (realFill == 0) return fluidStack;
         capability.fill(fluidStack.copy(), FluidAction.EXECUTE);
         blockEntity.setChanged();
 
@@ -220,7 +220,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
             // Prevent special cap behavior interrupting draw fluid. Such as Mekanism.
             FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
-            if(realDraw.isEmpty())
+            if (realDraw.isEmpty())
                 return FluidStack.EMPTY;
             capability.drain(fluidCopy, FluidAction.EXECUTE);
 

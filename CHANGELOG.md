@@ -1,8 +1,11 @@
-## Create: Dragons Plus 1.8.5
+## Create: Dragons Plus 1.8.6
+
+Update for Create 6.0.9.
 
 ### Update
-* Bulk Sanding doesn't use Quicksand(neoforge) as a hard requirement.
-  Now, whenever any one of the following conditions is met:  `Quicksand installed`, `C:DnD installed`, or `Bulk Sanding block tag contains a block`, then Bulk Sanding is activated.
+* Add item tag `not_applicable_for_coloring`. This tag prevents specific item from being bulk colored.
 
 ### Fix
-* Update recipe format for new version of KubeJS-Create compatibility
+* Fix pondering encased fan with Dreams and Desires and without Quicksand results in a game crash
+* Fix Game Crash install with Oreganized when player use encased fan's ponder at bulk freezing
+* Fix Fluid Hatch Interaction with Mekanism's Fluid Tanks is causing a Infinite Fluid Dupe.
