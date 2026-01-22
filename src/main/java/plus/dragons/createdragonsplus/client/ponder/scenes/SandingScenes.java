@@ -35,15 +35,16 @@ import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 
 public class SandingScenes {
     public static BlockState SANDING_CATALYST;
+
     public static void bulkSanding(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        if(SANDING_CATALYST == null){
+        if (SANDING_CATALYST == null) {
             var optional = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand"));
             if (optional.isEmpty()) {
                 var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
                 if (optional2.isEmpty())
                     optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
-                if (optional2.isEmpty()){
+                if (optional2.isEmpty()) {
                     throw new RuntimeException("Sanding catalysts not found! Please report this to Author with log!");
                 }
                 SANDING_CATALYST = optional2.get().stream().findFirst().get().value().defaultBlockState();
@@ -52,7 +53,7 @@ public class SandingScenes {
             }
 
         }
-        scene.world().setBlock(util.grid().at(3,2,3), SANDING_CATALYST, false);
+        scene.world().setBlock(util.grid().at(3, 2, 3), SANDING_CATALYST, false);
 
         scene.title("bulk_sanding", "Bulk Sanding");
         scene.configureBasePlate(0, 0, 5);

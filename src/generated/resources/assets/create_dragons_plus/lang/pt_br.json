@@ -1,4 +1,5 @@
 {
+  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "Tinta Preta",
   "block.create_dragons_plus.blue_dye": "Tinta Azul",
   "block.create_dragons_plus.brown_dye": "Tinta Marrom",
@@ -38,7 +39,7 @@
   "create_dragons_plus.ponder.bulk_freezing.header": "Congelamento em Massa",
   "create_dragons_plus.ponder.bulk_freezing.text_1": "Fluxos de Ar passando através da Neve em Pó criam uma Configuração de Congelamento",
   "create_dragons_plus.ponder.bulk_sanding.header": "Lixamento em Massa",
-  "create_dragons_plus.ponder.bulk_sanding.text_1": "Fluxos de Ar passando através da Areia Movediça criam uma Configuração de Lixamento",
+  "create_dragons_plus.ponder.bulk_sanding.text_1": "Air Flows passing through Bulk Sanding Catalysts (Example: Quicksand) create a Sanding Setup",
   "create_dragons_plus.ponder.bulk_sanding.text_2": "Como a Explosão em Massa e a Fumação em Massa, o Lixamento em Massa é automaticamente compatível com as receitas de lixa do Bloco de Lixamento",
   "fluid.create_dragons_plus.black_dye": "Tinta Preta",
   "fluid.create_dragons_plus.blue_dye": "Tinta Azul",
@@ -131,5 +132,6 @@
   "tag.item.c.buckets.dye.red": "Balde de Tinta Vermelha",
   "tag.item.c.buckets.dye.white": "Balde de Tinta Branca",
   "tag.item.c.buckets.dye.yellow": "Balde de Tinta Amarela",
+  "tag.item.create_dragons_plus.not_applicable_for_coloring": "Not applicable for automatic Coloring Recipe",
   "upgrade.create_dragons_plus.blaze_upgrade": "Aprimoramento de Blaze"
 }

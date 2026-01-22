@@ -58,6 +58,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
+import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
@@ -162,6 +163,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
     }
 
     private Optional<ItemStack> processByCrafting(ItemStack stack, Level level) {
+        if (stack.is(CDPItems.MOD_TAGS.notApplicableColoring))
+            return Optional.empty();
         // 1 Dye + 1 Colorless = 1 Dyed
         var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
         var optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);

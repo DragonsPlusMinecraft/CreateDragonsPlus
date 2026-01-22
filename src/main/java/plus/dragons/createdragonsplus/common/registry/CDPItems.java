@@ -47,6 +47,7 @@ import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 
 public class CDPItems {
     public static final CommonTags COMMON_TAGS = new CommonTags();
+    public static final ModTags MOD_TAGS = new ModTags();
 
     public static final ItemEntry<PackageItem> RARE_BLAZE_PACKAGE = REGISTRATE
             .item("rare_blaze_pacakge", prop -> new PackageItem(prop,
@@ -82,6 +83,7 @@ public class CDPItems {
 
     public static void register(IEventBus modBus) {
         REGISTRATE.registerItemTags(COMMON_TAGS);
+        REGISTRATE.registerItemTags(MOD_TAGS);
     }
 
     public static class Tooltips {
@@ -118,6 +120,14 @@ public class CDPItems {
             super("c");
             addTag(Tags.Items.BUCKETS, dyeBuckets);
             addTag(Tags.Items.BUCKETS, dragonBreathBuckets);
+        }
+    }
+
+    public static class ModTags extends ItemTagRegistry {
+        public final TagKey<Item> notApplicableColoring = tag("not_applicable_for_coloring", "Not applicable for automatic Coloring Recipe");
+
+        protected ModTags() {
+            super(CDPCommon.ID);
         }
     }
 }

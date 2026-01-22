@@ -53,6 +53,7 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
+import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.CompatUtility;
@@ -158,20 +159,26 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
 
     private static Optional<RecipeHolder<ColoringRecipe>> convert2x1(ResourceLocation id, DyeColor color, List<Ingredient> ingredients, ItemStack result) {
         var dye = new ItemStack(DyeItem.byColor(color));
-        if (ingredients.get(0).test(dye)) {
+        int dyePos;
+        if (ingredients.get(0).test(dye)) dyePos = 0;
+        else if (ingredients.get(1).test(dye)) dyePos = 1;
+        else return Optional.empty();
+        var in = ingredients.get(dyePos == 0 ? 1 : 0);
+        if (Arrays.stream(in.getItems()).anyMatch(i -> i.is(CDPItems.MOD_TAGS.notApplicableColoring))) {
+            var fi = Arrays.stream(in.getItems()).filter(i -> !i.is(CDPItems.MOD_TAGS.notApplicableColoring));
+            if (fi.findAny().isEmpty()) return Optional.empty();
             var recipe = ColoringRecipe.builder(id, color)
-                    .require(ingredients.get(1))
+                    .require(Ingredient.of(fi))
                     .output(result)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
-        } else if (ingredients.get(1).test(dye)) {
+        } else {
             var recipe = ColoringRecipe.builder(id, color)
-                    .require(ingredients.get(0))
+                    .require(in)
                     .output(result)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
         }
-        return Optional.empty();
     }
 
     private static Optional<RecipeHolder<ColoringRecipe>> convert3x3(ResourceLocation id, DyeColor color, List<Ingredient> ingredients, ItemStack result) {
@@ -193,11 +200,21 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         }
         if (!hasDye || dyeable == null)
             return Optional.empty();
-        var recipe = ColoringRecipe.builder(id, color)
-                .require(dyeable)
-                .output(result.copyWithCount(1))
-                .build();
-        return Optional.of(new RecipeHolder<>(id, recipe));
+        if (Arrays.stream(dyeable.getItems()).anyMatch(i -> i.is(CDPItems.MOD_TAGS.notApplicableColoring))) {
+            var fi = Arrays.stream(dyeable.getItems()).filter(i -> !i.is(CDPItems.MOD_TAGS.notApplicableColoring));
+            if (fi.findAny().isEmpty()) return Optional.empty();
+            var recipe = ColoringRecipe.builder(id, color)
+                    .require(Ingredient.of(fi))
+                    .output(result.copyWithCount(1))
+                    .build();
+            return Optional.of(new RecipeHolder<>(id, recipe));
+        } else {
+            var recipe = ColoringRecipe.builder(id, color)
+                    .require(dyeable)
+                    .output(result.copyWithCount(1))
+                    .build();
+            return Optional.of(new RecipeHolder<>(id, recipe));
+        }
     }
 
     @FieldsNullabilityUnknownByDefault

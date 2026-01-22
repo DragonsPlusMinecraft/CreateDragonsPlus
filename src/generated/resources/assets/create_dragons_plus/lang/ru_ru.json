@@ -1,4 +1,5 @@
 {
+  "_comment.unlocalized": "Remove this line after finishing localization.",
   "block.create_dragons_plus.black_dye": "Чёрный краситель",
   "block.create_dragons_plus.blue_dye": "Синий краситель",
   "block.create_dragons_plus.brown_dye": "Коричневый краситель",
@@ -38,7 +39,7 @@
   "create_dragons_plus.ponder.bulk_freezing.header": "Массовой заморозкой",
   "create_dragons_plus.ponder.bulk_freezing.text_1": "Проходя через рыхлый снег, воздушный поток становится замораживающим",
   "create_dragons_plus.ponder.bulk_sanding.header": "Массовая полировка",
-  "create_dragons_plus.ponder.bulk_sanding.text_1": "Проходя через зыбучий песок, воздушный поток становится полирующим",
+  "create_dragons_plus.ponder.bulk_sanding.text_1": "Air Flows passing through Bulk Sanding Catalysts (Example: Quicksand) create a Sanding Setup",
   "create_dragons_plus.ponder.bulk_sanding.text_2": "Как массовое плавление и массовое копчение, массовая полировка автоматически совместима с рецептами полирования наждачной бумагой",
   "fluid.create_dragons_plus.black_dye": "Чёрный краситель",
   "fluid.create_dragons_plus.blue_dye": "Синий краситель",
@@ -131,5 +132,6 @@
   "tag.item.c.buckets.dye.red": "Вёдра красного красителя",
   "tag.item.c.buckets.dye.white": "Вёдра белого красителя",
   "tag.item.c.buckets.dye.yellow": "Вёдра жёлтого красителя",
+  "tag.item.create_dragons_plus.not_applicable_for_coloring": "Not applicable for automatic Coloring Recipe",
   "upgrade.create_dragons_plus.blaze_upgrade": "Улучшение всполоха"
 }

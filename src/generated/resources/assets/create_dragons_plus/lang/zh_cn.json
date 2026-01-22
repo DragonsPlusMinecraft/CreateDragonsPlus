@@ -38,7 +38,7 @@
   "create_dragons_plus.ponder.bulk_freezing.header": "批量冷冻",
   "create_dragons_plus.ponder.bulk_freezing.text_1": "当气流吹过细雪后，便可用于冷冻物品",
   "create_dragons_plus.ponder.bulk_sanding.header": "批量喷砂",
-  "create_dragons_plus.ponder.bulk_sanding.text_1": "当气流吹过流沙后，便可用于打磨物品",
+  "create_dragons_plus.ponder.bulk_sanding.text_1": "当气流吹过批量喷砂触媒（例：流沙）后，便可用于打磨物品",
   "create_dragons_plus.ponder.bulk_sanding.text_2": "与批量熔炼和批量烟熏相同，批量喷砂自动兼容砂纸打磨配方",
   "fluid.create_dragons_plus.black_dye": "黑色染料",
   "fluid.create_dragons_plus.blue_dye": "蓝色染料",
@@ -92,7 +92,7 @@
   "recipe.create_dragons_plus.fan_sanding.fan": "在流沙后放置鼓风机",
   "tag.block.create_dragons_plus.fan_processing_catalysts.ending": "批量终结触媒",
   "tag.block.create_dragons_plus.fan_processing_catalysts.sanding": "批量喷砂触媒",
-  "tag.block.create_dragons_plus.not_applicable_for_polishing": "不适用与方块打磨抛光配方",
+  "tag.block.create_dragons_plus.not_applicable_for_polishing": "不适用于方块打磨抛光配方",
   "tag.block.create_dragons_plus.passive_block_freezers": "被动方块冷源",
   "tag.fluid.c.dragon_breath": "龙息",
   "tag.fluid.c.dyes": "染料",
@@ -131,5 +131,6 @@
   "tag.item.c.buckets.dye.red": "红色染料桶",
   "tag.item.c.buckets.dye.white": "白色染料桶",
   "tag.item.c.buckets.dye.yellow": "黄色染料桶",
+  "tag.item.create_dragons_plus.not_applicable_for_coloring": "不适用于批量染色配方",
   "upgrade.create_dragons_plus.blaze_upgrade": "烈焰人升级"
 }

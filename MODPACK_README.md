@@ -6,6 +6,7 @@
 * `c:buckets/dye` for Bucket of Dye Fluid and `c:buckets/dye/color`for specific color
 * `c:dyed/color` for specific color dyed item, which includes corresponding Bucket of Dye Fluid
 * `c:buckets` for Bucket Item, which includes `c:buckets/dye`
+* `create_dragons_plus:not_applicable_for_coloring` for Item that is not applicable for automatic Coloring Recipe support
 #### Block
 * `create_dragons_plus:passiveBlockFreezers` for Passive Block Freezers
 * `create_dragons_plus:fan_processing_catalysts/sanding` for Bulk Sanding Catalysts

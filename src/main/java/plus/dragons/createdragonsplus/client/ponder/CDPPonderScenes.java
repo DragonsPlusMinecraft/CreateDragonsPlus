@@ -25,7 +25,7 @@ import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import plus.dragons.createdragonsplus.client.ponder.scenes.CDPFanScenes;
-import plus.dragons.createdragonsplus.client.ponder.scenes.QuickSandScenes;
+import plus.dragons.createdragonsplus.client.ponder.scenes.SandingScenes;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
@@ -39,7 +39,7 @@ public class CDPPonderScenes {
 
         if (ModIntegration.QUICKSAND.enabled() || ModIntegration.CREATE_DND.enabled() || BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts).isPresent()) {
             registration.forComponents(AllBlocks.ENCASED_FAN)
-                    .addStoryBoard("bulk_sanding", QuickSandScenes::bulkSanding);
+                    .addStoryBoard("bulk_sanding", SandingScenes::bulkSanding);
         }
     }
 }

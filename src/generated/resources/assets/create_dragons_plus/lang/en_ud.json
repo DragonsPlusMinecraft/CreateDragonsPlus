@@ -38,7 +38,7 @@
   "create_dragons_plus.ponder.bulk_freezing.header": "buızǝǝɹℲ ʞןnᗺ",
   "create_dragons_plus.ponder.bulk_freezing.text_1": "dnʇǝS buızǝǝɹℲ ɐ ǝʇɐǝɹɔ ʍouS ɹǝpʍoԀ ɥbnoɹɥʇ buıssɐd sʍoןℲ ɹıⱯ",
   "create_dragons_plus.ponder.bulk_sanding.header": "buıpuɐS ʞןnᗺ",
-  "create_dragons_plus.ponder.bulk_sanding.text_1": "dnʇǝS buıpuɐS ɐ ǝʇɐǝɹɔ puɐsʞɔınὉ ɥbnoɹɥʇ buıssɐd sʍoןℲ ɹıⱯ",
+  "create_dragons_plus.ponder.bulk_sanding.text_1": "dnʇǝS buıpuɐS ɐ ǝʇɐǝɹɔ )puɐsʞɔınὉ :ǝןdɯɐxƎ( sʇsʎןɐʇɐƆ buıpuɐS ʞןnᗺ ɥbnoɹɥʇ buıssɐd sʍoןℲ ɹıⱯ",
   "create_dragons_plus.ponder.bulk_sanding.text_2": "sǝdıɔǝɹ buıpuɐs ɹǝdɐԀ puɐS ɥʇıʍ ǝןqıʇɐdɯoɔ ʎןןɐɔıʇɐɯoʇnɐ sı buıpuɐS ʞןnᗺ 'buıʞoɯS ʞןnᗺ puɐ buıʇsɐןᗺ ʞןnᗺ ǝʞıꞀ",
   "fluid.create_dragons_plus.black_dye": "ǝʎᗡ ʞɔɐןᗺ",
   "fluid.create_dragons_plus.blue_dye": "ǝʎᗡ ǝnןᗺ",
@@ -131,5 +131,6 @@
   "tag.item.c.buckets.dye.red": "sʇǝʞɔnᗺ ǝʎᗡ pǝᴚ",
   "tag.item.c.buckets.dye.white": "sʇǝʞɔnᗺ ǝʎᗡ ǝʇıɥM",
   "tag.item.c.buckets.dye.yellow": "sʇǝʞɔnᗺ ǝʎᗡ ʍoןןǝʎ",
+  "tag.item.create_dragons_plus.not_applicable_for_coloring": "ǝdıɔǝᴚ buıɹoןoƆ ɔıʇɐɯoʇnɐ ɹoɟ ǝןqɐɔıןddɐ ʇoN",
   "upgrade.create_dragons_plus.blaze_upgrade": "ǝpɐɹbd∩ ǝzɐןᗺ"
 }
