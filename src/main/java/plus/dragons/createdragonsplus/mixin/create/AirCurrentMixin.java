@@ -64,7 +64,7 @@ public class AirCurrentMixin implements AirCurrentAccess {
         var state = world.getBlockState(currentPos);
         var direction = source.getAirFlowDirection();
         if (state.is(Blocks.DRAGON_HEAD)) {
-            var facing = RotationSegment.convertToDirection(state.getValue(SkullBlock.ROTATION)).orElse(null);
+            var facing = RotationSegment.convertToDirection(state.getValue(SkullBlock.ROTATION)).orElse(direction);
             if (direction == facing)
                 return CDPFanProcessingTypes.ENDING.get();
         } else if (state.is(Blocks.DRAGON_WALL_HEAD) && state.getValue(WallSkullBlock.FACING) == direction) {
