@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.client.ponder.scenes;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
@@ -31,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 
 public class SandingScenes {
@@ -42,12 +44,14 @@ public class SandingScenes {
             var optional = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand"));
             if (optional.isEmpty()) {
                 var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-                if (optional2.isEmpty())
+                if (optional2.isEmpty() || optional2.get().size() == 0)
                     optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
-                if (optional2.isEmpty()) {
-                    throw new RuntimeException("Sanding catalysts not found! Please report this to Author with log!");
+                if (optional2.isEmpty() || optional2.get().size() == 0) {
+                    LogUtils.getLogger().error("Sanding catalysts not found! Please report this to Author with log!");
+                    SANDING_CATALYST = Blocks.SAND.defaultBlockState();
+                } else {
+                    SANDING_CATALYST = optional2.get().stream().findFirst().get().value().defaultBlockState();
                 }
-                SANDING_CATALYST = optional2.get().stream().findFirst().get().value().defaultBlockState();
             } else {
                 SANDING_CATALYST = optional.get().defaultBlockState();
             }
