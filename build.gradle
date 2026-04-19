@@ -13,11 +13,43 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
-base {
-    archivesName = mod_artifact_id
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+sourceSets {
+    "simulated" {
+        java {
+            srcDir "src/integration/simulated/java"
+        }
+        resources {
+            srcDir "src/integration/simulated/resources"
+        }
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+    }
+    main {
+        runtimeClasspath += sourceSets."simulated".output
+    }
+}
+
+classes {
+    finalizedBy(tasks."simulatedClasses")
+}
+
+tasks.withType(Jar) {
+    from "LICENSING.txt"
+    from "LICENSE.txt"
+    from "LICENSE-CREATE.txt"
+    from sourceSets."simulated".output
+    exclude ".cache"
+}
+
+tasks.sourcesJar {
+    from sourceSets."simulated".allJava
+}
 
 neoForge {
     version = project.neo_version
@@ -53,6 +85,7 @@ neoForge {
                                     '--output', file('src/generated/resources/').getAbsolutePath(),
                                     '--existing', file('src/main/resources/').getAbsolutePath(),
                                     '--existing', file('src/main/translations/').getAbsolutePath(),
+                                    '--existing', file("src/integration/simulated/resources/").getAbsolutePath(),
                                     '--existing-mod', 'create'
         }
 
@@ -66,6 +99,7 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
+            sourceSet(sourceSets."simulated")
         }
     }
 }
@@ -155,14 +189,8 @@ sourceSets.main.resources {
     srcDir 'src/generated/resources'
     srcDir generateModMetadata
 }
-neoForge.ideSyncTask generateModMetadata
 
-tasks.withType(Jar) {
-    from "LICENSING.txt"
-    from "LICENSE.txt"
-    from "LICENSE-CREATE.txt"
-    exclude ".cache"
-}
+neoForge.ideSyncTask generateModMetadata
 
 spotless {
     java {
@@ -177,10 +205,6 @@ spotless {
 }
 
 build.dependsOn(spotlessApply)
-
-java {
-    withSourcesJar()
-}
 
 publishing {
     publications {

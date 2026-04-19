@@ -25,7 +25,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -88,7 +87,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
         return level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_FAN_COLORING_CATALYSTS) == this.color;
     }
 
-    public void recreateCache(){
+    public void recreateCache() {
         CRAFTING_RESULT_CACHE.clear();
     }
 
@@ -174,7 +173,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (stack.is(CDPItems.MOD_TAGS.notApplicableColoring))
             return Optional.empty();
 
-        if(CRAFTING_RESULT_CACHE.containsKey(stack.getItem()))
+        if (CRAFTING_RESULT_CACHE.containsKey(stack.getItem()))
             return Optional.of(CRAFTING_RESULT_CACHE.get(stack.getItem()).copy());
 
         // 1 Dye + 1 Colorless = 1 Dyed
@@ -184,8 +183,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
             var recipe = optional.get().value();
             var result = recipe.assemble(input, level.registryAccess());
             // Not a coloring recipe if result count is not 1
-            if(result.getCount() == 1){
-                CRAFTING_RESULT_CACHE.put(stack.getItem(),result.copy());
+            if (result.getCount() == 1) {
+                CRAFTING_RESULT_CACHE.put(stack.getItem(), result.copy());
                 return Optional.of(result);
             } else return Optional.empty();
         }
@@ -201,7 +200,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
             if (result.getCount() != 8)
                 return Optional.empty();
             result.setCount(1);
-            CRAFTING_RESULT_CACHE.put(stack.getItem(),result.copy());
+            CRAFTING_RESULT_CACHE.put(stack.getItem(), result.copy());
             return Optional.of(result);
         }
         return Optional.empty();

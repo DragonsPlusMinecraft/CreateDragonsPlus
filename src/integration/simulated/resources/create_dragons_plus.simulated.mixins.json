@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "priority": 1000,
+  "package": "plus.dragons.createdragonsplus.mixin.simulated",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

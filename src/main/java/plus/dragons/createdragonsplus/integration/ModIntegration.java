@@ -36,8 +36,7 @@ public enum ModIntegration {
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     CREATE_DND(Constants.CREATE_DND),
     QUICKSAND(Constants.QUICKSAND),
-    SABLE(Constants.SABLE),;
-    ;
+    AERONAUTICS(Constants.AERONAUTICS),;;
 
     private final String id;
 
@@ -72,7 +71,7 @@ public enum ModIntegration {
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_DND = "dndesires";
         public static final String QUICKSAND = "quicksand";
-        public static final String SABLE = "sable";
+        public static final String AERONAUTICS = "aeronautics";
     }
 
     public DeferredHolder<FanProcessingType, FanProcessingType> fanType(String path) {

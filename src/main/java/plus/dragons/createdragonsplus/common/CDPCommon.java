@@ -19,7 +19,6 @@
 package plus.dragons.createdragonsplus.common;
 
 import com.simibubi.create.foundation.item.ItemDescription;
-
 import java.util.concurrent.CompletableFuture;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.core.HolderLookup;
@@ -67,7 +66,7 @@ public class CDPCommon {
             .addLang("pack", asResource("runtime"), NAME);
     private final Component runtimePackDescription = REGISTRATE
             .addLang("pack", asResource("runtime"), "description", NAME + " Runtime Generated Resources");
-    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> CDPFanProcessingTypes.COLORING.values().forEach(t->t.get().recreateCache());
+    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> CDPFanProcessingTypes.COLORING.values().forEach(t -> t.get().recreateCache());
 
     public CDPCommon(IEventBus modBus, ModContainer modContainer) {
         this.modContainer = modContainer;

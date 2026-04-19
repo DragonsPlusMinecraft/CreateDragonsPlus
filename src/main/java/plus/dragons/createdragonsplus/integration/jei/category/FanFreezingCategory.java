@@ -42,8 +42,8 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
-import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
