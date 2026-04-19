@@ -95,7 +95,7 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
                 .getRecipeFor((RecipeType<? extends StandardProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
                 .or(() -> recipeManager.getRecipeFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), input, level))
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true))
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
                 .or(() -> processByCompatRecipe(createDNDRecipe, stack, level))
                 .orElse(null);
     }
@@ -179,6 +179,6 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
             return Optional.empty();
         return level.getRecipeManager()
                 .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true));
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
     }
 }

@@ -90,7 +90,7 @@ public class EndingFanProcessingType implements FanProcessingType {
         var input = new SingleRecipeInput(stack);
         return recipeManager
                 .getRecipeFor(CDPRecipes.ENDING.getType(), input, level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true))
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
                 .or(() -> processByCompatRecipe(createDNDRecipe, stack, level))
                 .orElse(null);
     }
@@ -141,6 +141,6 @@ public class EndingFanProcessingType implements FanProcessingType {
             return Optional.empty();
         return level.getRecipeManager()
                 .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true));
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
     }
 }

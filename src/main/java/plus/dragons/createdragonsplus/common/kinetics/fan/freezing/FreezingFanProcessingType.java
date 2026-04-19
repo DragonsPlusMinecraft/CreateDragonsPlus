@@ -86,7 +86,7 @@ public class FreezingFanProcessingType implements FanProcessingType {
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         return level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true))
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
                 .or(() -> {
                     var result = processByCompatRecipe(createGarnishedRecipe, stack, level);
                     if (result.isEmpty())
@@ -140,6 +140,6 @@ public class FreezingFanProcessingType implements FanProcessingType {
             return Optional.empty();
         return level.getRecipeManager()
                 .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), true));
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
     }
 }

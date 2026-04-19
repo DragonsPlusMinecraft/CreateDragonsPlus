@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.integration;
+package plus.dragons.createdragonsplus.integration.industrial_fan;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +25,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
-public class CompatUtility {
+public class IndustrialFanCompat {
     public static Optional<Item> INDUSTRIAL_FAN;
 
     public static List<Supplier<? extends ItemStack>> catalystWithIndustryFan(ItemStack fan) {

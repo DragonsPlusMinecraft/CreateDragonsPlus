@@ -1,6 +1,11 @@
-## Create: Dragons Plus 1.8.7
+## Create: Dragons Plus 1.9.0
 
-Update for Create 6.0.9.
+Update for Create Simulated series.
+
+Also update compats for C:D2D and C:Garnished to latest.
+
+### Update
+
 
 ### Fix
-* Fix pondering encased fan with Bulk Sanding crash in certain situation
+* Fix Bulk processing item duplication issue

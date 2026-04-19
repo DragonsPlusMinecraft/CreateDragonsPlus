@@ -87,6 +87,7 @@ repositories {
     maven { url "https://api.modrinth.com/maven" }
     maven { url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config api port, needed by ponder
     maven { url "https://maven.dragons.plus/releases" } // Dragons Plus Maven
+    maven { url "https://maven.ryanhcode.dev/releases" } // RyanHCode Maven - Sable
 }
 
 dependencies {
@@ -110,6 +111,16 @@ dependencies {
 
     compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
     localRuntime("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
+
+    compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
+    localRuntime("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
+
+    //compileOnly("foundry.veil:veil-common-$minecraft_version}:${veil_version}")
+    //localRuntime("foundry.veil:veil-common-${minecraft_version}:${veil_version}")
+    compileOnly("dev.ryanhcode.sable:sable-common-${minecraft_version}:${sable_version}")
+    localRuntime("dev.ryanhcode.sable:sable-common-${minecraft_version}:${sable_version}")
+    compileOnly("maven.modrinth:create-aeronautics:${create_aeronautics_version}")
+    localRuntime("maven.modrinth:create-aeronautics:${create_aeronautics_version}")
 
     compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
