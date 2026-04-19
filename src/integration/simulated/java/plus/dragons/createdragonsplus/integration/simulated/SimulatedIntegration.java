@@ -21,25 +21,41 @@ package plus.dragons.createdragonsplus.integration.simulated;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
+import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 
-// wait for https://github.com/Creators-of-Aeronautics/Simulated-Project/issues/196 to be fixed and then we can do something on it
-// @Mod(CDPCommon.ID)
+@Mod(CDPCommon.ID)
 public class SimulatedIntegration {
-    public SimulatedIntegration(IEventBus modBus) {
+    public SimulatedIntegration(IEventBus modBus, ModContainer modContainer) {
         if (ModIntegration.AERONAUTICS.enabled()) {
-            modBus.register(new Common());
+            modBus.register(new Common(modBus, modContainer));
             if (FMLLoader.getDist() == Dist.CLIENT)
                 modBus.register(new Client());
         }
     }
 
     public static class Common {
+        private final IEventBus modBus;
+        private final ModContainer modContainer;
+
+        public Common(IEventBus modBus, ModContainer modContainer) {
+            this.modBus = modBus;
+            this.modContainer = modContainer;
+        }
+
         @SubscribeEvent
-        public void construct(final FMLConstructModEvent event) {}
+        public void construct(final FMLConstructModEvent event) {
+            CDPSEDataMaps.register(modBus);
+            modBus.register(new CDPSEConfig(modContainer));
+        }
 
         @SubscribeEvent
         public void generate(final GatherDataEvent event) {

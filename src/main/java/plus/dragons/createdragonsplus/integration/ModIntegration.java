@@ -60,13 +60,6 @@ public enum ModIntegration {
         return new ModLoadedCondition(id);
     }
 
-    public void onConstructMod() {}
-
-    public void onCommonSetup() {}
-
-    @OnlyIn(Dist.CLIENT)
-    public void onClientSetup() {}
-
     public static class Constants {
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_DND = "dndesires";

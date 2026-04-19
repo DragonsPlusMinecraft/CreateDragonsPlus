@@ -16,26 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.client;
+package plus.dragons.createdragonsplus.integration.simulated.config;
 
-import net.createmod.ponder.foundation.PonderIndex;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import plus.dragons.createdragonsplus.client.model.CDPPartialModels;
-import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.config.FeaturesConfig;
 
-@Mod(CDPCommon.ID)
-public class CDPClient {
-    public CDPClient(IEventBus modBus) {
-        modBus.register(this);
+public class CDPSEFeaturesConfig extends FeaturesConfig {
+    private final ConfigGroup fluid = group(1, "fluid", Comments.fluid);
+    public final ConfigFeature airCurrentBlockInteraction = feature(
+            true,
+            "fluid/air_current_block_interaction",
+            Comments.fluidAirCurrentBlockInteraction);
+
+    public CDPSEFeaturesConfig() {
+        super(CDPCommon.ID);
     }
 
-    @SubscribeEvent
-    public void setup(final FMLClientSetupEvent event) {
-        PonderIndex.addPlugin(new CDPPonderPlugin());
-        CDPPartialModels.register();
+    static class Comments {
+        static final String fluid = "Fluid Feature Elements";
+        static final String fluidAirCurrentBlockInteraction = "If block interaction of air current through fluid should be enabled";
     }
 }

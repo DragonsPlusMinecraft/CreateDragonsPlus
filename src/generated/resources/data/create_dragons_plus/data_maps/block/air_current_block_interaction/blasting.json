@@ -1,0 +1,8 @@
+{
+  "values": {
+    "minecraft:ice": "minecraft:water",
+    "minecraft:powder_snow": "minecraft:air",
+    "minecraft:snow": "minecraft:air",
+    "minecraft:snow_block": "minecraft:air"
+  }
+}

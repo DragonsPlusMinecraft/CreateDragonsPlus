@@ -5,6 +5,15 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin",
   "mixins": [
+    "create.AirCurrentMixinForSimulatedBehaviour",
+    "create.ProcessingTypeMixins$BlastingTypeMixin",
+    "create.ProcessingTypeMixins$ColoringTypeMixin",
+    "create.ProcessingTypeMixins$EndingTypeMixin",
+    "create.ProcessingTypeMixins$FreezingTypeMixin",
+    "create.ProcessingTypeMixins$HauntingTypeMixin",
+    "create.ProcessingTypeMixins$SandingTypeMixin",
+    "create.ProcessingTypeMixins$SmokingTypeMixin",
+    "create.ProcessingTypeMixins$SplashingTypeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

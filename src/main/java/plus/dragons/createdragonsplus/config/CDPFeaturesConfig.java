@@ -69,7 +69,7 @@ public class CDPFeaturesConfig extends FeaturesConfig {
     static class Comments {
         static final String fluid = "Fluid Feature Elements";
         static final String dyeFluids = "If Dye Fluids should be enabled";
-        static final String dyeFluidsLavaInteractionGenerateColoredConcrete = "If colored concrete should be generated when Fye Fluid meets Lava";
+        static final String dyeFluidsLavaInteractionGenerateColoredConcrete = "If colored concrete should be generated when Dye Fluid meets Lava";
         static final String dragonBreathFluid = "If Dragon's Breath Fluid should be enabled";
         static final String block = "Block Feature Elements";
         static final String fluidHatch = "If Fluid Hatch should be enabled";

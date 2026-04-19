@@ -33,7 +33,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -52,7 +51,6 @@ import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.internal.CDPRuntimeRecipeProvider;
 import plus.dragons.createdragonsplus.data.runtime.RuntimePackResources;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 @Mod(CDPCommon.ID)
 public class CDPCommon {
@@ -88,20 +86,8 @@ public class CDPCommon {
     }
 
     @SubscribeEvent
-    public void construct(final FMLConstructModEvent event) {
-        for (ModIntegration integration : ModIntegration.values()) {
-            if (integration.enabled())
-                event.enqueueWork(integration::onConstructMod);
-        }
-    }
-
-    @SubscribeEvent
     public void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(CDPBlockFreezers::register);
-        for (ModIntegration integration : ModIntegration.values()) {
-            if (integration.enabled())
-                event.enqueueWork(integration::onCommonSetup);
-        }
     }
 
     public static void addReloadListeners(AddReloadListenerEvent event) {

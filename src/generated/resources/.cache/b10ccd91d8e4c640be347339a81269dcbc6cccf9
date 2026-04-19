@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-22T10:48:52.8641017	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-04-20T10:41:20.4021167	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 30944dc3840117f79d60ca7eca170ea5847ecb0d assets/create_dragons_plus/blockstates/black_dye.json
 5511ed73c7a82ef6ac5a79f7b21eeca34cc193de assets/create_dragons_plus/blockstates/blue_dye.json
 5d2b44ea68a4e18cecee4658da13110f5184a89d assets/create_dragons_plus/blockstates/brown_dye.json
@@ -59,6 +59,9 @@ eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/yellow_dye_bucket.json
 32d67056c0094b9de935582a815713a7c1a6688f data/create/tags/block/fan_transparent.json
 0e8f062c463db5fb917c92a0c36a9faa5396fc3a data/create/tags/item/packages.json
+afdb51f6a74e7138ef8bd94db6497a1e3c218bd5 data/create_dragons_plus/data_maps/block/air_current_block_interaction/blasting.json
+83866186f533e48968a494d2992c937e4459fb63 data/create_dragons_plus/data_maps/block/air_current_block_interaction/freezing.json
+551b211bd4fd33643f5ede312ffc8b9e7b41de25 data/create_dragons_plus/data_maps/block/air_current_block_interaction/smoking.json
 ce0d2b3f52d587d18a04dcb9716b708866af8b04 data/create_dragons_plus/data_maps/fluid/fan_processing_catalysts/coloring.json
 39dc58062533ed5be7431eebec54780c04ef4541 data/create_dragons_plus/loot_table/blocks/fluid_hatch.json
 5a96c3a36b29e105309f1aa428084bda375df5ed data/create_dragons_plus/recipe/emptying/dragon_breath.json
