@@ -46,7 +46,7 @@ import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCo
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
-public class FanFreezingCategory extends ProcessingViaFanCategory<FreezingRecipe> {
+public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<FreezingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.FREEZING.getId());
 
     private FanFreezingCategory(Info<FreezingRecipe> info) {

@@ -51,7 +51,7 @@ import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
-public class FanEndingCategory extends ProcessingViaFanCategory<EndingRecipe> {
+public class FanEndingCategory extends ProcessingViaFanCategory.MultiOutput<EndingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<EndingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.ENDING.getId());
 
     private FanEndingCategory(Info<EndingRecipe> info) {

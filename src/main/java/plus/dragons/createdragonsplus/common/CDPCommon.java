@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.common;
 
 import com.simibubi.create.foundation.item.ItemDescription;
+
 import java.util.concurrent.CompletableFuture;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.core.HolderLookup;
@@ -27,13 +28,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack.Position;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockFreezers;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
@@ -63,6 +67,7 @@ public class CDPCommon {
             .addLang("pack", asResource("runtime"), NAME);
     private final Component runtimePackDescription = REGISTRATE
             .addLang("pack", asResource("runtime"), "description", NAME + " Runtime Generated Resources");
+    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> CDPFanProcessingTypes.COLORING.values().forEach(t->t.get().recreateCache());
 
     public CDPCommon(IEventBus modBus, ModContainer modContainer) {
         this.modContainer = modContainer;
@@ -80,6 +85,7 @@ public class CDPCommon {
         CDPDataMaps.register(modBus);
         modBus.register(this);
         modBus.register(new CDPConfig(modContainer));
+        NeoForge.EVENT_BUS.addListener(CDPCommon::addReloadListeners);
     }
 
     @SubscribeEvent
@@ -97,6 +103,10 @@ public class CDPCommon {
             if (integration.enabled())
                 event.enqueueWork(integration::onCommonSetup);
         }
+    }
+
+    public static void addReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(RELOAD_LISTENER);
     }
 
     @SubscribeEvent

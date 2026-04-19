@@ -57,7 +57,7 @@ import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
-public class FanSandingCategory extends ProcessingViaFanCategory<SandingRecipe> {
+public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<SandingRecipe> {
     public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<SandingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.SANDING.getId());
     private HolderSet<Block> catalystBlocks;
     private BlockState[] catalystStates;
