@@ -1,15 +1,30 @@
 package plus.dragons.createdragonsplus.mixin.simulated.create;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
+import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.EventHooks;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProcessingType;
@@ -17,6 +32,9 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.simulated.common.kinetics.fan.IFanProcessingTypeSimulatedExtension;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class ProcessingTypeMixins {
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
@@ -32,9 +50,16 @@ public class ProcessingTypeMixins {
         public boolean canAffectBlock(Level level, BlockPos pos, BlockState blockState) {
             if(blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_BLASTING)!=null)
                 return true;
-            else if(CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingIgniteBlock.get()){
+            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingIgniteBlock.get()){
+                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                    return !blockState.getValue(CampfireBlock.LIT) && level.getFluidState(pos).isEmpty();
+                } else if (blockState.is(AllBlocks.BLAZE_BURNER)) {
+                    return blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) == BlazeBurnerBlock.HeatLevel.NONE;
+                }
+            }
+            if(CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingSpreadFire.get())
                 return blockState.ignitedByLava(level, pos, Direction.getRandom(level.random));
-            } return false;
+            return false;
         }
 
         @Override
@@ -42,7 +67,20 @@ public class ProcessingTypeMixins {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_BLASTING);
             if(result!=null){
                 level.setBlockAndUpdate(pos, result.defaultBlockState());
-            } else {
+                return;
+            }
+
+            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingIgniteBlock.get()){
+                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                    level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,true));
+                    return;
+                } else if (blockState.is(AllBlocks.BLAZE_BURNER)) {
+                    level.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
+                    return;
+                }
+            }
+
+            if(CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingSpreadFire.get()) {
                 pos = pos.relative(Direction.getRandom(level.random));
                 if(level.getBlockState(pos).isAir())
                     level.setBlockAndUpdate(pos, EventHooks.fireFluidPlaceBlockEvent(level, pos, pos, BaseFireBlock.getState(level, pos)));
@@ -83,8 +121,16 @@ public class ProcessingTypeMixins {
 
         @Override
         public boolean canAffectBlock(Level level, BlockPos pos, BlockState blockState) {
-            return blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING)!=null;
-            // TODO
+            var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING);
+            if(result!=null) return true;
+
+            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkSplashingExtinguishFire.get()){
+                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                    return blockState.getValue(CampfireBlock.LIT);
+                } else return blockState.is(AllBlocks.LIT_BLAZE_BURNER);
+            }
+
+            return false;
         }
 
         @Override
@@ -92,7 +138,14 @@ public class ProcessingTypeMixins {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING);
             if(result!=null)
                 level.setBlockAndUpdate(pos, result.defaultBlockState());
-            // TODO
+
+            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkSplashingExtinguishFire.get()){
+                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                    level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,false));
+                } else if (blockState.is(AllBlocks.LIT_BLAZE_BURNER)) {
+                    level.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
+                }
+            }
         }
     }
 
@@ -185,8 +238,20 @@ public class ProcessingTypeMixins {
     }
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
-    @Mixin(SandingFanProcessingType.class)
-    public static class ColoringTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    @Mixin(ColoringFanProcessingType.class)
+    public static abstract class ColoringTypeMixin implements IFanProcessingTypeSimulatedExtension {
+
+        @Shadow
+        @Nullable
+        public abstract List<ItemStack> process(ItemStack stack, Level level);
+
+        @Unique
+        private final HashMap<Block, Block> transformingResultCache = new HashMap<>();
+
+        @Inject(method = "recreateCache", at = @At(value = "RETURN"), remap = false)
+        private void recreateCache$thisCache(CallbackInfo ci) {
+            transformingResultCache.clear();
+        }
 
         @Override
         public boolean active() {
@@ -195,13 +260,29 @@ public class ProcessingTypeMixins {
 
         @Override
         public boolean canAffectBlock(Level level, BlockPos pos, BlockState blockState) {
-            // TODO gen from recipe and cache them
+            if(!blockState.getBlock().asItem().equals(Items.AIR)){
+                if(transformingResultCache.containsKey(blockState.getBlock()))
+                    return !transformingResultCache.get(blockState.getBlock()).equals(Blocks.AIR);
+                else{
+                    var result = process(new ItemStack(blockState.getBlock()), level);
+                    if(result==null || result.size()!=1){
+                        transformingResultCache.put(blockState.getBlock(), Blocks.AIR);
+                        return false;
+                    }
+                    else {
+                        transformingResultCache.put(blockState.getBlock(),Block.byItem(result.get(0).getItem()));
+                        return !Block.byItem(result.get(0).getItem()).equals(Items.AIR);
+                    }
+                }
+            }
             return false;
         }
 
         @Override
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
-            // TODO
+            if(transformingResultCache.containsKey(blockState.getBlock())){
+                level.setBlockAndUpdate(pos, transformingResultCache.get(blockState.getBlock()).defaultBlockState());
+            }
         }
     }
 }

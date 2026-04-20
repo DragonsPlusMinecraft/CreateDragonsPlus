@@ -60,7 +60,7 @@ public abstract class CDPAdvancement {
 
     AdvancementHolder datagenResult;
 
-    private String id;
+    private final String id;
     private String title;
     private String description;
 

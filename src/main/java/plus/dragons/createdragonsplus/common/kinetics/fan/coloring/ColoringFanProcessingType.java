@@ -70,7 +70,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeColor color;
     private final Vector3f rgb;
     private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
-    private final HashMap<Item, ItemStack> CRAFTING_RESULT_CACHE = new HashMap<>();
+    private final HashMap<Item, ItemStack> craftingResultCache = new HashMap<>();
 
     public ColoringFanProcessingType(DyeColor color) {
         this.color = color;
@@ -88,7 +88,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     }
 
     public void recreateCache() {
-        CRAFTING_RESULT_CACHE.clear();
+        craftingResultCache.clear();
     }
 
     @Override
@@ -173,8 +173,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (stack.is(CDPItems.MOD_TAGS.notApplicableColoring))
             return Optional.empty();
 
-        if (CRAFTING_RESULT_CACHE.containsKey(stack.getItem()))
-            return Optional.of(CRAFTING_RESULT_CACHE.get(stack.getItem()).copy());
+        if (craftingResultCache.containsKey(stack.getItem()))
+            return Optional.of(craftingResultCache.get(stack.getItem()).copy());
 
         // 1 Dye + 1 Colorless = 1 Dyed
         var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
@@ -184,7 +184,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
             var result = recipe.assemble(input, level.registryAccess());
             // Not a coloring recipe if result count is not 1
             if (result.getCount() == 1) {
-                CRAFTING_RESULT_CACHE.put(stack.getItem(), result.copy());
+                craftingResultCache.put(stack.getItem(), result.copy());
                 return Optional.of(result);
             } else return Optional.empty();
         }
@@ -200,7 +200,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
             if (result.getCount() != 8)
                 return Optional.empty();
             result.setCount(1);
-            CRAFTING_RESULT_CACHE.put(stack.getItem(), result.copy());
+            craftingResultCache.put(stack.getItem(), result.copy());
             return Optional.of(result);
         }
         return Optional.empty();

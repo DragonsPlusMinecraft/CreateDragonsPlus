@@ -30,6 +30,9 @@ public class CDPAirCurrentBlockInteractionConfig extends ConfigBase {
     public final ConfigBool bulkBlastingIgniteBlock = b(false,
             "bulkBlastingIgniteBlock",
             Comments.bulkBlastingIgniteBlock);
+    public final ConfigBool bulkBlastingSpreadFire = b(true,
+            "bulkBlastingSpreadFire",
+            Comments.bulkBlastingSpreadFire);
     public final ConfigBool enableBulkSplashingBlockInteraction = b(true,
             "enableBulkSplashingBlockInteraction",
             Comments.enableBulkSplashingBlockInteraction);
@@ -60,6 +63,7 @@ public class CDPAirCurrentBlockInteractionConfig extends ConfigBase {
     static class Comments {
         static final String enableBulkBlastingBlockInteraction = "If air current block interaction of Bulk Blasting should be enabled";
         static final String bulkBlastingIgniteBlock = "If air current of Bulk Blasting ignite block when possible";
+        static final String bulkBlastingSpreadFire = "If air current of Bulk Blasting spread fire on flammable block when possible";
         static final String enableBulkSmokingBlockInteraction = "If air current block interaction of Bulk Smoking should be enabled";
         static final String enableBulkSplashingBlockInteraction = "If air current block interaction of Bulk Splashing should be enabled";
         static final String bulkSplashingExtinguishFire = "If air current of Bulk Splashing extinguish fire when possible";

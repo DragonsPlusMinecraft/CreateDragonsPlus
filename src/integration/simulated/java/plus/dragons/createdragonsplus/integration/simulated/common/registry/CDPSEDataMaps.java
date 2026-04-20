@@ -79,12 +79,32 @@ public class CDPSEDataMaps {
 
     public static void generate(RegistrateDataMapProvider provider) {
         provider.builder(BLOCK_INTERACTION_BLASTING)
+                .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)
                 .add(Blocks.ICE.builtInRegistryHolder(), Blocks.WATER, false)
                 .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false)
                 .add(Blocks.SNOW_BLOCK.defaultBlockState().getBlockHolder(), Blocks.AIR, false)
                 .add(Blocks.POWDER_SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
         provider.builder(BLOCK_INTERACTION_SMOKING)
                 .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
+        provider.builder(BLOCK_INTERACTION_SPLASHING)
+                .add(Blocks.SPONGE.defaultBlockState().getBlockHolder(), Blocks.WET_SPONGE, false)
+                .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)
+                .add(Blocks.WHITE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.WHITE_CONCRETE, false)
+                .add(Blocks.LIGHT_GRAY_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.LIGHT_GRAY_CONCRETE, false)
+                .add(Blocks.GRAY_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.GRAY_CONCRETE, false)
+                .add(Blocks.BLACK_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.BLACK_CONCRETE, false)
+                .add(Blocks.BROWN_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.BROWN_CONCRETE, false)
+                .add(Blocks.RED_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.RED_CONCRETE, false)
+                .add(Blocks.YELLOW_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.YELLOW_CONCRETE, false)
+                .add(Blocks.ORANGE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.ORANGE_CONCRETE, false)
+                .add(Blocks.LIME_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.LIME_CONCRETE, false)
+                .add(Blocks.GREEN_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.GREEN_CONCRETE, false)
+                .add(Blocks.CYAN_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.CYAN_CONCRETE, false)
+                .add(Blocks.LIGHT_BLUE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.LIGHT_BLUE_CONCRETE, false)
+                .add(Blocks.BLUE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.BLUE_CONCRETE, false)
+                .add(Blocks.PURPLE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.PURPLE_CONCRETE, false)
+                .add(Blocks.MAGENTA_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.MAGENTA_CONCRETE, false)
+                .add(Blocks.PINK_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.PINK_CONCRETE, false);
         provider.builder(BLOCK_INTERACTION_FREEZING)
                 .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
     }

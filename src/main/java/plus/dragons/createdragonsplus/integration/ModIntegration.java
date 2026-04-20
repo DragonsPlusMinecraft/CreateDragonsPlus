@@ -36,7 +36,7 @@ public enum ModIntegration {
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     CREATE_DND(Constants.CREATE_DND),
     QUICKSAND(Constants.QUICKSAND),
-    AERONAUTICS(Constants.AERONAUTICS),;;
+    AERONAUTICS(Constants.AERONAUTICS),;
 
     private final String id;
 
