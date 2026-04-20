@@ -104,7 +104,21 @@ public class CDPSEDataMaps {
                 .add(Blocks.BLUE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.BLUE_CONCRETE, false)
                 .add(Blocks.PURPLE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.PURPLE_CONCRETE, false)
                 .add(Blocks.MAGENTA_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.MAGENTA_CONCRETE, false)
-                .add(Blocks.PINK_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.PINK_CONCRETE, false);
+                .add(Blocks.PINK_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.PINK_CONCRETE, false)
+                .add(Blocks.LIGHT_GRAY_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.GRAY_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.BLACK_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.BROWN_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.RED_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.ORANGE_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.YELLOW_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.LIME_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.GREEN_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.CYAN_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.BLUE_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.PURPLE_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.MAGENTA_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.PINK_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false);
         provider.builder(BLOCK_INTERACTION_FREEZING)
                 .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
     }
