@@ -1,10 +1,10 @@
-package plus.dragons.createdragonsplus.integration.simulated.common.kinetics.fan;
+package plus.dragons.createdragonsplus.integration.simulated.api.kinetics.fan;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public interface IFanProcessingTypeSimulatedExtension {
+public interface FanProcessingTypeSimulatedExtension {
 
     boolean active();
 

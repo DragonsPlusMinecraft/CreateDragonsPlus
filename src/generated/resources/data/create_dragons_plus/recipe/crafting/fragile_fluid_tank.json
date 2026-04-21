@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid/fragile_fluid_tank"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "aeronautics"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "n": {
+      "item": "minecraft:barrel"
+    },
+    "t": {
+      "item": "create:copper_sheet"
+    }
+  },
+  "pattern": [
+    " t ",
+    "gng",
+    " t "
+  ],
+  "result": {
+    "count": 1,
+    "id": "create_dragons_plus:fragile_fluid_tank"
+  }
+}

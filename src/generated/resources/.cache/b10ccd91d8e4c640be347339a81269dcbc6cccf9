@@ -1,12 +1,14 @@
-// 1.21.1	2026-04-20T18:07:01.7962312	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.21.1	2026-04-21T17:11:13.2060761	Registrate Provider for create_dragons_plus [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
 30944dc3840117f79d60ca7eca170ea5847ecb0d assets/create_dragons_plus/blockstates/black_dye.json
 5511ed73c7a82ef6ac5a79f7b21eeca34cc193de assets/create_dragons_plus/blockstates/blue_dye.json
 5d2b44ea68a4e18cecee4658da13110f5184a89d assets/create_dragons_plus/blockstates/brown_dye.json
 e44c12444d650bad8fcb0954c145313939930f78 assets/create_dragons_plus/blockstates/cyan_dye.json
 ccbe6016e9b809a666d29d60c69d618a00ab8536 assets/create_dragons_plus/blockstates/dragon_breath.json
 d5aa1b6fd032032370301aaa6b3da879e169cf24 assets/create_dragons_plus/blockstates/fluid_hatch.json
+8790f3a87f49c4fa97fae01f37bc7b7f7d6a1278 assets/create_dragons_plus/blockstates/fragile_fluid_tank.json
 8722540357880161bfa1a2c88e7b80f30087d44e assets/create_dragons_plus/blockstates/gray_dye.json
 dcc644b14a76428465a3472e1a6be7993a986c60 assets/create_dragons_plus/blockstates/green_dye.json
+19a0c037b0faa9fed8c1209cff21f6fa75b825c4 assets/create_dragons_plus/blockstates/levitite_fragile_fluid_tank.json
 99f5027d582b52e501955d5567d393d487ee335e assets/create_dragons_plus/blockstates/light_blue_dye.json
 e50f9d562e905735412bcd20c6bd72c4d291a7e5 assets/create_dragons_plus/blockstates/light_gray_dye.json
 92a9a2c04a915b8c7753484dcf02a60517eb1239 assets/create_dragons_plus/blockstates/lime_dye.json
@@ -17,8 +19,8 @@ f6efce45ed4b540e58a76fdef3bd8d539ac248f4 assets/create_dragons_plus/blockstates/
 f6cae37dc906804600744ebfddb3070a0640e16b assets/create_dragons_plus/blockstates/red_dye.json
 11b5d524a6d1e8d0922aac902b3b6007e3f30623 assets/create_dragons_plus/blockstates/white_dye.json
 b4b1473f3c75a619278b5493ba58805fd9723c38 assets/create_dragons_plus/blockstates/yellow_dye.json
-fdacbaaf8e710086cf01128aab8031c30afcad20 assets/create_dragons_plus/lang/en_ud.json
-7a5bb3434350f1b53c38a9a3a043509de355c5ae assets/create_dragons_plus/lang/en_us.json
+6caf33a482bf3a0d4251ddbdaa7f9783d4f9a1c2 assets/create_dragons_plus/lang/en_ud.json
+136f90a37fe2ece0571ae9d1e788e194ca3fb8e3 assets/create_dragons_plus/lang/en_us.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/black_dye.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/blue_dye.json
 cdc02c68e639d9023b8577631d71bcaf707f3cf5 assets/create_dragons_plus/models/block/brown_dye.json
@@ -43,8 +45,10 @@ eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/cyan_dye_bucket.json
 61792441540fc9f4ea77dea1bbf74315276d34ee assets/create_dragons_plus/models/item/dragon_breath_bucket.json
 996bb9fe6580cda4891f99d76f6a487b3bd80388 assets/create_dragons_plus/models/item/fluid_hatch.json
+b6543f8b0a10a1298e4990cc75a71f6ecf4d022b assets/create_dragons_plus/models/item/fragile_fluid_tank.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/gray_dye_bucket.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/green_dye_bucket.json
+ce5fd1c2501100d88732acf16a5cbbda794fd190 assets/create_dragons_plus/models/item/levitite_fragile_fluid_tank.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/light_blue_dye_bucket.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/light_gray_dye_bucket.json
 eb503b224379b81b74d0384d7b7765cbb50198c8 assets/create_dragons_plus/models/item/lime_dye_bucket.json
@@ -65,6 +69,8 @@ e6d1330abd0b7a30835cfb771a6ca5d29225c9fe data/create_dragons_plus/data_maps/bloc
 5576519a9af2b49abddce5f52f611dc73b2316ab data/create_dragons_plus/data_maps/block/air_current_block_interaction/splashing.json
 ce0d2b3f52d587d18a04dcb9716b708866af8b04 data/create_dragons_plus/data_maps/fluid/fan_processing_catalysts/coloring.json
 39dc58062533ed5be7431eebec54780c04ef4541 data/create_dragons_plus/loot_table/blocks/fluid_hatch.json
+9fc6a0712f8654041abe5ff031199cd9a5b4a10e data/create_dragons_plus/loot_table/blocks/fragile_fluid_tank.json
+fa280ac7b82ba349771a141e2e86bb07db65d99d data/create_dragons_plus/loot_table/blocks/levitite_fragile_fluid_tank.json
 5a96c3a36b29e105309f1aa428084bda375df5ed data/create_dragons_plus/recipe/emptying/dragon_breath.json
 923c5cbfca94eb764812cf11a1526ef9ed22780e data/create_dragons_plus/recipe/filling/dragon_breath.json
 e8a9d4590328375624f61e358e616222cfddb0c3 data/create_dragons_plus/recipe/mixing/black_dye_from_fluid.json
@@ -157,4 +163,4 @@ d0f5e7ff00e6f2f52ff9eff23631a19924306ea5 data/c/tags/item/dyed/orange.json
 02a08cf138fd91f303264e19275ca06400294fdd data/c/tags/item/dyed/red.json
 16a80e38bd08fbdff77dc253dad3fc7b36393a4c data/c/tags/item/dyed/white.json
 0e4c702cc74741285516beb8e7aff0b2ff2e01ca data/c/tags/item/dyed/yellow.json
-3790a5f17509048b3bebbc6932bd6cf7467a6e8a data/minecraft/tags/block/mineable/pickaxe.json
+a1b4f87f7560fd1029e51551accac59e7438b02a data/minecraft/tags/block/mineable/pickaxe.json

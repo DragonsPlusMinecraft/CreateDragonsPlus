@@ -1,4 +1,4 @@
-## Create: Dragons Plus 1.9.1
+## Create: Dragons Plus 1.9.2
 
 ### Update
-* Bulk Processing Air Current on Simulated Contraption now also interact with **block on Simulated Contraption**.
+* Add **Fragile Fluid Tank** and **Levitite Fragile Fluid Tank**-Fluid Tanks break on impact and apply effects depending on fluid inside. They appear when Create: Simulated is installed.

@@ -114,7 +114,7 @@ configurations {
 repositories {
     maven { url "https://maven.createmod.net" } // Ponder, Flywheel
     maven { url "https://mvn.devos.one/snapshots" } // Registrate
-    maven { url "https://maven.blamejared.com" } // JEI
+    maven { url "https://maven.blamejared.com"       } // JEI
     maven { url "https://maven.theillusivec4.top/" } // Curios API
     maven { url 'https://maven.fallenbreath.me/releases' } // Conditional Mixin
     maven { url "https://www.cursemaven.com" }

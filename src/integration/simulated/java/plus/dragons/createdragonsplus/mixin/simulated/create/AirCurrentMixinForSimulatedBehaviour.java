@@ -12,7 +12,6 @@ import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import plus.dragons.createdragonsplus.common.kinetics.fan.AirCurrentSegmentAccess;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
-import plus.dragons.createdragonsplus.integration.simulated.common.kinetics.fan.IFanProcessingTypeSimulatedExtension;
+import plus.dragons.createdragonsplus.integration.simulated.api.kinetics.fan.FanProcessingTypeSimulatedExtension;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class AirCurrentMixinForSimulatedBehaviour {
         Pose3dc pose = subLevel.logicalPose();
         segments.forEach(seg -> {
             var type = seg.getType();
-            if (type == null || !(type instanceof IFanProcessingTypeSimulatedExtension extendType) || !extendType.active()) return;
+            if (type == null || !(type instanceof FanProcessingTypeSimulatedExtension extendType) || !extendType.active()) return;
             for(int i= seg.getStartOffset(); i < seg.getEndOffset(); i++) {
                 var currentPos = source.getAirCurrentPos().relative(direction, i);
                 var position = currentPos.getCenter();

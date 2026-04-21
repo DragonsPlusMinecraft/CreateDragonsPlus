@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.integration.simulated.config;
 import net.createmod.catnip.config.ConfigBase;
 
 public class CDPSEServerConfig extends ConfigBase {
+    public final CDPSEFluidConfig fluid = nested(1, CDPSEFluidConfig::new, Comments.fluids);
     public final CDPAirCurrentBlockInteractionConfig airCurrentBlockInteraction = nested(1, CDPAirCurrentBlockInteractionConfig::new, Comments.airCurrentBlockInteraction);
 
     @Override
@@ -29,6 +30,7 @@ public class CDPSEServerConfig extends ConfigBase {
     }
 
     static class Comments {
+        static final String fluids = "Parameters and abilities of fluids and fluid operating components";
         static final String airCurrentBlockInteraction = "Control panel for block Interaction of air current through fluid should be enabled";
     }
 }

@@ -23,18 +23,24 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
+import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlocks;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
+import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEFragileTankBreakEffectHandlers;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
+import plus.dragons.createdragonsplus.integration.simulated.data.internal.CDPSERecipeProvider;
 
 @Mod(CDPCommon.ID)
-public class SimulatedIntegration {
-    public SimulatedIntegration(IEventBus modBus, ModContainer modContainer) {
+public class SimulatedExtension {
+    public SimulatedExtension(IEventBus modBus, ModContainer modContainer) {
         if (ModIntegration.AERONAUTICS.enabled()) {
             modBus.register(new Common(modBus, modContainer));
             if (FMLLoader.getDist() == Dist.CLIENT)
@@ -53,8 +59,25 @@ public class SimulatedIntegration {
 
         @SubscribeEvent
         public void construct(final FMLConstructModEvent event) {
+            CDPSEBlocks.register(modBus);
+            CDPSEBlockEntities.register(modBus);
             CDPSEDataMaps.register(modBus);
             modBus.register(new CDPSEConfig(modContainer));
+            modBus.addListener(Common::commonSetup);
+            modBus.addListener(Common::buildContents);
+        }
+
+        public static void commonSetup(final FMLCommonSetupEvent event) {
+            CDPSEFragileTankBreakEffectHandlers.registerDefaults();
+        }
+
+        public static void buildContents(BuildCreativeModeTabContentsEvent event) {
+            if (event.getTabKey() == CDPCreativeModeTabs.BASE.getKey()) {
+                if (CDPSEConfig.features().fragileFluidTank.get()){
+                    event.accept(CDPSEBlocks.FRAGILE_FLUID_TANK);
+                    event.accept(CDPSEBlocks.LEVITITE_FRAGILE_FLUID_TANK);
+                }
+            }
         }
 
         @SubscribeEvent
@@ -63,6 +86,7 @@ public class SimulatedIntegration {
             var lookupProvider = event.getLookupProvider();
             var output = generator.getPackOutput();
             var server = event.includeServer();
+            event.addProvider(new CDPSERecipeProvider(output,lookupProvider));
         }
     }
 

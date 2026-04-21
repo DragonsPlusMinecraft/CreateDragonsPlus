@@ -55,6 +55,14 @@ public class CDPSEConfig {
         return COMMON_CONFIG.features;
     }
 
+    public static CDPAirCurrentBlockInteractionConfig airCurrentBlockInteraction() {
+        return SERVER_CONFIG.airCurrentBlockInteraction;
+    }
+
+    public static CDPSEFluidConfig fluid() {
+        return SERVER_CONFIG.fluid;
+    }
+
     @SubscribeEvent
     public void onLoad(ModConfigEvent.Loading event) {
         var spec = event.getConfig().getSpec();

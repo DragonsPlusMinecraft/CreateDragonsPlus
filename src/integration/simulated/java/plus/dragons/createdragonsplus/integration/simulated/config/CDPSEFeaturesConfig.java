@@ -28,6 +28,11 @@ public class CDPSEFeaturesConfig extends FeaturesConfig {
             "fluid/air_current_block_interaction",
             Comments.fluidAirCurrentBlockInteraction);
 
+    public final ConfigFeature fragileFluidTank = feature(
+            true,
+            "fluid/fragile_fluid_tank",
+            Comments.fragileFluidTank);
+
     public CDPSEFeaturesConfig() {
         super(CDPCommon.ID);
     }
@@ -35,5 +40,6 @@ public class CDPSEFeaturesConfig extends FeaturesConfig {
     static class Comments {
         static final String fluid = "Fluid Feature Elements";
         static final String fluidAirCurrentBlockInteraction = "If block interaction of air current through fluid should be enabled";
+        static final String fragileFluidTank = "If Fragile Fluid Tank should be enabled";
     }
 }

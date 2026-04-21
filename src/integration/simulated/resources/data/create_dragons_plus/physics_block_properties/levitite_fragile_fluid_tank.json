@@ -1,0 +1,6 @@
+{
+  "selector": "create_dragons_plus:levitite_fragile_fluid_tank",
+  "properties": {
+    "sable:floating_material": "create_dragons_plus:fragile_fluid_tank"
+  }
+}

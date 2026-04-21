@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
@@ -29,7 +28,7 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingFanProces
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProcessingType;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
-import plus.dragons.createdragonsplus.integration.simulated.common.kinetics.fan.IFanProcessingTypeSimulatedExtension;
+import plus.dragons.createdragonsplus.integration.simulated.api.kinetics.fan.FanProcessingTypeSimulatedExtension;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 
@@ -39,25 +38,25 @@ import java.util.List;
 public class ProcessingTypeMixins {
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(AllFanProcessingTypes.BlastingType.class)
-    public static class BlastingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class BlastingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkBlastingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkBlastingBlockInteraction.get();
         }
 
         @Override
         public boolean canAffectBlock(Level level, BlockPos pos, BlockState blockState) {
             if(blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_BLASTING)!=null)
                 return true;
-            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingIgniteBlock.get()){
+            if (CDPSEConfig.airCurrentBlockInteraction().bulkBlastingIgniteBlock.get()){
                 if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
                     return !blockState.getValue(CampfireBlock.LIT) && level.getFluidState(pos).isEmpty();
                 } else if (blockState.is(AllBlocks.BLAZE_BURNER)) {
                     return blockState.getValue(BlazeBurnerBlock.HEAT_LEVEL) == BlazeBurnerBlock.HeatLevel.NONE;
                 }
             }
-            if(CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingSpreadFire.get())
+            if(CDPSEConfig.airCurrentBlockInteraction().bulkBlastingSpreadFire.get())
                 return blockState.ignitedByLava(level, pos, Direction.getRandom(level.random));
             return false;
         }
@@ -70,7 +69,7 @@ public class ProcessingTypeMixins {
                 return;
             }
 
-            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingIgniteBlock.get()){
+            if (CDPSEConfig.airCurrentBlockInteraction().bulkBlastingIgniteBlock.get()){
                 if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
                     level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,true));
                     return;
@@ -80,7 +79,7 @@ public class ProcessingTypeMixins {
                 }
             }
 
-            if(CDPSEConfig.server().airCurrentBlockInteraction.bulkBlastingSpreadFire.get()) {
+            if(CDPSEConfig.airCurrentBlockInteraction().bulkBlastingSpreadFire.get()) {
                 pos = pos.relative(Direction.getRandom(level.random));
                 if(level.getBlockState(pos).isAir())
                     level.setBlockAndUpdate(pos, EventHooks.fireFluidPlaceBlockEvent(level, pos, pos, BaseFireBlock.getState(level, pos)));
@@ -90,11 +89,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(AllFanProcessingTypes.SmokingType.class)
-    public static class SmokingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class SmokingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkSmokingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkSmokingBlockInteraction.get();
         }
 
         @Override
@@ -112,11 +111,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(AllFanProcessingTypes.SplashingType.class)
-    public static class SplashingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class SplashingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkSplashingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkSplashingBlockInteraction.get();
         }
 
         @Override
@@ -124,7 +123,7 @@ public class ProcessingTypeMixins {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING);
             if(result!=null) return true;
 
-            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkSplashingExtinguishFire.get()){
+            if (CDPSEConfig.airCurrentBlockInteraction().bulkSplashingExtinguishFire.get()){
                 if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
                     return blockState.getValue(CampfireBlock.LIT);
                 } else return blockState.is(AllBlocks.LIT_BLAZE_BURNER);
@@ -139,7 +138,7 @@ public class ProcessingTypeMixins {
             if(result!=null)
                 level.setBlockAndUpdate(pos, result.defaultBlockState());
 
-            if (CDPSEConfig.server().airCurrentBlockInteraction.bulkSplashingExtinguishFire.get()){
+            if (CDPSEConfig.airCurrentBlockInteraction().bulkSplashingExtinguishFire.get()){
                 if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
                     level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,false));
                 } else if (blockState.is(AllBlocks.LIT_BLAZE_BURNER)) {
@@ -151,11 +150,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(AllFanProcessingTypes.HauntingType.class)
-    public static class HauntingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class HauntingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkHauntingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkHauntingBlockInteraction.get();
         }
 
         @Override
@@ -173,11 +172,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(FreezingFanProcessingType.class)
-    public static class FreezingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class FreezingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkFreezingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkFreezingBlockInteraction.get();
         }
 
         @Override
@@ -195,11 +194,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(EndingFanProcessingType.class)
-    public static class EndingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class EndingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkEndingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkEndingBlockInteraction.get();
         }
 
         @Override
@@ -217,11 +216,11 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(SandingFanProcessingType.class)
-    public static class SandingTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static class SandingTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkSandingBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkSandingBlockInteraction.get();
         }
 
         @Override
@@ -239,7 +238,7 @@ public class ProcessingTypeMixins {
 
     @Restriction(require = @Condition(ModIntegration.Constants.AERONAUTICS))
     @Mixin(ColoringFanProcessingType.class)
-    public static abstract class ColoringTypeMixin implements IFanProcessingTypeSimulatedExtension {
+    public static abstract class ColoringTypeMixin implements FanProcessingTypeSimulatedExtension {
 
         @Shadow
         @Nullable
@@ -255,7 +254,7 @@ public class ProcessingTypeMixins {
 
         @Override
         public boolean active() {
-            return CDPSEConfig.server().airCurrentBlockInteraction.enableBulkColoringBlockInteraction.get();
+            return CDPSEConfig.airCurrentBlockInteraction().enableBulkColoringBlockInteraction.get();
         }
 
         @Override
