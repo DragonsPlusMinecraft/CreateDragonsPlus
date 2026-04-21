@@ -5,10 +5,13 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
+import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockWithSubLevelCollisionCallback;
 import dev.ryanhcode.sable.api.physics.callback.BlockSubLevelCollisionCallback;
+import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.physics.callback.FragileBlockCallback;
+import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -97,7 +100,10 @@ public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<Fra
                 if(!be.getFluidInTank().isEmpty()) {
                     var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(be.getFluidInTank().getFluid());
                     if(handler != null) {
-                        handler.apply(level, pos, hitPos, be.getFluidInTank());
+                        var helper = Sable.HELPER;
+                        var p = BlockPos.containing(helper.projectOutOfSubLevel(level, pos.getCenter()));
+                        var hp = helper.projectOutOfSubLevel(level, hitPos);
+                        handler.apply(level, p, hp, be.getFluidInTank());
                     }
                 }
             });

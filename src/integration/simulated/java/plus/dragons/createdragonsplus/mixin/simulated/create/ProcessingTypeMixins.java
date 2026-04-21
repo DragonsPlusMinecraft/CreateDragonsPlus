@@ -123,13 +123,9 @@ public class ProcessingTypeMixins {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING);
             if(result!=null) return true;
 
-            if (CDPSEConfig.airCurrentBlockInteraction().bulkSplashingExtinguishFire.get()){
-                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
-                    return blockState.getValue(CampfireBlock.LIT);
-                } else return blockState.is(AllBlocks.LIT_BLAZE_BURNER);
-            }
-
-            return false;
+            if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                return blockState.getValue(CampfireBlock.LIT);
+            } else return blockState.is(AllBlocks.LIT_BLAZE_BURNER);
         }
 
         @Override
@@ -138,12 +134,10 @@ public class ProcessingTypeMixins {
             if(result!=null)
                 level.setBlockAndUpdate(pos, result.defaultBlockState());
 
-            if (CDPSEConfig.airCurrentBlockInteraction().bulkSplashingExtinguishFire.get()){
-                if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
-                    level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,false));
-                } else if (blockState.is(AllBlocks.LIT_BLAZE_BURNER)) {
-                    level.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
-                }
+            if (blockState.is(Blocks.CAMPFIRE) || blockState.is(Blocks.SOUL_CAMPFIRE)) {
+                level.setBlockAndUpdate(pos, blockState.setValue(CampfireBlock.LIT,false));
+            } else if (blockState.is(AllBlocks.LIT_BLAZE_BURNER)) {
+                level.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
             }
         }
     }

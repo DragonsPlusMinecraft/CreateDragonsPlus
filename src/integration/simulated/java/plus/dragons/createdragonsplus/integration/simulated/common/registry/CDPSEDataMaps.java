@@ -118,7 +118,8 @@ public class CDPSEDataMaps {
                 .add(Blocks.BLUE_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
                 .add(Blocks.PURPLE_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
                 .add(Blocks.MAGENTA_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
-                .add(Blocks.PINK_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false);
+                .add(Blocks.PINK_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
+                .add(Blocks.FIRE.builtInRegistryHolder(), Blocks.AIR, false);
         provider.builder(BLOCK_INTERACTION_FREEZING)
                 .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
     }

@@ -36,9 +36,6 @@ public class CDPAirCurrentBlockInteractionConfig extends ConfigBase {
     public final ConfigBool enableBulkSplashingBlockInteraction = b(true,
             "enableBulkSplashingBlockInteraction",
             Comments.enableBulkSplashingBlockInteraction);
-    public final ConfigBool bulkSplashingExtinguishFire = b(true,
-            "bulkSplashingExtinguishFire",
-            Comments.bulkSplashingExtinguishFire);
     public final ConfigBool enableBulkHauntingBlockInteraction = b(false,
             "enableBulkHauntingBlockInteraction",
             Comments.enableBulkHauntingBlockInteraction);
@@ -66,7 +63,6 @@ public class CDPAirCurrentBlockInteractionConfig extends ConfigBase {
         static final String bulkBlastingSpreadFire = "If air current of Bulk Blasting spread fire on flammable block when possible";
         static final String enableBulkSmokingBlockInteraction = "If air current block interaction of Bulk Smoking should be enabled";
         static final String enableBulkSplashingBlockInteraction = "If air current block interaction of Bulk Splashing should be enabled";
-        static final String bulkSplashingExtinguishFire = "If air current of Bulk Splashing extinguish fire when possible";
         static final String enableBulkHauntingBlockInteraction = "If air current block interaction of Bulk Haunting should be enabled";
         static final String enableBulkFreezingBlockInteraction = "If air current block interaction of Bulk Freezing should be enabled";
         static final String enableBulkEndingBlockInteraction = "If air current block interaction of Bulk Ending should be enabled";

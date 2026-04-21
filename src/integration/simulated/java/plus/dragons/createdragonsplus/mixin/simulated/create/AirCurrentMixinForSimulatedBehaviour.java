@@ -70,9 +70,6 @@ public class AirCurrentMixinForSimulatedBehaviour {
                         var inSBPosition = sbPose.transformPositionInverse(finalPosition);
                         var sbPos = BlockPos.containing(inSBPosition.x, inSBPosition.y, inSBPosition.z);
                         var bs = embLevel.getLevel().getBlockState(sbPos);
-                        //var embCenter = plot.getCenterBlock();
-                        //var localPos = mainWorldPos2.offset(plot.getCenterBlock());
-                        //var localPos = mainWorldPos2.offset(-embCenter.getX(), -embCenter.getY(), -embCenter.getZ());
                         if(extendType.canAffectBlock(embLevel.getLevel(), sbPos, bs)){
                             extendType.affectBlock(embLevel.getLevel(), sbPos, bs);
                         }
