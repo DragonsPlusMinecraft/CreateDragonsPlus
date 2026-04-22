@@ -61,6 +61,14 @@ public class CDPSEDataMaps {
             .builder(CDPCommon.asResource("air_current_block_interaction/ending"), Registries.BLOCK, BuiltInRegistries.BLOCK.byNameCodec())
             .synced(BuiltInRegistries.BLOCK.byNameCodec(), true)
             .build();
+    public static final DataMapType<Block, Block> FRAGILE_FLUID_TANK_LAVA = DataMapType
+            .builder(CDPCommon.asResource("fragile_fluid_tank/lava"), Registries.BLOCK, BuiltInRegistries.BLOCK.byNameCodec())
+            .synced(BuiltInRegistries.BLOCK.byNameCodec(), true)
+            .build();
+    public static final DataMapType<Block, Block> FRAGILE_FLUID_TANK_WATER = DataMapType
+            .builder(CDPCommon.asResource("fragile_fluid_tank/water"), Registries.BLOCK, BuiltInRegistries.BLOCK.byNameCodec())
+            .synced(BuiltInRegistries.BLOCK.byNameCodec(), true)
+            .build();
 
     public static void register(IEventBus modBus) {
         modBus.addListener(RegisterDataMapTypesEvent.class, CDPSEDataMaps::register);
@@ -75,18 +83,32 @@ public class CDPSEDataMaps {
         event.register(BLOCK_INTERACTION_FREEZING);
         event.register(BLOCK_INTERACTION_SANDING);
         event.register(BLOCK_INTERACTION_ENDING);
+        event.register(FRAGILE_FLUID_TANK_LAVA);
+        event.register(FRAGILE_FLUID_TANK_WATER);
     }
 
     public static void generate(RegistrateDataMapProvider provider) {
-        provider.builder(BLOCK_INTERACTION_BLASTING)
+        genLavaDataMap(provider,BLOCK_INTERACTION_BLASTING);
+        genLavaDataMap(provider,FRAGILE_FLUID_TANK_LAVA);
+        provider.builder(BLOCK_INTERACTION_SMOKING)
+                .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
+        genWaterDataMap(provider,BLOCK_INTERACTION_SPLASHING);
+        genWaterDataMap(provider,FRAGILE_FLUID_TANK_WATER);
+        provider.builder(BLOCK_INTERACTION_FREEZING)
+                .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
+    }
+
+    private static void genLavaDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> lavaMap){
+        provider.builder(lavaMap)
                 .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)
                 .add(Blocks.ICE.builtInRegistryHolder(), Blocks.WATER, false)
                 .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false)
                 .add(Blocks.SNOW_BLOCK.defaultBlockState().getBlockHolder(), Blocks.AIR, false)
                 .add(Blocks.POWDER_SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
-        provider.builder(BLOCK_INTERACTION_SMOKING)
-                .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
-        provider.builder(BLOCK_INTERACTION_SPLASHING)
+    }
+
+    private static void genWaterDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> waterMap){
+        provider.builder(waterMap)
                 .add(Blocks.SPONGE.defaultBlockState().getBlockHolder(), Blocks.WET_SPONGE, false)
                 .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)
                 .add(Blocks.WHITE_CONCRETE_POWDER.builtInRegistryHolder(), Blocks.WHITE_CONCRETE, false)
@@ -120,7 +142,5 @@ public class CDPSEDataMaps {
                 .add(Blocks.MAGENTA_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
                 .add(Blocks.PINK_WOOL.builtInRegistryHolder(), Blocks.WHITE_WOOL, false)
                 .add(Blocks.FIRE.builtInRegistryHolder(), Blocks.AIR, false);
-        provider.builder(BLOCK_INTERACTION_FREEZING)
-                .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
     }
 }

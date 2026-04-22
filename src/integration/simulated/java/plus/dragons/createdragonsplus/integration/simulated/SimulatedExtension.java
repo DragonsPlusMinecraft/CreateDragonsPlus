@@ -26,6 +26,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -65,6 +66,7 @@ public class SimulatedExtension {
             modBus.register(new CDPSEConfig(modContainer));
             modBus.addListener(Common::commonSetup);
             modBus.addListener(Common::buildContents);
+            NeoForge.EVENT_BUS.addListener(CDPSEFragileTankBreakEffectHandlers::addReloadListeners);
         }
 
         public static void commonSetup(final FMLCommonSetupEvent event) {

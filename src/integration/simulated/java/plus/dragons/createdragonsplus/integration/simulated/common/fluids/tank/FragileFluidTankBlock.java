@@ -107,7 +107,7 @@ public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<Fra
                     }
                 }
             });
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+            level.destroyBlock(pos, false);
             return new CollisionResult(JOMLConversion.ZERO, true);
         }
     }

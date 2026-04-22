@@ -34,7 +34,7 @@ public abstract class DefaultRangedEffectHandler implements FragileFluidTankBrea
     /** In most cases we don't need this here. But there is still case that entity is in sublevel such as painting and armor stand. <p>
      * So, a utility method is placed here just in case.
      */
-    protected static boolean isEntityInRangeConsideringSubLevel(Level level, Entity entity, Vector3d hitPos, int range) {
+    protected static boolean isEntityInRangeConsideringSubLevel(Level level, Entity entity, Vector3d hitPos, double range) {
         var helper = Sable.HELPER;
         if(helper.isInPlotGrid(entity)){
             return helper.distanceSquaredWithSubLevels(level, entity.position().x, entity.position().y, entity.position().z, hitPos.x, hitPos.y, hitPos.z) <= range * range ;
