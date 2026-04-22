@@ -1,19 +1,19 @@
 {
   "required": true,
   "priority": 1000,
-  "package": "plus.dragons.createdragonsplus.mixin",
+  "package": "plus.dragons.createdragonsplus.mixin.simulated",
   "compatibilityLevel": "JAVA_21",
   "plugin": "plus.dragons.createdragonsplus.mixin.CDPMixinConfigPlugin",
   "mixins": [
-    "create.AirCurrentMixinForSimulatedBehaviour",
-    "create.ProcessingTypeMixins$BlastingTypeMixin",
-    "create.ProcessingTypeMixins$ColoringTypeMixin",
-    "create.ProcessingTypeMixins$EndingTypeMixin",
-    "create.ProcessingTypeMixins$FreezingTypeMixin",
-    "create.ProcessingTypeMixins$HauntingTypeMixin",
-    "create.ProcessingTypeMixins$SandingTypeMixin",
-    "create.ProcessingTypeMixins$SmokingTypeMixin",
-    "create.ProcessingTypeMixins$SplashingTypeMixin"
+    "AirCurrentMixinForSimulatedBehaviour",
+    "ProcessingTypeMixins$BlastingTypeMixin",
+    "ProcessingTypeMixins$ColoringTypeMixin",
+    "ProcessingTypeMixins$EndingTypeMixin",
+    "ProcessingTypeMixins$FreezingTypeMixin",
+    "ProcessingTypeMixins$HauntingTypeMixin",
+    "ProcessingTypeMixins$SandingTypeMixin",
+    "ProcessingTypeMixins$SmokingTypeMixin",
+    "ProcessingTypeMixins$SplashingTypeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,7 +1,13 @@
 {
   "values": [
     "create_dragons_plus:fluid_hatch",
-    "create_dragons_plus:fragile_fluid_tank",
-    "create_dragons_plus:levitite_fragile_fluid_tank"
+    {
+      "id": "create_dragons_plus:fragile_fluid_tank",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:levitite_fragile_fluid_tank",
+      "required": false
+    }
   ]
 }
