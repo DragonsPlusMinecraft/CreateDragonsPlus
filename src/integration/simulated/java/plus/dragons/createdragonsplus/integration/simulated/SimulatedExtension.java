@@ -18,26 +18,36 @@
 
 package plus.dragons.createdragonsplus.integration.simulated;
 
+import com.tterrag.registrate.providers.ProviderType;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import plus.dragons.createdragonsplus.client.model.CDPPartialModels;
+import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
+import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataMaps;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.simulated.client.ponder.CDPSEPonderPlugin;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlocks;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEFragileTankBreakEffectHandlers;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 import plus.dragons.createdragonsplus.integration.simulated.data.internal.CDPSERecipeProvider;
+
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 @Mod(CDPCommon.ID)
 public class SimulatedExtension {
@@ -67,6 +77,9 @@ public class SimulatedExtension {
             modBus.addListener(Common::commonSetup);
             modBus.addListener(Common::buildContents);
             NeoForge.EVENT_BUS.addListener(CDPSEFragileTankBreakEffectHandlers::addReloadListeners);
+            if (!DatagenModLoader.isRunningDataGen())
+                return;
+            REGISTRATE.registerPonderLocalization(CDPSEPonderPlugin::new);
         }
 
         public static void commonSetup(final FMLCommonSetupEvent event) {
@@ -94,8 +107,11 @@ public class SimulatedExtension {
 
     public static class Client {
         @SubscribeEvent
-        public void construct(final FMLConstructModEvent event) {
-            //NDUPonderPlugin.register();
+        public void construct(final FMLConstructModEvent event) { }
+
+        @SubscribeEvent
+        public void setup(final FMLClientSetupEvent event) {
+            PonderIndex.addPlugin(new CDPSEPonderPlugin());
         }
     }
 }

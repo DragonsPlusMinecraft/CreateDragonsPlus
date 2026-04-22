@@ -54,6 +54,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.MILK, OpenEndedPipeEffectHandlerWrapper.of(new MilkEffectHandler())));
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.LAVA, new LavaHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.WATER, new WaterHandler()));
+        FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(CDPFluids.COMMON_TAGS.dragonBreath, new DragonBreathHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.POTION.getSource(), new PotionHandler());
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.TEA.getSource(), new TeaHandler());
         for(DyeColor color : DyeColor.values()) {
@@ -138,6 +139,16 @@ public class CDPSEFragileTankBreakEffectHandlers {
             double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
             level.getEntitiesOfClass(LivingEntity.class, area, (livingEntity) -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange))
                     .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, duration, 0, false, false, false)));
+        }
+    }
+
+    private static class DragonBreathHandler extends DefaultRangedEffectHandler {
+        @Override
+        public void onHit(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
+            var amplifier = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get();
+            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
+            level.getEntitiesOfClass(LivingEntity.class, area, (livingEntity) -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange))
+                    .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, amplifier + 1, false, false, false)));
         }
     }
 

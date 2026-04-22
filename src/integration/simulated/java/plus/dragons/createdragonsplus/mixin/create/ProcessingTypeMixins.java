@@ -1,4 +1,4 @@
-package plus.dragons.createdragonsplus.mixin.simulated.create;
+package plus.dragons.createdragonsplus.mixin.create;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
