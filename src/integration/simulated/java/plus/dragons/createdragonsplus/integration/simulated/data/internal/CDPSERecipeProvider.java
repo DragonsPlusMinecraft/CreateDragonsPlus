@@ -1,6 +1,7 @@
 package plus.dragons.createdragonsplus.integration.simulated.data.internal;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.eriksonn.aeronautics.neoforge.index.AeroFluidsNeoForge;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -11,7 +12,6 @@ import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 import java.util.concurrent.CompletableFuture;
 
 import static com.simibubi.create.AllItems.COPPER_SHEET;
-import static dev.eriksonn.aeronautics.index.AeroBlocks.LEVITITE;
 import static net.minecraft.world.item.Items.*;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 import static plus.dragons.createdragonsplus.data.recipe.VanillaRecipeBuilders.shaped;
@@ -39,11 +39,11 @@ public class CDPSERecipeProvider extends RegistrateRecipeProvider {
 
         shaped().output(LEVITITE_FRAGILE_FLUID_TANK, 8)
                 .define('l', FRAGILE_FLUID_TANK)
-                .define('t', LEVITITE)
+                .define('t', AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get())
                 .pattern("lll")
                 .pattern("ltl")
                 .pattern("lll")
-                .unlockedBy("has_fragile_fluid_tank", has(FRAGILE_FLUID_TANK))
+                .unlockedBy("has_fragile_fluid_tank", has(AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get()))
                 .withCondition(CDPSEConfig.features().fragileFluidTank)
                 .withCondition(ModIntegration.AERONAUTICS.condition())
                 .accept(output);

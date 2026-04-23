@@ -14,7 +14,7 @@
       "conditions": {
         "items": [
           {
-            "items": "create_dragons_plus:fragile_fluid_tank"
+            "items": "aeronautics:levitite_blend_bucket"
           }
         ]
       },
