@@ -39,7 +39,7 @@ classes {
     finalizedBy(tasks."simulatedClasses")
 }
 
-tasks.withType(Jar) {
+tasks.named("jar", Jar) {
     from "LICENSING.txt"
     from "LICENSE.txt"
     from "LICENSE-CREATE.txt"
