@@ -62,7 +62,7 @@ public enum ModIntegration {
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_DND = "dndesires";
         public static final String QUICKSAND = "quicksand";
-        public static final String SABLE = "aeronautics";
+        public static final String SABLE = "sable";
     }
 
     public DeferredHolder<FanProcessingType, FanProcessingType> fanType(String path) {
