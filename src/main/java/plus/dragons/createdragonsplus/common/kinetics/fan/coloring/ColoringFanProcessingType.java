@@ -32,9 +32,11 @@ import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -52,6 +54,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
@@ -71,6 +74,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private final Vector3f rgb;
     private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
     private final HashMap<Item, ItemStack> craftingResultCache = new HashMap<>();
+    private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
+            .fromNamespaceAndPath("supplementaries", "sus_crafting");
 
     public ColoringFanProcessingType(DyeColor color) {
         this.color = color;
@@ -178,32 +183,40 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
         // 1 Dye + 1 Colorless = 1 Dyed
         var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
-        var optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
-        if (optional.isPresent()) {
-            var recipe = optional.get().value();
-            var result = recipe.assemble(input, level.registryAccess());
-            // Not a coloring recipe if result count is not 1
-            if (result.getCount() == 1) {
-                craftingResultCache.put(stack.getItem(), result.copy());
-                return Optional.of(result);
-            } else return Optional.empty();
+        var result = findAutomaticColoringCraftingResult(input, level, 1);
+        if (result.isPresent()) {
+            craftingResultCache.put(stack.getItem(), result.get().copy());
+            return result;
         }
         // 1 Dye + 8 Colorless = 8 Dyed
         var items = NonNullList.withSize(9, stack);
         items.set(4, new ItemStack(DyeItem.byColor(this.color)));
         input = CraftingInput.of(3, 3, items);
-        optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
-        if (optional.isPresent()) {
-            var recipe = optional.get().value();
-            var result = recipe.assemble(input, level.registryAccess());
-            // Not a coloring recipe if result count is not 8
-            if (result.getCount() != 8)
-                return Optional.empty();
-            result.setCount(1);
-            craftingResultCache.put(stack.getItem(), result.copy());
-            return Optional.of(result);
+        result = findAutomaticColoringCraftingResult(input, level, 8);
+        if (result.isPresent()) {
+            var craftingResult = result.get();
+            craftingResult.setCount(1);
+            craftingResultCache.put(stack.getItem(), craftingResult.copy());
+            return Optional.of(craftingResult);
         }
         return Optional.empty();
+    }
+
+    private static Optional<ItemStack> findAutomaticColoringCraftingResult(CraftingInput input, Level level, int resultCount) {
+        for (var holder : level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
+            var recipe = holder.value();
+            if (isIgnoredAutomaticColoringRecipe(recipe) || !recipe.matches(input, level))
+                continue;
+            var result = recipe.assemble(input, level.registryAccess());
+            if (result.getCount() == resultCount)
+                return Optional.of(result);
+        }
+        return Optional.empty();
+    }
+
+    private static boolean isIgnoredAutomaticColoringRecipe(CraftingRecipe recipe) {
+        var serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(recipe.getSerializer());
+        return SUPPLEMENTARIES_SUS_CRAFTING.equals(serializerId);
     }
 
     public void applyColoring(LivingEntity entity, Level level) {
