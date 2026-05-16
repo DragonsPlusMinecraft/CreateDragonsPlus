@@ -27,32 +27,18 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CDPSEConfig {
-    private static final CDPSECommonConfig COMMON_CONFIG = new CDPSECommonConfig();
     private static final CDPSEServerConfig SERVER_CONFIG = new CDPSEServerConfig();
-    private static ModConfigSpec COMMON_SPEC;
     private static ModConfigSpec SERVER_SPEC;
 
     public CDPSEConfig(ModContainer container) {
-        COMMON_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
-            COMMON_CONFIG.registerAll(builder);
-            return Unit.INSTANCE;
-        }).getValue(), spec -> container.registerConfig(Type.COMMON, spec, container.getModId() + "-simulated-extension-common.toml"));
         SERVER_SPEC = Util.make(new ModConfigSpec.Builder().configure(builder -> {
             SERVER_CONFIG.registerAll(builder);
             return Unit.INSTANCE;
         }).getValue(), spec -> container.registerConfig(Type.SERVER, spec, container.getModId() + "-simulated-extension-server.toml"));
     }
 
-    public static CDPSECommonConfig common() {
-        return COMMON_CONFIG;
-    }
-
     public static CDPSEServerConfig server() {
         return SERVER_CONFIG;
-    }
-
-    public static CDPSEFeaturesConfig features() {
-        return COMMON_CONFIG.features;
     }
 
     public static CDPAirCurrentBlockInteractionConfig airCurrentBlockInteraction() {
@@ -66,18 +52,14 @@ public class CDPSEConfig {
     @SubscribeEvent
     public void onLoad(ModConfigEvent.Loading event) {
         var spec = event.getConfig().getSpec();
-        if (spec == COMMON_SPEC)
-            COMMON_CONFIG.onLoad();
-        else if (spec == SERVER_SPEC)
+        if (spec == SERVER_SPEC)
             SERVER_CONFIG.onLoad();
     }
 
     @SubscribeEvent
     public void onReload(ModConfigEvent.Reloading event) {
         var spec = event.getConfig().getSpec();
-        if (spec == COMMON_SPEC)
-            COMMON_CONFIG.onReload();
-        else if (spec == SERVER_SPEC)
+        if (spec == SERVER_SPEC)
             SERVER_CONFIG.onReload();
     }
 }

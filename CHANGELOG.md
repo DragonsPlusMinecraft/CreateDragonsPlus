@@ -1,8 +1,14 @@
-## Create: Dragons Plus 1.10.0b
+## Create: Dragons Plus 1.10.1
 
-Update for Create 6.0.10.
+### Update
+* Add Bulgarian Localization by @Boris Valkov
+* Update French Localization by @Achille
 
-If you are using Create: Simulated, please update Simulated to at least 1.1.0.
+### Change
+* Sable Integration Feature setting has been moved to Global Feature setting so It should prevent some loading issue from happening.
+* Sable Integration now loads with Sable instead of Create Aeronautics
 
 ### Fix
-* Fix crafting recipe of Fragile Fluid Tank
+* Fix Crash with sable only
+* Fix a KubeJS related error (if issue still persist please report)
+* Fix Floor Differences About Vanilla Create Ponder

@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FragileFluidTankRenderer extends SmartBlockEntityRenderer<FragileFluidTankBlockEntity> {
-
     public FragileFluidTankRenderer(Context context) {
         super(context);
     }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.integration.simulated.common.registry;
 
 import com.simibubi.create.AllBlocks;
@@ -6,6 +24,9 @@ import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.impl.effect.MilkEffectHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -42,10 +63,6 @@ import plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank.O
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class CDPSEFragileTankBreakEffectHandlers {
     private static final List<Runnable> RELOAD_FUNCTION = new ArrayList<>();
     private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> RELOAD_FUNCTION.forEach(Runnable::run);
@@ -57,8 +74,8 @@ public class CDPSEFragileTankBreakEffectHandlers {
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(CDPFluids.COMMON_TAGS.dragonBreath, new DragonBreathHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.POTION.getSource(), new PotionHandler());
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.TEA.getSource(), new TeaHandler());
-        for(DyeColor color : DyeColor.values()) {
-            if(CDPFluids.DYES_BY_COLOR.containsKey(color)){
+        for (DyeColor color : DyeColor.values()) {
+            if (CDPFluids.DYES_BY_COLOR.containsKey(color)) {
                 var fluid = CDPFluids.DYES_BY_COLOR.get(color);
                 FragileFluidTankBreakEffectHandler.REGISTRY.register(fluid.getSource(), new DyeFluidHandler(color));
             }
@@ -73,27 +90,27 @@ public class CDPSEFragileTankBreakEffectHandlers {
         @Override
         protected void onHitDoBlock(Level level, BlockPos pos, BlockState state, FluidStack fluid) {
             if (state.isAir()) return;
-            if (CDPSEConfig.fluid().fragileFluidTankLavaIgniteBlock.get()){
+            if (CDPSEConfig.fluid().fragileFluidTankLavaIgniteBlock.get()) {
                 if ((state.is(Blocks.CAMPFIRE) || state.is(Blocks.SOUL_CAMPFIRE)) && !state.getValue(CampfireBlock.LIT) && level.getFluidState(pos).isEmpty()) {
-                    level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT,true));
+                    level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, true));
                     return;
                 } else if (state.is(AllBlocks.BLAZE_BURNER) && state.getValue(BlazeBurnerBlock.HEAT_LEVEL) == BlazeBurnerBlock.HeatLevel.NONE) {
                     level.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
                     return;
                 }
             }
-            if(CDPSEConfig.fluid().fragileFluidTankLavaSpreadFire.get()){
+            if (CDPSEConfig.fluid().fragileFluidTankLavaSpreadFire.get()) {
                 var d = Direction.getRandom(level.random);
                 var p = pos.relative(d);
-                if(level.getBlockState(p).isAir()){
-                    if(state.ignitedByLava(level, p, d)){
+                if (level.getBlockState(p).isAir()) {
+                    if (state.ignitedByLava(level, p, d)) {
                         level.setBlockAndUpdate(p, EventHooks.fireFluidPlaceBlockEvent(level, p, p, BaseFireBlock.getState(level, p)));
                         return;
                     }
                 }
             }
             var r = state.getBlockHolder().getData(CDPSEDataMaps.FRAGILE_FLUID_TANK_LAVA);
-            if(r!=null)
+            if (r != null)
                 level.setBlockAndUpdate(pos, r.defaultBlockState());
         }
 
@@ -101,10 +118,8 @@ public class CDPSEFragileTankBreakEffectHandlers {
         public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
             var duration = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get() * 100;
             double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(Entity.class, area, entity ->
-                            isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && !entity.isInWater())
+            level.getEntitiesOfClass(Entity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && !entity.isInWater())
                     .forEach(livingEntity -> livingEntity.setRemainingFireTicks(duration));
-
         }
     }
 
@@ -113,22 +128,21 @@ public class CDPSEFragileTankBreakEffectHandlers {
         protected void onHitDoBlock(Level level, BlockPos pos, BlockState state, FluidStack fluid) {
             if (state.isAir()) return;
             if ((state.is(Blocks.CAMPFIRE) || state.is(Blocks.SOUL_CAMPFIRE)) && state.getValue(CampfireBlock.LIT)) {
-                level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT,false));
+                level.setBlockAndUpdate(pos, state.setValue(CampfireBlock.LIT, false));
                 return;
             } else if (state.is(AllBlocks.LIT_BLAZE_BURNER)) {
                 level.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
                 return;
             }
             var r = state.getBlockHolder().getData(CDPSEDataMaps.FRAGILE_FLUID_TANK_WATER);
-            if(r!=null)
+            if (r != null)
                 level.setBlockAndUpdate(pos, r.defaultBlockState());
         }
 
         @Override
         public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
             double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(Entity.class, area, entity ->
-                            isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && entity.isOnFire()).forEach(Entity::extinguishFire);
+            level.getEntitiesOfClass(Entity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && entity.isOnFire()).forEach(Entity::extinguishFire);
         }
     }
 
@@ -161,8 +175,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
             if (contents == PotionContents.EMPTY)
                 return;
             double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, livingEntity->
-                    isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange) && livingEntity.isAffectedByPotions());
+            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, livingEntity -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange) && livingEntity.isAffectedByPotions());
             for (LivingEntity entity : entities) {
                 contents.forEachEffect(effectInstance -> {
                     MobEffect effect = effectInstance.getEffect().value();
@@ -200,21 +213,20 @@ public class CDPSEFragileTankBreakEffectHandlers {
         @Override
         protected void onHitDoBlock(Level level, BlockPos pos, BlockState state, FluidStack fluid) {
             if (state.isAir()) return;
-            if(borrow==null){
+            if (borrow == null) {
                 borrow = CDPFanProcessingTypes.COLORING.get(color).get();
             }
-            if (CDPSEConfig.fluid().fragileFluidTankDyeColorBlock.get()){
-                if(transformingResultCache.containsKey(state.getBlock())){
-                    if(!transformingResultCache.get(state.getBlock()).equals(Blocks.AIR))
+            if (CDPSEConfig.fluid().fragileFluidTankDyeColorBlock.get()) {
+                if (transformingResultCache.containsKey(state.getBlock())) {
+                    if (!transformingResultCache.get(state.getBlock()).equals(Blocks.AIR))
                         level.setBlockAndUpdate(pos, transformingResultCache.get(state.getBlock()).defaultBlockState());
                 } else {
                     var result = borrow.process(new ItemStack(state.getBlock()), level);
-                    if(result==null || result.size()!=1){
+                    if (result == null || result.size() != 1) {
                         transformingResultCache.put(state.getBlock(), Blocks.AIR);
-                    }
-                    else {
-                        transformingResultCache.put(state.getBlock(),Block.byItem(result.get(0).getItem()));
-                        level.setBlockAndUpdate(pos,Block.byItem(result.get(0).getItem()).defaultBlockState());
+                    } else {
+                        transformingResultCache.put(state.getBlock(), Block.byItem(result.get(0).getItem()));
+                        level.setBlockAndUpdate(pos, Block.byItem(result.get(0).getItem()).defaultBlockState());
                     }
                 }
             }
@@ -223,8 +235,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
         @Override
         public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
             double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(LivingEntity.class, area, entity ->
-                            isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange))
+            level.getEntitiesOfClass(LivingEntity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange))
                     .forEach(entity -> {
                         if (entity instanceof LivingEntity livingEntity)
                             borrow.applyColoring(livingEntity, level);
@@ -232,7 +243,6 @@ public class CDPSEFragileTankBreakEffectHandlers {
                             entity.hurt(entity.damageSources().drown(), 2);
                         }
                     });
-
         }
     }
 }

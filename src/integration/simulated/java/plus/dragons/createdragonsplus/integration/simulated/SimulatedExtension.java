@@ -18,7 +18,8 @@
 
 package plus.dragons.createdragonsplus.integration.simulated;
 
-import com.tterrag.registrate.providers.ProviderType;
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
+
 import net.createmod.ponder.foundation.PonderIndex;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -33,11 +34,9 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import plus.dragons.createdragonsplus.client.model.CDPPartialModels;
-import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
-import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataMaps;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.simulated.client.ponder.CDPSEPonderPlugin;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
@@ -47,12 +46,10 @@ import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPS
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 import plus.dragons.createdragonsplus.integration.simulated.data.internal.CDPSERecipeProvider;
 
-import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
-
 @Mod(CDPCommon.ID)
 public class SimulatedExtension {
     public SimulatedExtension(IEventBus modBus, ModContainer modContainer) {
-        if (ModIntegration.AERONAUTICS.enabled()) {
+        if (ModIntegration.SABLE.enabled()) {
             modBus.register(new Common(modBus, modContainer));
             if (FMLLoader.getDist() == Dist.CLIENT)
                 modBus.register(new Client());
@@ -88,7 +85,7 @@ public class SimulatedExtension {
 
         public static void buildContents(BuildCreativeModeTabContentsEvent event) {
             if (event.getTabKey() == CDPCreativeModeTabs.BASE.getKey()) {
-                if (CDPSEConfig.features().fragileFluidTank.get()){
+                if (CDPConfig.features().fragileFluidTank.get()) {
                     event.accept(CDPSEBlocks.FRAGILE_FLUID_TANK);
                     event.accept(CDPSEBlocks.LEVITITE_FRAGILE_FLUID_TANK);
                 }
@@ -101,13 +98,13 @@ public class SimulatedExtension {
             var lookupProvider = event.getLookupProvider();
             var output = generator.getPackOutput();
             var server = event.includeServer();
-            event.addProvider(new CDPSERecipeProvider(output,lookupProvider));
+            event.addProvider(new CDPSERecipeProvider(output, lookupProvider));
         }
     }
 
     public static class Client {
         @SubscribeEvent
-        public void construct(final FMLConstructModEvent event) { }
+        public void construct(final FMLConstructModEvent event) {}
 
         @SubscribeEvent
         public void setup(final FMLClientSetupEvent event) {

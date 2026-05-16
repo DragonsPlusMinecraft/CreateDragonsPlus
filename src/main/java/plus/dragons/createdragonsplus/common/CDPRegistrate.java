@@ -58,7 +58,6 @@ import java.util.function.Supplier;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Position;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -75,7 +74,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
@@ -87,7 +85,6 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,7 +191,7 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
         if (FMLLoader.getDist() == Dist.CLIENT) {
             var registrateLangProviderAdded = PonderIndex.streamPlugins().anyMatch(p -> p.getModId().equals(plugin.get().getModId()));
             PonderIndex.addPlugin(plugin.get());
-            if(!registrateLangProviderAdded){
+            if (!registrateLangProviderAdded) {
                 this.addDataGenerator(ProviderType.LANG, prov -> PonderIndex
                         .getLangAccess()
                         .provideLang(getModid(), prov::add));

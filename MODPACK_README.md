@@ -8,9 +8,10 @@
 * `c:buckets` for Bucket Item, which includes `c:buckets/dye`
 * `create_dragons_plus:not_applicable_for_coloring` for Item that is not applicable for automatic Coloring Recipe support
 #### Block
-* `create_dragons_plus:passiveBlockFreezers` for Passive Block Freezers
+* `create_dragons_plus:passive_block_freezers` for Passive Block Freezers
 * `create_dragons_plus:fan_processing_catalysts/sanding` for Bulk Sanding Catalysts
 * `create_dragons_plus:fan_processing_catalysts/ending` for Bulk Ending Catalysts
+* `create_dragons_plus:fan_processing_catalysts/freezing` for Bulk Freezing Catalysts
 * `create_dragons_plus:not_applicable_for_polishing` for Block that is not applicable for automatic Polishing Block Sanding Recipe support
 
 ## Recipes

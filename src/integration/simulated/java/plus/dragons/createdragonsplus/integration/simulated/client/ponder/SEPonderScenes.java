@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.integration.simulated.client.ponder;
 
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
@@ -30,7 +48,7 @@ public class SEPonderScenes {
         world.moveSection(t1, new Vec3(2.22, 3, 3.1), 0);
         scene.addInstruction(CustomAnimateWorldSectionInstruction.rotate(t1, new Vec3(25, 4, 6), 120, SmoothMovementUtils.linear()));
         scene.idle(15);
-        var t2 = world.showIndependentSection(util.select().fromTo(1, 1, 0,1,2,0), Direction.UP);
+        var t2 = world.showIndependentSection(util.select().fromTo(1, 1, 0, 1, 2, 0), Direction.UP);
         world.moveSection(t2, new Vec3(-1.42, 0.6, 1.1), 0);
         scene.addInstruction(CustomAnimateWorldSectionInstruction.rotate(t2, new Vec3(0, 47, 0), 120, SmoothMovementUtils.linear()));
         scene.idle(15);
@@ -40,7 +58,7 @@ public class SEPonderScenes {
         scene.idle(50);
 
         var hoverArea = util.select().fromTo(0, 1, 2, 5, 2, 5);
-        world.setKineticSpeed(util.select().everywhere(),128);
+        world.setKineticSpeed(util.select().everywhere(), 128);
 
         var hoverCraft = world.showIndependentSection(hoverArea, Direction.UP);
         scene.addInstruction(CustomAnimateWorldSectionInstruction.rotate(hoverCraft, new Vec3(12, 0, 0), 0, SmoothMovementUtils.linear()));
@@ -49,12 +67,12 @@ public class SEPonderScenes {
 
         scene.idle(120);
         scene.addKeyframe();
-        world.setBlock(util.grid().at(0,1,0), Blocks.AIR.defaultBlockState(), false);
-        world.setKineticSpeed(util.select().everywhere(),0);
-        world.setBlock(util.grid().at(2,2,4), Blocks.FIRE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(3,2,4), Blocks.FIRE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(0,1,4), Blocks.FIRE.defaultBlockState().setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.EAST),true), false);
-        world.setBlock(util.grid().at(5,1,4), Blocks.FIRE.defaultBlockState().setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.WEST),true), false);
+        world.setBlock(util.grid().at(0, 1, 0), Blocks.AIR.defaultBlockState(), false);
+        world.setKineticSpeed(util.select().everywhere(), 0);
+        world.setBlock(util.grid().at(2, 2, 4), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 2, 4), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(0, 1, 4), Blocks.FIRE.defaultBlockState().setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.EAST), true), false);
+        world.setBlock(util.grid().at(5, 1, 4), Blocks.FIRE.defaultBlockState().setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.WEST), true), false);
 
         scene.idle(5);
         scene.overlay().showText(80)
@@ -62,8 +80,8 @@ public class SEPonderScenes {
                 .text("When fragile Fluid Tanks breaks, fluid effect will be applied to surrounding");
         scene.addInstruction(CustomAnimateWorldSectionInstruction.move(hoverCraft, new Vec3(0, -0.5, -10), 100, SmoothMovementUtils.quadraticRiseOut()));
         scene.idle(78);
-        world.setBlock(util.grid().at(0,1,4), Blocks.AIR.defaultBlockState(), false);
-        world.setBlock(util.grid().at(1,1,4), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(0, 1, 4), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(1, 1, 4), Blocks.AIR.defaultBlockState(), false);
         scene.idle(12);
     }
 
@@ -89,104 +107,104 @@ public class SEPonderScenes {
                 .independent()
                 .text("Air Current of Bulk Processing from Simulated Contraptions can affect block")
                 .attachKeyFrame();
-        world.setBlock(util.grid().at(2,3,3), CDPFluids.DYES_BY_COLOR.get(DyeColor.LIME).getSource().defaultFluidState().createLegacyBlock(), false);
+        world.setBlock(util.grid().at(2, 3, 3), CDPFluids.DYES_BY_COLOR.get(DyeColor.LIME).getSource().defaultFluidState().createLegacyBlock(), false);
         scene.idle(15);
-        world.setBlock(util.grid().at(5,3,5), Blocks.LAVA.defaultBlockState(), false);
+        world.setBlock(util.grid().at(5, 3, 5), Blocks.LAVA.defaultBlockState(), false);
         scene.idle(15);
-        world.setBlock(util.grid().at(3,3,8), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 3, 8), Blocks.WATER.defaultBlockState(), false);
         scene.idle(15);
-        world.setBlock(util.grid().at(0,3,6), Blocks.POWDER_SNOW.defaultBlockState(), false);
+        world.setBlock(util.grid().at(0, 3, 6), Blocks.POWDER_SNOW.defaultBlockState(), false);
         scene.idle(15);
 
-        world.showSection(util.select().layers(1,4).substract(hoverArea), Direction.DOWN);
+        world.showSection(util.select().layers(1, 4).substract(hoverArea), Direction.DOWN);
         scene.idle(20);
 
-        world.setKineticSpeed(util.select().everywhere(),64f);
+        world.setKineticSpeed(util.select().everywhere(), 64f);
         scene.addInstruction(CustomAnimateWorldSectionInstruction.rotate(hoverCraft1, new Vec3(0, 360, 0), 180, SmoothMovementUtils.linear()));
         scene.addInstruction(CustomAnimateWorldSectionInstruction.rotate(hoverCraft2, new Vec3(0, 360, 0), 180, SmoothMovementUtils.linear()));
-        world.setBlock(util.grid().at(2,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
-        world.setBlock(util.grid().at(7,3,5), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 5), Blocks.WATER.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(2,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
-        world.setBlock(util.grid().at(7,3,4), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 4), Blocks.WATER.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(1,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
-        world.setBlock(util.grid().at(7,4,3), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(1, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 3), Blocks.FIRE.defaultBlockState(), false);
         scene.overlay().showText(80)
-                .pointAt(util.vector().centerOf(7,4,3))
+                .pointAt(util.vector().centerOf(7, 4, 3))
                 .attachKeyFrame()
                 .placeNearTarget()
                 .text("\"Bulk Blasting Air Current spreads fire\" is off by default in config to prevent new players from burning their properties accidentally");
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,4,2), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 2), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(6,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(6, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(5,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(5, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(4,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(4, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(3,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(2,4,1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 4, 1), Blocks.FIRE.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(1,4,1), Blocks.FIRE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(7,4,3), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(1, 4, 1), Blocks.FIRE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 3), Blocks.AIR.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,4,2), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 2), Blocks.AIR.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,4,1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 4, 1), Blocks.AIR.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(6,4,1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(6, 4, 1), Blocks.AIR.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(5,4,1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(5, 4, 1), Blocks.AIR.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,7), Blocks.ICE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(4,4,1), Blocks.AIR.defaultBlockState(), false);
-        world.setBlock(util.grid().at(4,3,1), Blocks.WHITE_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 7), Blocks.ICE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(4, 4, 1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(4, 3, 1), Blocks.WHITE_WOOL.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,6), Blocks.ICE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(3,4,1), Blocks.AIR.defaultBlockState(), false);
-        world.setBlock(util.grid().at(3,3,1), Blocks.WHITE_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 6), Blocks.ICE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 4, 1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 3, 1), Blocks.WHITE_WOOL.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,5), Blocks.ICE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(2,4,1), Blocks.AIR.defaultBlockState(), false);
-        world.setBlock(util.grid().at(2,3,1), Blocks.WHITE_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 5), Blocks.ICE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 4, 1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 3, 1), Blocks.WHITE_WOOL.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,4), Blocks.ICE.defaultBlockState(), false);
-        world.setBlock(util.grid().at(1,4,1), Blocks.AIR.defaultBlockState(), false);
-        world.setBlock(util.grid().at(1,3,1), Blocks.WHITE_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 4), Blocks.ICE.defaultBlockState(), false);
+        world.setBlock(util.grid().at(1, 4, 1), Blocks.AIR.defaultBlockState(), false);
+        world.setBlock(util.grid().at(1, 3, 1), Blocks.WHITE_WOOL.defaultBlockState(), false);
 
         scene.idle(75);
-        world.setBlock(util.grid().at(7,3,7), Blocks.WATER.defaultBlockState(), false);
-        world.setBlock(util.grid().at(4,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 7), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(4, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,6), Blocks.WATER.defaultBlockState(), false);
-        world.setBlock(util.grid().at(3,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 6), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(3, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
 
         scene.idle(5);
-        world.setBlock(util.grid().at(7,3,5), Blocks.WATER.defaultBlockState(), false);
-        world.setBlock(util.grid().at(2,3,1), Blocks.LIME_WOOL.defaultBlockState(), false);
+        world.setBlock(util.grid().at(7, 3, 5), Blocks.WATER.defaultBlockState(), false);
+        world.setBlock(util.grid().at(2, 3, 1), Blocks.LIME_WOOL.defaultBlockState(), false);
     }
 }

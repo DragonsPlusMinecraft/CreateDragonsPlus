@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025  DragonsPlus
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank;
 
 import com.mojang.serialization.MapCodec;
@@ -8,26 +26,17 @@ import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockWithSubLevelCollisionCallback;
 import dev.ryanhcode.sable.api.physics.callback.BlockSubLevelCollisionCallback;
-import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.physics.callback.FragileBlockCallback;
-import dev.ryanhcode.sable.sublevel.SubLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -38,7 +47,6 @@ import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.Frag
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
 
 public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<FragileFluidTankBlockEntity>, BlockWithSubLevelCollisionCallback {
-
     public FragileFluidTankBlock(Properties properties) {
         super(properties);
     }
@@ -97,9 +105,9 @@ public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<Fra
     private class ImpactCallback extends FragileBlockCallback {
         public CollisionResult onHit(final ServerLevel level, final BlockPos pos, final BlockState state, final Vector3d hitPos) {
             withBlockEntityDo(level, pos, (be) -> {
-                if(!be.getFluidInTank().isEmpty()) {
+                if (!be.getFluidInTank().isEmpty()) {
                     var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(be.getFluidInTank().getFluid());
-                    if(handler != null) {
+                    if (handler != null) {
                         var helper = Sable.HELPER;
                         var p = BlockPos.containing(helper.projectOutOfSubLevel(level, pos.getCenter()));
                         var hp = helper.projectOutOfSubLevel(level, hitPos);

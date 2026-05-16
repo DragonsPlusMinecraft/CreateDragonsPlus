@@ -18,6 +18,8 @@
 
 package plus.dragons.createdragonsplus.integration.simulated.common.registry;
 
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
+
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateDataMapProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,9 +30,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-
-import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
-
 
 public class CDPSEDataMaps {
     public static final DataMapType<Block, Block> BLOCK_INTERACTION_BLASTING = DataMapType
@@ -88,17 +87,17 @@ public class CDPSEDataMaps {
     }
 
     public static void generate(RegistrateDataMapProvider provider) {
-        genLavaDataMap(provider,BLOCK_INTERACTION_BLASTING);
-        genLavaDataMap(provider,FRAGILE_FLUID_TANK_LAVA);
+        genLavaDataMap(provider, BLOCK_INTERACTION_BLASTING);
+        genLavaDataMap(provider, FRAGILE_FLUID_TANK_LAVA);
         provider.builder(BLOCK_INTERACTION_SMOKING)
                 .add(Blocks.SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
-        genWaterDataMap(provider,BLOCK_INTERACTION_SPLASHING);
-        genWaterDataMap(provider,FRAGILE_FLUID_TANK_WATER);
+        genWaterDataMap(provider, BLOCK_INTERACTION_SPLASHING);
+        genWaterDataMap(provider, FRAGILE_FLUID_TANK_WATER);
         provider.builder(BLOCK_INTERACTION_FREEZING)
                 .add(Blocks.WATER.defaultBlockState().getBlockHolder(), Blocks.ICE, false);
     }
 
-    private static void genLavaDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> lavaMap){
+    private static void genLavaDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> lavaMap) {
         provider.builder(lavaMap)
                 .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)
                 .add(Blocks.ICE.builtInRegistryHolder(), Blocks.WATER, false)
@@ -107,7 +106,7 @@ public class CDPSEDataMaps {
                 .add(Blocks.POWDER_SNOW.defaultBlockState().getBlockHolder(), Blocks.AIR, false);
     }
 
-    private static void genWaterDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> waterMap){
+    private static void genWaterDataMap(RegistrateDataMapProvider provider, DataMapType<Block, Block> waterMap) {
         provider.builder(waterMap)
                 .add(Blocks.SPONGE.defaultBlockState().getBlockHolder(), Blocks.WET_SPONGE, false)
                 .add(Blocks.WET_SPONGE.builtInRegistryHolder(), Blocks.SPONGE, false)

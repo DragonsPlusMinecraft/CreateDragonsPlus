@@ -61,6 +61,15 @@ public class CDPFeaturesConfig extends FeaturesConfig {
             true,
             "recipe/sand_paper_polishing/waxed_blocks",
             Comments.generateSandPaperPolishingRecipeForWaxedBlocks);
+    public final ConfigFeature airCurrentBlockInteraction = feature(
+            true,
+            "fluid/air_current_block_interaction",
+            Comments.fluidAirCurrentBlockInteraction);
+
+    public final ConfigFeature fragileFluidTank = feature(
+            true,
+            "fluid/fragile_fluid_tank",
+            Comments.fragileFluidTank);
 
     public CDPFeaturesConfig() {
         super(CDPCommon.ID);
@@ -80,5 +89,7 @@ public class CDPFeaturesConfig extends FeaturesConfig {
         static final String generateSandPaperPolishingRecipeForPolishedBlocks = "If Sand Paper Polishing Recipes for Polished Blocks should be generated";
         static final String generateSandPaperPolishingRecipeForOxidizedBlocks = "If Sand Paper Polishing Recipes for Oxidized Blocks should be generated";
         static final String generateSandPaperPolishingRecipeForWaxedBlocks = "If Sand Paper Polishing Recipes for Waxed Blocks should be generated";
+        static final String fluidAirCurrentBlockInteraction = "If block interaction of air current through fluid should be enabled (sable integration)";
+        static final String fragileFluidTank = "If Fragile Fluid Tank should be enabled (sable integration)";
     }
 }

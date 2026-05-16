@@ -18,6 +18,8 @@
 
 package plus.dragons.createdragonsplus.integration.simulated.client.ponder;
 
+import static dev.simulated_team.simulated.index.SimPonderTags.PHYSICS_BEHAVIOR;
+
 import net.createmod.catnip.registry.RegisteredObjectsHelper;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -26,8 +28,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlocks;
-
-import static dev.simulated_team.simulated.index.SimPonderTags.PHYSICS_BEHAVIOR;
 
 public class CDPSEPonderPlugin implements PonderPlugin {
     @Override
