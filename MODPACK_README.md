@@ -10,6 +10,7 @@
 
 * `c:buckets/dye` for Buckets of Dye Fluid and `c:buckets/dye/<color>` for a specific color
 * `c:buckets/dragon_breath` for the Bucket of Liquid Dragon's Breath
+* `c:buckets` for bucket items, including `c:buckets/dye` and `c:buckets/dragon_breath`
 * `c:dyed/<color>` for items dyed with a specific color, including the corresponding Bucket of Dye Fluid
 * `create_dragons_plus:not_applicable_for_coloring` for items that should not receive automatic Bulk Coloring recipe support
 

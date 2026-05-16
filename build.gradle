@@ -20,35 +20,58 @@ java {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-sourceSets {
-    "simulated" {
-        java {
-            srcDir "src/integration/simulated/java"
-        }
-        resources {
-            srcDir "src/integration/simulated/resources"
-        }
-        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
-    }
-    main {
-        runtimeClasspath += sourceSets."simulated".output
-    }
+def allIntegrationSourceSets = [
+        "simulated",
+]
+
+def isIntegrationEnabled = { name ->
+    providers.gradleProperty("enable_${name}_integration")
+            .map { it.toBoolean() }
+            .orElse(true)
+            .get()
 }
 
-classes {
-    finalizedBy(tasks."simulatedClasses")
+def enabledIntegrationSourceSets = allIntegrationSourceSets.findAll { name ->
+    isIntegrationEnabled(name)
+}
+
+def hasIntegration = { name ->
+    enabledIntegrationSourceSets.contains(name)
+}
+
+sourceSets {
+    enabledIntegrationSourceSets.each { name ->
+        create(name) {
+            java {
+                srcDir "src/integration/${name}/java"
+            }
+            resources {
+                srcDir "src/integration/${name}/resources"
+            }
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        }
+    }
+    main {
+        enabledIntegrationSourceSets.each { name ->
+            runtimeClasspath += sourceSets[name].output
+        }
+    }
 }
 
 tasks.named("jar", Jar) {
     from "LICENSING.txt"
     from "LICENSE.txt"
     from "LICENSE-CREATE.txt"
-    from sourceSets."simulated".output
+    enabledIntegrationSourceSets.each { name ->
+        from sourceSets[name].output
+    }
     exclude ".cache"
 }
 
-tasks.sourcesJar {
-    from sourceSets."simulated".allJava
+tasks.named("sourcesJar", Jar) {
+    enabledIntegrationSourceSets.each { name ->
+        from sourceSets[name].allJava
+    }
 }
 
 neoForge {
@@ -80,13 +103,18 @@ neoForge {
 
         data {
             data()
-            programArguments.addAll '--mod', project.mod_id,
-                                    '--all',
-                                    '--output', file('src/generated/resources/').getAbsolutePath(),
-                                    '--existing', file('src/main/resources/').getAbsolutePath(),
-                                    '--existing', file('src/main/translations/').getAbsolutePath(),
-                                    '--existing', file("src/integration/simulated/resources/").getAbsolutePath(),
-                                    '--existing-mod', 'create'
+            def dataArgs = [
+                    '--mod', project.mod_id,
+                    '--all',
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/translations/').getAbsolutePath(),
+                    '--existing-mod', 'create'
+            ]
+            enabledIntegrationSourceSets.each { name ->
+                dataArgs.addAll('--existing', file("src/integration/${name}/resources/").getAbsolutePath())
+            }
+            programArguments.addAll dataArgs
         }
 
         configureEach {
@@ -99,7 +127,9 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet(sourceSets.main)
-            sourceSet(sourceSets."simulated")
+            enabledIntegrationSourceSets.each { name ->
+                sourceSet(sourceSets[name])
+            }
         }
     }
 }
@@ -109,6 +139,25 @@ configurations {
     compileClasspath.extendsFrom localImplementation
     runtimeClasspath.extendsFrom localImplementation
     runtimeClasspath.extendsFrom localRuntime
+}
+
+enabledIntegrationSourceSets.each { name ->
+    def localConfig = configurations.create("${name}LocalImplementation") {
+        canBeConsumed = false
+        canBeResolved = false
+    }
+
+    configurations.named("${name}CompileClasspath") {
+        extendsFrom localConfig
+    }
+
+    configurations.named("${name}RuntimeClasspath") {
+        extendsFrom localConfig
+    }
+
+    configurations.named("runtimeClasspath") {
+        extendsFrom localConfig
+    }
 }
 
 repositories {
@@ -149,16 +198,30 @@ dependencies {
     compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
     localRuntime("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
 
-    localImplementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}")
-    localImplementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
-    localImplementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
-    localImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+    if (hasIntegration("simulated")) {
+        simulatedLocalImplementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}")
+        simulatedLocalImplementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+        simulatedLocalImplementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+        simulatedLocalImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+    }
 
     compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
 
     compileOnly("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
 }
+
+def integrationMixinConfigs = [
+        simulated: "${mod_id}.simulated.mixins.json",
+]
+
+def integrationMixinBlocks = enabledIntegrationSourceSets
+        .collect { name -> integrationMixinConfigs[name] }
+        .findAll { it != null }
+        .collect { config ->
+            "[[mixins]]\nconfig=\"${config}\""
+        }
+        .join("\n\n")
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
@@ -175,7 +238,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_description        : mod_description,
             mod_github             : mod_github,
             mod_logo               : mod_logo,
-            create_version_range   : create_version_range
+            create_version_range   : create_version_range,
+            integration_mixin_blocks: integrationMixinBlocks
     ]
     inputs.properties replaceProperties
     expand replaceProperties
