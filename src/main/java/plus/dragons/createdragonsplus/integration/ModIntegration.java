@@ -33,6 +33,7 @@ public enum ModIntegration {
     //TODO: Keep an eye on Create Garnished 2. Wait it add back Fan Processing
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     CREATE_DND(Constants.CREATE_DND),
+    IMMERSIVE_ENGINEERING(Constants.IMMERSIVE_ENGINEERING),
     QUICKSAND(Constants.QUICKSAND),
     SABLE(Constants.SABLE),;
 
@@ -61,6 +62,7 @@ public enum ModIntegration {
     public static class Constants {
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_DND = "dndesires";
+        public static final String IMMERSIVE_ENGINEERING = "immersiveengineering";
         public static final String QUICKSAND = "quicksand";
         public static final String SABLE = "sable";
     }

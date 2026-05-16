@@ -207,6 +207,7 @@ dependencies {
 
     compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
+    localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
 
     compileOnly("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
 }

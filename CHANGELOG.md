@@ -10,6 +10,7 @@
 
 ### Fix
 * Fix When paired with Supplementaries, coloring sand will turn it into suspicious sand with the dye inside.
+* Fix Potion of Immersive Engineering can not be taken out via Fluid Hatch
 * Fix Crash with sable only
 * Fix a KubeJS related error (if issue still persist please report)
 * Fix Floor Differences About Vanilla Create Ponder

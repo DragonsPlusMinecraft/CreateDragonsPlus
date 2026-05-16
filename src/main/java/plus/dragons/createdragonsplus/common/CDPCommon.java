@@ -51,6 +51,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.internal.CDPRuntimeRecipeProvider;
 import plus.dragons.createdragonsplus.data.runtime.RuntimePackResources;
+import plus.dragons.createdragonsplus.integration.CDPIntegrations;
 
 @Mod(CDPCommon.ID)
 public class CDPCommon {
@@ -88,6 +89,7 @@ public class CDPCommon {
     @SubscribeEvent
     public void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(CDPBlockFreezers::register);
+        event.enqueueWork(CDPIntegrations::register);
     }
 
     public static void addReloadListeners(AddReloadListenerEvent event) {

@@ -202,7 +202,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             FluidStack fluidStack = capability.getFluidInTank(i);
             if (fluidStack.isEmpty() || !filter.test(fluidStack))
                 continue;
-            int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(level, stack, fluidStack.copy());
+            int requiredAmountForItem = FluidHatchItemFilling.getRequiredAmountForItem(level, stack, fluidStack.copy());
             if (requiredAmountForItem == -1)
                 continue;
             if (requiredAmountForItem > fluidStack.getAmount())
@@ -213,7 +213,7 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
             if (player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity)
                 stack = stack.copy();
-            ItemStack result = GenericItemFilling.fillItem(level, requiredAmountForItem, stack, fluidStack.copy());
+            ItemStack result = FluidHatchItemFilling.fillItem(level, requiredAmountForItem, stack, fluidStack.copy());
 
             FluidStack fluidCopy = fluidStack.copy();
             fluidCopy.setAmount(requiredAmountForItem);
