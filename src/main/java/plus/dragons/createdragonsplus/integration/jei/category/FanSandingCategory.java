@@ -28,6 +28,8 @@ import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
@@ -133,16 +135,26 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
 
         @Override
         protected ItemStack getCatalyst() {
-            var optional = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-            if (optional.isEmpty())
-                return ItemStack.EMPTY;
-            if (catalystBlocks != optional.get()) {
-                catalystBlocks = optional.get();
-                catalystStacks = catalystBlocks.stream()
-                        .map(Holder::value)
-                        .map(ItemStack::new)
-                        .toArray(ItemStack[]::new);
+
+            var optional = BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand_bucket"));
+            if (optional.isEmpty()){
+                var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
+                if (optional2.isEmpty())
+                    optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
+                if (optional2.isEmpty())
+                    return ItemStack.EMPTY;
+                if (catalystBlocks != optional2.get()) {
+                    catalystBlocks = optional2.get();
+                    catalystStacks = catalystBlocks.stream()
+                            .map(Holder::value)
+                            .map(ItemStack::new)
+                            .toArray(ItemStack[]::new);
+                }
+            } else {
+                catalystStacks = new ItemStack[1];
+                catalystStacks[0] = optional.get().getDefaultInstance();
             }
+
             if (catalystStacks.length == 0)
                 return ItemStack.EMPTY;
             return catalystStacks[(AnimationTickHolder.getTicks() / 20) % catalystStacks.length];

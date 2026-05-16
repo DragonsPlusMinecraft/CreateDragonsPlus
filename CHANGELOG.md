@@ -12,3 +12,4 @@
 * Fix Crash with sable only
 * Fix a KubeJS related error (if issue still persist please report)
 * Fix Floor Differences About Vanilla Create Ponder
+* Fix JEI Sanding Category icon error due to Quicksand lacking item model for block
