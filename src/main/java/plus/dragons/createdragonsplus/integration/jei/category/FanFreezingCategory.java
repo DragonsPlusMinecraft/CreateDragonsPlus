@@ -24,25 +24,19 @@ import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
@@ -76,22 +70,7 @@ public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<Fr
     private static List<RecipeHolder<FreezingRecipe>> getAllRecipes() {
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.FREEZING.getType()));
-        DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource("freezing"));
-        if (createGarnishedRecipe.isBound()) {
-            manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes
-                    .add(new RecipeHolder<>(holder.id(), FreezingRecipe.builder(holder.id())
-                            .withItemIngredients(holder.value().getIngredients())
-                            .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
-                            .build())));
-        }
-        DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createDNDRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_DND.asResource("freezing"));
-        if (createDNDRecipe.isBound()) {
-            manager.getAllRecipesFor(createDNDRecipe.get()).forEach(holder -> recipes
-                    .add(new RecipeHolder<>(holder.id(), FreezingRecipe.builder(holder.id())
-                            .withItemIngredients(holder.value().getIngredients())
-                            .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
-                            .build())));
-        }
+        CDPIntegrationContributions.gatherFreezingJeiRecipes(manager, recipes);
         return recipes;
     }
 }

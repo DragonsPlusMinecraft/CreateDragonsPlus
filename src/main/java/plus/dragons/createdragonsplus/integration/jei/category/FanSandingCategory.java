@@ -24,8 +24,6 @@ import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -35,22 +33,19 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
@@ -79,9 +74,7 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
 
     @Override
     protected void renderAttachedBlock(GuiGraphics graphics) {
-        var optional = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-        if (optional.isEmpty())
-            optional = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
+        var optional = SandingCatalysts.findBlockTag();
         if (optional.isEmpty())
             return;
         if (catalystBlocks != optional.get()) {
@@ -103,7 +96,7 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
     @Override
     public boolean isHandled(RecipeHolder<SandingRecipe> recipe) {
         var tag = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-        return (tag.isPresent() && tag.get().size() > 0) || ModIntegration.CREATE_DND.enabled();
+        return (tag.isPresent() && tag.get().size() > 0) || !CDPIntegrationContributions.sandingCatalystTags().isEmpty();
     }
 
     private static List<RecipeHolder<SandingRecipe>> getAllRecipes() {
@@ -115,14 +108,7 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
                 .map(SandingRecipe::convertSandPaperPolishing)
                 .forEach(recipes::add);
-        DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createDNDRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_DND.asResource("sanding"));
-        if (createDNDRecipe.isBound()) {
-            manager.getAllRecipesFor(createDNDRecipe.get()).forEach(holder -> recipes
-                    .add(new RecipeHolder<>(holder.id(), SandingRecipe.builder(holder.id())
-                            .withItemIngredients(holder.value().getIngredients())
-                            .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
-                            .build())));
-        }
+        CDPIntegrationContributions.gatherSandingJeiRecipes(manager, recipes);
 
         return recipes;
     }
@@ -135,9 +121,7 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
         protected ItemStack getCatalyst() {
             var optional = BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand_bucket"));
             if (optional.isEmpty()) {
-                var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-                if (optional2.isEmpty())
-                    optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
+                var optional2 = SandingCatalysts.findBlockTag();
                 if (optional2.isEmpty())
                     return ItemStack.EMPTY;
                 if (catalystBlocks != optional2.get()) {

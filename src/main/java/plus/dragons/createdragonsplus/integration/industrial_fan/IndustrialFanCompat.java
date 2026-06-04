@@ -19,21 +19,12 @@
 package plus.dragons.createdragonsplus.integration.industrial_fan;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class IndustrialFanCompat {
-    public static Optional<Item> INDUSTRIAL_FAN;
-
     public static List<Supplier<? extends ItemStack>> catalystWithIndustryFan(ItemStack fan) {
-        if (INDUSTRIAL_FAN == null) {
-            INDUSTRIAL_FAN = DeferredHolder.create(Registries.ITEM, ModIntegration.CREATE_DND.asResource("industrial_fan")).asOptional();
-        }
-        return INDUSTRIAL_FAN.<List<Supplier<? extends ItemStack>>>map(item -> List.of(() -> fan, () -> new ItemStack(item))).orElseGet(() -> List.of(() -> fan));
+        return CDPIntegrationContributions.gatherFanCatalysts(fan);
     }
 }

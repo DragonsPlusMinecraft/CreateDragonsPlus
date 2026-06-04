@@ -25,6 +25,8 @@ def allIntegrationSourceSets = [
         "dye_depot",
         "dyenamics",
         "arts_and_crafts",
+        "create_garnished",
+        "create_dnd",
 ]
 
 def isIntegrationEnabled = { name ->
@@ -208,11 +210,8 @@ dependencies {
         sableLocalImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
     }
 
-    compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
     //localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
-
-    compileOnly("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
 
     if (hasIntegration("dye_depot")) {
         dye_depotLocalImplementation("maven.modrinth:dye-depot:${dye_depot_version}")
@@ -226,10 +225,20 @@ dependencies {
         arts_and_craftsLocalImplementation("curse.maven:jinxedlib-1203401:6727693") // Arts And Crafts dependency
         arts_and_craftsLocalImplementation("curse.maven:artsandcrafts-1034791:${artsandcrafts_version}") // 1.5.4
     }
+
+    if (hasIntegration("create_garnished")) {
+        create_garnishedLocalImplementation("maven.modrinth:create-garnished:${create_garnished_version}")
+    }
+
+    if (hasIntegration("create_dnd")) {
+        create_dndLocalImplementation("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
+    }
 }
 
 def integrationMixinConfigs = [
-        sable: "${mod_id}.sable.mixins.json",
+        sable           : "${mod_id}.sable.mixins.json",
+        create_garnished: "${mod_id}.create_garnished.mixins.json",
+        create_dnd      : "${mod_id}.create_dnd.mixins.json",
 ]
 
 def integrationMixinBlocks = enabledIntegrationSourceSets

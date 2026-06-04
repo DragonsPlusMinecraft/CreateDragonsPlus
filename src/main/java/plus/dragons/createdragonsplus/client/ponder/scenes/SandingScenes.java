@@ -27,12 +27,10 @@ import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 
 public class SandingScenes {
     public static BlockState SANDING_CATALYST;
@@ -42,9 +40,7 @@ public class SandingScenes {
         if (SANDING_CATALYST == null) {
             var optional = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand"));
             if (optional.isEmpty()) {
-                var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
-                if (optional2.isEmpty() || optional2.get().size() == 0)
-                    optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
+                var optional2 = SandingCatalysts.findBlockTag();
                 if (optional2.isEmpty() || optional2.get().size() == 0) {
                     LogUtils.getLogger().error("Sanding catalysts not found! Please report this to Author with log!");
                     SANDING_CATALYST = Blocks.SAND.defaultBlockState();

@@ -25,8 +25,6 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,15 +36,12 @@ import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
@@ -55,7 +50,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
@@ -127,16 +122,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
-        for (var variant : DyeVariantRegistry.all()) {
-            DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(variant.serializedName() + "_dye_blowing"));
-            if (!createGarnishedRecipe.isBound())
-                continue;
-            manager.getAllRecipesFor(createGarnishedRecipe.get()).forEach(holder -> recipes
-                    .add(new RecipeHolder<>(holder.id(), ColoringRecipe.builder(holder.id(), variant.id())
-                            .withItemIngredients(holder.value().getIngredients())
-                            .withItemOutputs(holder.value().getRollableResults().toArray(ProcessingOutput[]::new))
-                            .build())));
-        }
+        CDPIntegrationContributions.gatherColoringJeiRecipes(manager, recipes);
         for (var holder : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
             var crafting = holder.value();
             if (crafting.isSpecial())

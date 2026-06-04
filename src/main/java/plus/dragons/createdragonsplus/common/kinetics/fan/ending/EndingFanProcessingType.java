@@ -19,10 +19,8 @@
 package plus.dragons.createdragonsplus.common.kinetics.fan.ending;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import java.util.List;
-import java.util.Optional;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,27 +30,17 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class EndingFanProcessingType implements FanProcessingType {
-    private final DeferredHolder<FanProcessingType, FanProcessingType> createDNDType;
-    private final DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createDNDRecipe;
-
-    public EndingFanProcessingType() {
-        this.createDNDType = ModIntegration.CREATE_DND.fanType("dragon_breathing");
-        this.createDNDRecipe = ModIntegration.CREATE_DND.recipeType("dragon_breathing");
-    }
-
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkEnding.get())
@@ -63,7 +51,7 @@ public class EndingFanProcessingType implements FanProcessingType {
         var state = level.getBlockState(pos);
         if (state.is(CDPBlocks.MOD_TAGS.fanEndingCatalysts))
             return true;
-        return createDNDType.isBound() && createDNDType.get().isValidAt(level, pos);
+        return CDPIntegrationContributions.isEndingCatalyst(level, pos);
     }
 
     @Override
@@ -81,7 +69,7 @@ public class EndingFanProcessingType implements FanProcessingType {
                 .getRecipeFor(CDPRecipes.ENDING.getType(), input, level)
                 .isPresent())
             return true;
-        return canProcessByCompatRecipe(createDNDRecipe, stack, level);
+        return CDPIntegrationContributions.canEndByCompat(stack, level);
     }
 
     @Override
@@ -91,7 +79,7 @@ public class EndingFanProcessingType implements FanProcessingType {
         return recipeManager
                 .getRecipeFor(CDPRecipes.ENDING.getType(), input, level)
                 .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
-                .or(() -> processByCompatRecipe(createDNDRecipe, stack, level))
+                .or(() -> CDPIntegrationContributions.processEndingByCompat(stack, level))
                 .orElse(null);
     }
 
@@ -122,25 +110,6 @@ public class EndingFanProcessingType implements FanProcessingType {
         if (entity instanceof LivingEntity livingEntity && livingEntity.isAffectedByPotions() && entity.tickCount % 5 == 0) {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, 1));
         }
-        if (createDNDType.isBound()) {
-            createDNDType.get().affectEntity(entity, level);
-        }
-    }
-
-    private boolean canProcessByCompatRecipe(DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> recipeType,
-            ItemStack stack, Level level) {
-        if (!recipeType.isBound())
-            return false;
-        return level.getRecipeManager()
-                .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .isPresent();
-    }
-
-    private Optional<List<ItemStack>> processByCompatRecipe(DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> recipeType, ItemStack stack, Level level) {
-        if (!recipeType.isBound())
-            return Optional.empty();
-        return level.getRecipeManager()
-                .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
+        CDPIntegrationContributions.affectEntityByEndingCompat(entity, level);
     }
 }

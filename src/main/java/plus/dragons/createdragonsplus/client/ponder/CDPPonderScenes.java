@@ -22,12 +22,10 @@ import com.simibubi.create.AllBlocks;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import plus.dragons.createdragonsplus.client.ponder.scenes.CDPFanScenes;
 import plus.dragons.createdragonsplus.client.ponder.scenes.SandingScenes;
-import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 
 public class CDPPonderScenes {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
@@ -37,7 +35,7 @@ public class CDPPonderScenes {
                 .addStoryBoard("bulk_freezing", CDPFanScenes::bulkFreezing)
                 .addStoryBoard("bulk_ending", CDPFanScenes::bulkEnding);
 
-        if (ModIntegration.QUICKSAND.enabled() || ModIntegration.CREATE_DND.enabled() || BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts).isPresent()) {
+        if (SandingCatalysts.hasAnyCatalyst()) {
             registration.forComponents(AllBlocks.ENCASED_FAN)
                     .addStoryBoard("bulk_sanding", SandingScenes::bulkSanding);
         }

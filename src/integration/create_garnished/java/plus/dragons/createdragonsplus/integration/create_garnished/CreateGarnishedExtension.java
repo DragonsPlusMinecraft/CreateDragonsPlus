@@ -16,15 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.data.internal;
+package plus.dragons.createdragonsplus.integration.create_garnished;
 
-import com.tterrag.registrate.providers.RegistrateDataMapProvider;
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
-public class CDPRegistrateDataMaps implements NonNullConsumer<RegistrateDataMapProvider> {
-    @Override
-    public void accept(RegistrateDataMapProvider provider) {
-        CDPIntegrationContributions.gatherDataMaps(provider);
+@Mod(CDPCommon.ID)
+public class CreateGarnishedExtension {
+    public CreateGarnishedExtension(IEventBus modBus) {
+        if (ModIntegration.CREATE_GARNISHED.enabled())
+            modBus.addListener(EventPriority.HIGH, this::construct);
+    }
+
+    private void construct(final FMLConstructModEvent event) {
+        CreateGarnishedFanCompat.register();
+        CDPIntegrationContributions.registerDataMaps(CreateGarnishedDataMaps::accept);
     }
 }

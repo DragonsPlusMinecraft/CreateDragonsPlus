@@ -19,41 +19,25 @@
 package plus.dragons.createdragonsplus.common.kinetics.fan.freezing;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import java.util.List;
-import java.util.Optional;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.processing.freeze.BlockFreezer;
 import plus.dragons.createdragonsplus.common.processing.freeze.FreezeCondition;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class FreezingFanProcessingType implements FanProcessingType {
-    private final DeferredHolder<FanProcessingType, FanProcessingType> createGarnishedType;
-    private final DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createGarnishedRecipe;
-    private final DeferredHolder<FanProcessingType, FanProcessingType> createDNDType;
-    private final DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> createDNDRecipe;
-
-    public FreezingFanProcessingType() {
-        this.createGarnishedType = ModIntegration.CREATE_GARNISHED.fanType("freezing");
-        this.createGarnishedRecipe = ModIntegration.CREATE_GARNISHED.recipeType("freezing");
-        this.createDNDType = ModIntegration.CREATE_DND.fanType("freezing");
-        this.createDNDRecipe = ModIntegration.CREATE_DND.recipeType("freezing");
-    }
-
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkFreezing.get())
@@ -62,8 +46,7 @@ public class FreezingFanProcessingType implements FanProcessingType {
         float freeze = BlockFreezer.findFreeze(level, pos, state);
         if (freeze >= 0)
             return true;
-        return (createGarnishedType.isBound() && createGarnishedType.get().isValidAt(level, pos)) ||
-                (createDNDType.isBound() && createDNDType.get().isValidAt(level, pos));
+        return CDPIntegrationContributions.isFreezingCatalyst(level, pos);
     }
 
     @Override
@@ -79,7 +62,7 @@ public class FreezingFanProcessingType implements FanProcessingType {
                 .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level);
         if (recipe.isPresent())
             return true;
-        return canProcessByCompatRecipe(createGarnishedRecipe, stack, level) || canProcessByCompatRecipe(createDNDRecipe, stack, level);
+        return CDPIntegrationContributions.canFreezeByCompat(stack, level);
     }
 
     @Override
@@ -87,12 +70,7 @@ public class FreezingFanProcessingType implements FanProcessingType {
         return level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level)
                 .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
-                .or(() -> {
-                    var result = processByCompatRecipe(createGarnishedRecipe, stack, level);
-                    if (result.isEmpty())
-                        result = processByCompatRecipe(createDNDRecipe, stack, level);
-                    return result;
-                })
+                .or(() -> CDPIntegrationContributions.processFreezingByCompat(stack, level))
                 .orElse(null);
     }
 
@@ -124,22 +102,5 @@ public class FreezingFanProcessingType implements FanProcessingType {
         if (entity.canFreeze())
             entity.setTicksFrozen(Math.min(entity.getTicksRequiredToFreeze(), entity.getTicksFrozen()) + 3);
         entity.extinguishFire();
-    }
-
-    private boolean canProcessByCompatRecipe(DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> recipeType,
-            ItemStack stack, Level level) {
-        if (!recipeType.isBound())
-            return false;
-        return level.getRecipeManager()
-                .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .isPresent();
-    }
-
-    private Optional<List<ItemStack>> processByCompatRecipe(DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> recipeType, ItemStack stack, Level level) {
-        if (!recipeType.isBound())
-            return Optional.empty();
-        return level.getRecipeManager()
-                .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
     }
 }

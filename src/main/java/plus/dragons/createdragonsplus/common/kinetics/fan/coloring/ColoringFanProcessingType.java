@@ -21,7 +21,6 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 import static plus.dragons.createdragonsplus.common.CDPCommon.PERSISTENT_DATA_KEY;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.infrastructure.config.AllConfigs;
@@ -34,7 +33,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -54,10 +52,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
@@ -65,14 +61,13 @@ import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
-import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.util.ItemStackKey;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeVariant variant;
     private final Vector3f rgb;
-    private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
     private final Map<ItemStackKey, ItemStack> craftingResultCache = new ConcurrentHashMap<>();
     private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
@@ -81,7 +76,6 @@ public class ColoringFanProcessingType implements FanProcessingType {
     public ColoringFanProcessingType(DyeVariant variant) {
         this.variant = variant;
         this.rgb = new Color(this.variant.color()).asVectorF();
-        this.createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(variant.serializedName() + "_dye_blowing"));
     }
 
     @Override
@@ -115,7 +109,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
                 .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.variant.id(), stack), level);
         if (recipe.isPresent())
             return true;
-        if (canProcessByCreateGarnished(stack, level))
+        if (CDPIntegrationContributions.canColorByCompat(this.variant, stack, level))
             return true;
         return this.processByCrafting(stack, level).isPresent();
     }
@@ -125,7 +119,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
         return level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.variant.id(), stack), level)
                 .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
-                .or(() -> processByCreateGarnished(stack, level))
+                .or(() -> CDPIntegrationContributions.processColoringByCompat(this.variant, stack, level))
                 .or(() -> processByCrafting(stack, level)
                         .map(result -> ItemHelper.multipliedOutput(stack, result)))
                 .orElse(null);
@@ -162,22 +156,6 @@ public class ColoringFanProcessingType implements FanProcessingType {
             level.playSound(null, entity.blockPosition(), SoundEvents.GENERIC_EXTINGUISH_FIRE,
                     SoundSource.NEUTRAL, 0.7F, 1.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.4F);
         }
-    }
-
-    private boolean canProcessByCreateGarnished(ItemStack stack, Level level) {
-        if (!createGarnishedRecipe.isBound())
-            return false;
-        return level.getRecipeManager()
-                .getRecipeFor(createGarnishedRecipe.get(), new SingleRecipeInput(stack), level)
-                .isPresent();
-    }
-
-    private Optional<List<ItemStack>> processByCreateGarnished(ItemStack stack, Level level) {
-        if (!createGarnishedRecipe.isBound())
-            return Optional.empty();
-        return level.getRecipeManager()
-                .getRecipeFor(createGarnishedRecipe.get(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false));
     }
 
     private Optional<ItemStack> processByCrafting(ItemStack stack, Level level) {
