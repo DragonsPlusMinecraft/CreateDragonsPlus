@@ -16,13 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package plus.dragons.createdragonsplus.integration;
+package plus.dragons.createdragonsplus.integration.aether.common.kinetics.fan.enchanting;
 
-import plus.dragons.createdragonsplus.integration.immersive_engineering.ImmersiveEngineeringFluidHatchCompat;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public class CDPIntegrations {
-    public static void register() {
-        if (ModIntegration.IMMERSIVE_ENGINEERING.enabled())
-            ImmersiveEngineeringFluidHatchCompat.register();
+public class AetherIncubationContext {
+    private static final ThreadLocal<Vec3> TRANSPORTED_ITEM_POSITION = new ThreadLocal<>();
+
+    public static void setTransportedItemPosition(Vec3 position) {
+        TRANSPORTED_ITEM_POSITION.set(position);
+    }
+
+    public static @Nullable Vec3 transportedItemPosition() {
+        return TRANSPORTED_ITEM_POSITION.get();
+    }
+
+    public static void clearTransportedItemPosition() {
+        TRANSPORTED_ITEM_POSITION.remove();
     }
 }

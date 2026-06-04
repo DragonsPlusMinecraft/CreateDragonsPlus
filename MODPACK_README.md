@@ -101,6 +101,9 @@ Vanilla dye variants can recolor vanilla-colorable entities such as sheep, shulk
 
 `Bulk Freezing` is the fan recipe type `create_dragons_plus:freezing`.
 
+When The Aether integration is enabled and The Aether is loaded, Bulk Freezing also supports `aether:freezing` Freezer recipes. The Aether Freezer block is not a Bulk Freezing catalyst; use the normal Bulk Freezing catalysts from Create: Dragons Plus.
+
+
 ### Bulk Ending
 
 `Bulk Ending` is the fan recipe type `create_dragons_plus:ending`.
@@ -117,6 +120,18 @@ Bulk Sanding requires Quicksand, Create: Dreams & Desires, or another valid bloc
 
 `Bulk Sanding` automatically supports polishing certain blocks into their polished variants by item id. These recipes are also added to Sandpaper Polishing. If a block should not be handled by this rule, add it to the block tag `create_dragons_plus:not_applicable_for_polishing`.
 
+### Bulk Enchanting
+
+When The Aether integration is enabled and The Aether is loaded, Create: Dragons Plus adds an Aether-only fan processing type for Altar recipes. This integration is built in a separate source set and can be disabled at build time with `-Penable_aether_integration=false`.
+
+* JEI name: `Bulk Enchanting`
+* Fan processing id: `create_dragons_plus:aether_enchanting`
+* Catalyst: an Encased Fan blowing through Golden Aercloud (`aether:golden_aercloud`)
+* Supported recipes: `aether:enchanting`, including Altar repairing recipes
+
+Bulk Enchanting also supports `aether:incubation` recipes for Moa Eggs. Moa Eggs processed by Bulk Enchanting spawn the recipe's entity and consume the egg item instead of producing an item output.
+
+
 ## Optional Compat
 
 ### Create: Garnished
@@ -126,6 +141,14 @@ Bulk Sanding requires Quicksand, Create: Dreams & Desires, or another valid bloc
 ### Create: Dreams & Desires
 
 `Bulk Sanding`, `Bulk Ending`, and `Bulk Freezing` support compatible fan processing recipes from Create: Dreams & Desires.
+
+### The Aether
+
+When The Aether is loaded:
+
+* `Bulk Freezing` can process The Aether Freezer recipes from `aether:freezing`.
+* `Bulk Enchanting` is added as an Aether-only fan type for The Aether Altar recipes from `aether:enchanting`.
+* `Bulk Enchanting` can incubate Moa Eggs through The Aether incubation recipes from `aether:incubation`.
 
 ### Quicksand
 
@@ -147,23 +170,23 @@ When Arts & Crafts is loaded, `arts_and_crafts:bleachdew` is treated as the sour
 
 This creates `create_dragons_plus:arts_and_crafts_bleached_dye` and its bucket. It is part of Bulk Coloring, not a separate Bulk Bleaching processing type.
 
-## Sable / Simulated Extension
+### Sable / Simulated Extension
 
-The Sable-backed simulated extension is enabled when Sable is loaded. It is built in a separate integration source set and can be disabled at build time with `-Penable_simulated_integration=false`.
+The Sable-backed simulated extension is enabled when Sable is loaded. It is built in a separate integration source set and can be disabled at build time with `-Penable_sable_integration=false`.
 
-### Added Blocks
+#### Added Blocks
 
 * `create_dragons_plus:fragile_fluid_tank`
 * `create_dragons_plus:levitite_fragile_fluid_tank`
 
-### Sable Tags and Physics Data
+#### Sable Tags and Physics Data
 
 * `sable:fragile` includes both Fragile Fluid Tanks
 * `sable:light` includes `create_dragons_plus:fluid_hatch`
 * `create_dragons_plus:floating_materials/fragile_fluid_tank` defines the floating material referenced by the levitite tank
 * `create_dragons_plus:physics_block_properties/levitite_fragile_fluid_tank` assigns that floating material to the levitite tank
 
-### Features
+#### Features
 
 * Air currents on simulated contraptions can run block interactions through the data maps listed above.
 * Fragile Fluid Tanks break on impact and use fluid-specific break effects.
@@ -202,6 +225,13 @@ The normal server config contains packmaker-facing switches for:
 * `enableBulkFreezing`
 * `enableBulkSanding`
 * `enableBulkEnding`
+
+### The Aether Integration Server Config
+
+When The Aether integration is active, `create_dragons_plus-aether-integration-server.toml` provides:
+
+* `enableBulkEnchanting`
+* `enableBulkMoaIncubation`
 
 ### Simulated Extension Server Config
 

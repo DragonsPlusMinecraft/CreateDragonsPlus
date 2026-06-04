@@ -77,7 +77,8 @@ public class CDPBlocks {
             provider.addTag(fanEndingCatalysts);
             provider.addTag(AllBlockTags.FAN_TRANSPARENT.tag)
                     .add(Blocks.DRAGON_HEAD)
-                    .add(Blocks.DRAGON_WALL_HEAD);
+                    .add(Blocks.DRAGON_WALL_HEAD)
+                    .addOptional(ResourceLocation.fromNamespaceAndPath("aether", "aercloud"));
             provider.addTag(notApplicablePolishing);
         }
     }

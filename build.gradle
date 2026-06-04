@@ -27,6 +27,7 @@ def allIntegrationSourceSets = [
         "arts_and_crafts",
         "create_garnished",
         "create_dnd",
+        "aether",
 ]
 
 def isIntegrationEnabled = { name ->
@@ -233,12 +234,19 @@ dependencies {
     if (hasIntegration("create_dnd")) {
         create_dndLocalImplementation("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
     }
+
+    if (hasIntegration("aether")) {
+        aetherLocalImplementation("maven.modrinth:owo-lib:0.12.15.5-beta.1+1.21")
+        aetherLocalImplementation("maven.modrinth:accessories:1.1.0-beta.53+1.21.1") // Embedded version causes mixin failure
+        aetherLocalImplementation("maven.modrinth:aether:${aether_version}")
+    }
 }
 
 def integrationMixinConfigs = [
         sable           : "${mod_id}.sable.mixins.json",
         create_garnished: "${mod_id}.create_garnished.mixins.json",
         create_dnd      : "${mod_id}.create_dnd.mixins.json",
+        aether          : "${mod_id}.aether.mixins.json",
 ]
 
 def integrationMixinBlocks = enabledIntegrationSourceSets

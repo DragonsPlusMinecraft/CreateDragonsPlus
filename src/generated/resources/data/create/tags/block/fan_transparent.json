@@ -1,6 +1,10 @@
 {
   "values": [
     "minecraft:dragon_head",
-    "minecraft:dragon_wall_head"
+    "minecraft:dragon_wall_head",
+    {
+      "id": "aether:aercloud",
+      "required": false
+    }
   ]
 }

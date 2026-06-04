@@ -6,5 +6,11 @@
   "recipe.create_dragons_plus.fan_sanding": "Bulk Sanding",
   "recipe.create_dragons_plus.fan_sanding.fan": "Fan behind Quicksand",
   "recipe.create_dragons_plus.fan_ending": "Bulk Ending",
-  "recipe.create_dragons_plus.fan_ending.fan": "Fan behind Dragon Head"
+  "recipe.create_dragons_plus.fan_ending.fan": "Fan behind Dragon Head",
+  "recipe.create_dragons_plus.aether_fan_enchanting": "Bulk Enchanting",
+  "recipe.create_dragons_plus.aether_fan_enchanting.fan": "Fan behind Golden Aercloud",
+  "recipe.create_dragons_plus.aether_fan_enchanting.repairing": "Repairs item durability",
+  "recipe.create_dragons_plus.aether_fan_incubation": "Bulk Enchanting Incubation",
+  "recipe.create_dragons_plus.aether_fan_incubation.fan": "Fan behind Golden Aercloud",
+  "recipe.create_dragons_plus.aether_fan_incubation.entity": "Spawns: %s"
 }

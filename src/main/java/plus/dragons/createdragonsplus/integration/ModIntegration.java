@@ -38,6 +38,7 @@ public enum ModIntegration {
     DYE_DEPOT(Constants.DYE_DEPOT),
     DYENAMICS(Constants.DYENAMICS),
     ARTS_AND_CRAFTS(Constants.ARTS_AND_CRAFTS),
+    AETHER(Constants.AETHER),
     SABLE(Constants.SABLE),;
 
     private final String id;
@@ -70,6 +71,7 @@ public enum ModIntegration {
         public static final String DYE_DEPOT = "dye_depot";
         public static final String DYENAMICS = "dyenamics";
         public static final String ARTS_AND_CRAFTS = "arts_and_crafts";
+        public static final String AETHER = "aether";
         public static final String SABLE = "sable";
     }
 
