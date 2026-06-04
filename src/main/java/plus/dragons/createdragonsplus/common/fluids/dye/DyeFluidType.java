@@ -39,8 +39,9 @@ public final class DyeFluidType extends SolidRenderFluidType {
     }
 
     public static FluidTypeFactory create(DyeVariant variant) {
-        int tintColor = FastColor.ARGB32.opaque(variant.color());
-        Vector3f fogColor = new Color(tintColor).asVectorF();
+        int rgbColor = variant.color();
+        int tintColor = FastColor.ARGB32.opaque(rgbColor);
+        Vector3f fogColor = new Color(rgbColor, false).asVectorF();
         return (properties, stillTexture, flowingTexture) -> new DyeFluidType(properties,
                 stillTexture,
                 flowingTexture,
