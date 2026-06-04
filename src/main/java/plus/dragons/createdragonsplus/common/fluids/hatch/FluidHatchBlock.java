@@ -64,6 +64,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import org.jetbrains.annotations.Nullable;
+import plus.dragons.createdragonsplus.common.fluids.hatch.FluidHatchItemFluidTransfer.TransferResult;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
 
 public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<FluidHatchBlockEntity>, IWrenchable, ProperWaterloggedBlock {
@@ -129,12 +130,25 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
 
         FluidExchange exchange;
         FluidStack fluidStack;
-        if (!(fluidStack = tryEmptyItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
-            exchange = FluidExchange.ITEM_TO_TANK;
-        } else if (!(fluidStack = tryFillItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
-            exchange = FluidExchange.TANK_TO_ITEM;
+        if (player.isSecondaryUseActive()) {
+            if (!(fluidStack = tryFillItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
+                exchange = FluidExchange.TANK_TO_ITEM;
+            } else if (!(fluidStack = tryEmptyItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
+                exchange = FluidExchange.ITEM_TO_TANK;
+            } else {
+                exchange = null;
+            }
         } else {
-            if (GenericItemEmptying.canItemBeEmptied(level, stack) || GenericItemFilling.canItemBeFilled(level, stack))
+            if (!(fluidStack = tryEmptyItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
+                exchange = FluidExchange.ITEM_TO_TANK;
+            } else if (!(fluidStack = tryFillItem(level, player, hand, stack, blockEntity, tankCapability, filter)).isEmpty()) {
+                exchange = FluidExchange.TANK_TO_ITEM;
+            } else {
+                exchange = null;
+            }
+        }
+        if (exchange == null) {
+            if (canItemBeEmptied(level, stack) || canItemBeFilled(level, stack))
                 return ItemInteractionResult.SUCCESS;
             return ItemInteractionResult.FAIL;
         }
@@ -157,6 +171,18 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
     public FluidStack tryEmptyItem(
             Level level, Player player, InteractionHand hand, ItemStack stack,
             BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter) {
+        ItemStack transferredStack = stack.copy();
+        TransferResult transfer = FluidHatchItemFluidTransfer.tryDrainItemToTank(transferredStack, capability, filter);
+        if (!transfer.isEmpty()) {
+            blockEntity.setChanged();
+            if (level instanceof ServerLevel serverLevel)
+                serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
+
+            if (!player.isCreative() && !(blockEntity instanceof CreativeFluidTankBlockEntity))
+                replaceItem(player, hand, transferredStack, transfer.result());
+            return transfer.fluidStack();
+        }
+
         if (!GenericItemEmptying.canItemBeEmptied(level, stack))
             return FluidStack.EMPTY;
 
@@ -184,22 +210,37 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
 
         if (!player.isCreative() && !(blockEntity instanceof CreativeFluidTankBlockEntity)) {
-            if (copy.isEmpty()) {
-                player.setItemInHand(hand, emptying.getSecond());
-            } else {
-                player.setItemInHand(hand, copy);
-                player.getInventory().placeItemBackInInventory(emptying.getSecond());
-            }
+            replaceItem(player, hand, copy, emptying.getSecond());
         }
         return fluidStack;
     }
 
     public FluidStack tryFillItem(Level level, Player player, InteractionHand hand, ItemStack stack, BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter) {
+        FluidStack fluidStack = tryFillItemWithExtraHandler(level, player, hand, stack, blockEntity, capability, filter);
+        if (!fluidStack.isEmpty())
+            return fluidStack;
+
+        fluidStack = tryFillItemWithFillingRecipe(level, player, hand, stack, blockEntity, capability, filter);
+        if (!fluidStack.isEmpty())
+            return fluidStack;
+
+        ItemStack transferredStack = stack.copy();
+        TransferResult transfer = FluidHatchItemFluidTransfer.tryFillItemFromTank(transferredStack, capability, filter);
+        if (!transfer.isEmpty()) {
+            blockEntity.setChanged();
+            if (level instanceof ServerLevel serverLevel)
+                serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
+
+            if (!player.isCreative())
+                replaceItem(player, hand, transferredStack, transfer.result());
+            return transfer.fluidStack();
+        }
+
         if (!GenericItemFilling.canItemBeFilled(level, stack))
             return FluidStack.EMPTY;
 
         for (int i = 0; i < capability.getTanks(); i++) {
-            FluidStack fluidStack = capability.getFluidInTank(i);
+            fluidStack = capability.getFluidInTank(i);
             if (fluidStack.isEmpty() || !filter.test(fluidStack))
                 continue;
             int requiredAmountForItem = FluidHatchItemFilling.getRequiredAmountForItem(level, stack, fluidStack.copy());
@@ -208,33 +249,139 @@ public class FluidHatchBlock extends HorizontalDirectionalBlock implements IBE<F
             if (requiredAmountForItem > fluidStack.getAmount())
                 continue;
 
-            if (level.isClientSide)
-                return fluidStack;
-
-            if (player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity)
-                stack = stack.copy();
-            ItemStack result = FluidHatchItemFilling.fillItem(level, requiredAmountForItem, stack, fluidStack.copy());
-
             FluidStack fluidCopy = fluidStack.copy();
             fluidCopy.setAmount(requiredAmountForItem);
 
-            // Prevent special cap behavior interrupting draw fluid. Such as Mekanism.
             FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
-            if (realDraw.isEmpty())
-                return FluidStack.EMPTY;
+            if (realDraw.isEmpty() || realDraw.getAmount() != requiredAmountForItem)
+                continue;
+
+            if (level.isClientSide)
+                return fluidCopy;
+
+            ItemStack workingStack = player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity
+                    ? stack.copy()
+                    : stack;
+            ItemStack result = FluidHatchItemFilling.fillItem(level, requiredAmountForItem, workingStack, fluidStack.copy());
+            if (result.isEmpty())
+                continue;
             capability.drain(fluidCopy, FluidAction.EXECUTE);
 
-            if (!player.isCreative()) {
-                if (player.getItemInHand(hand).isEmpty())
-                    player.setItemInHand(hand, result);
-                else player.getInventory().placeItemBackInInventory(result);
-            }
+            if (!player.isCreative())
+                replaceItem(player, hand, workingStack, result);
             blockEntity.setChanged();
             if (level instanceof ServerLevel serverLevel)
                 serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
             return fluidCopy;
         }
         return FluidStack.EMPTY;
+    }
+
+    private FluidStack tryFillItemWithFillingRecipe(
+            Level level, Player player, InteractionHand hand, ItemStack stack,
+            BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter) {
+        for (int i = 0; i < capability.getTanks(); i++) {
+            FluidStack fluidStack = capability.getFluidInTank(i);
+            if (fluidStack.isEmpty() || !filter.test(fluidStack))
+                continue;
+
+            var requiredAmount = FluidHatchFillingRecipeTransfer.getRequiredAmountForItem(level, stack, fluidStack.copy());
+            if (requiredAmount.isEmpty())
+                continue;
+            int requiredAmountForItem = requiredAmount.getAsInt();
+            if (requiredAmountForItem > fluidStack.getAmount())
+                continue;
+
+            FluidStack fluidCopy = fluidStack.copy();
+            fluidCopy.setAmount(requiredAmountForItem);
+
+            FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
+            if (realDraw.isEmpty() || realDraw.getAmount() != requiredAmountForItem)
+                continue;
+
+            if (level.isClientSide)
+                return fluidCopy;
+
+            ItemStack workingStack = player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity
+                    ? stack.copy()
+                    : stack;
+            var result = FluidHatchFillingRecipeTransfer.fillItem(level, requiredAmountForItem, workingStack, fluidStack.copy());
+            if (result.isEmpty())
+                continue;
+
+            capability.drain(fluidCopy, FluidAction.EXECUTE);
+
+            if (!player.isCreative())
+                replaceItem(player, hand, workingStack, result.get());
+            blockEntity.setChanged();
+            if (level instanceof ServerLevel serverLevel)
+                serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
+            return fluidCopy;
+        }
+        return FluidStack.EMPTY;
+    }
+
+    private FluidStack tryFillItemWithExtraHandler(
+            Level level, Player player, InteractionHand hand, ItemStack stack,
+            BlockEntity blockEntity, IFluidHandler capability, FilteringBehaviour filter) {
+        for (int i = 0; i < capability.getTanks(); i++) {
+            FluidStack fluidStack = capability.getFluidInTank(i);
+            if (fluidStack.isEmpty() || !filter.test(fluidStack))
+                continue;
+
+            var requiredAmount = FluidHatchItemFilling.getRequiredAmountForExtraHandler(stack, fluidStack.copy());
+            if (requiredAmount.isEmpty())
+                continue;
+            int requiredAmountForItem = requiredAmount.getAsInt();
+            if (requiredAmountForItem > fluidStack.getAmount())
+                continue;
+
+            FluidStack fluidCopy = fluidStack.copy();
+            fluidCopy.setAmount(requiredAmountForItem);
+
+            FluidStack realDraw = capability.drain(fluidCopy, FluidAction.SIMULATE);
+            if (realDraw.isEmpty() || realDraw.getAmount() != requiredAmountForItem)
+                continue;
+
+            if (level.isClientSide)
+                return fluidCopy;
+
+            ItemStack workingStack = player.isCreative() || blockEntity instanceof CreativeFluidTankBlockEntity
+                    ? stack.copy()
+                    : stack;
+            var result = FluidHatchItemFilling.fillItemWithExtraHandler(requiredAmountForItem, workingStack, fluidStack.copy());
+            if (result.isEmpty())
+                continue;
+            capability.drain(fluidCopy, FluidAction.EXECUTE);
+
+            if (!player.isCreative())
+                replaceItem(player, hand, workingStack, result.get());
+            blockEntity.setChanged();
+            if (level instanceof ServerLevel serverLevel)
+                serverLevel.getChunkSource().blockChanged(blockEntity.getBlockPos());
+            return fluidCopy;
+        }
+        return FluidStack.EMPTY;
+    }
+
+    private static void replaceItem(Player player, InteractionHand hand, ItemStack stack, ItemStack result) {
+        if (stack.isEmpty()) {
+            player.setItemInHand(hand, result);
+        } else {
+            player.setItemInHand(hand, stack);
+            player.getInventory().placeItemBackInInventory(result);
+        }
+    }
+
+    private static boolean canItemBeEmptied(Level level, ItemStack stack) {
+        return GenericItemEmptying.canItemBeEmptied(level, stack)
+                || FluidHatchItemFluidTransfer.canItemBeEmptied(stack);
+    }
+
+    private static boolean canItemBeFilled(Level level, ItemStack stack) {
+        return FluidHatchFillingRecipeTransfer.canItemBeFilled(level, stack)
+                || FluidHatchItemFluidTransfer.canItemBeFilled(stack)
+                || GenericItemFilling.canItemBeFilled(level, stack);
     }
 
     @Override

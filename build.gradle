@@ -212,7 +212,6 @@ dependencies {
     }
 
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
-    //localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
 
     if (hasIntegration("dye_depot")) {
         dye_depotLocalImplementation("maven.modrinth:dye-depot:${dye_depot_version}")
@@ -240,6 +239,9 @@ dependencies {
         aetherLocalImplementation("maven.modrinth:accessories:1.1.0-beta.53+1.21.1") // Embedded version causes mixin failure
         aetherLocalImplementation("maven.modrinth:aether:${aether_version}")
     }
+
+    // Compat fix
+    //localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
 }
 
 def integrationMixinConfigs = [

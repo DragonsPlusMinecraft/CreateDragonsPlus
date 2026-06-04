@@ -34,21 +34,35 @@ public class FluidHatchItemFilling {
         EXTRA_HANDLERS.add(handler);
     }
 
-    public static int getRequiredAmountForItem(Level level, ItemStack stack, FluidStack availableFluid) {
+    public static OptionalInt getRequiredAmountForExtraHandler(ItemStack stack, FluidStack availableFluid) {
         for (var handler : EXTRA_HANDLERS) {
             var requiredAmount = handler.getRequiredAmountForItem(stack, availableFluid);
             if (requiredAmount.isPresent())
-                return requiredAmount.getAsInt();
+                return requiredAmount;
         }
+        return OptionalInt.empty();
+    }
+
+    public static int getRequiredAmountForItem(Level level, ItemStack stack, FluidStack availableFluid) {
+        var requiredAmount = getRequiredAmountForExtraHandler(stack, availableFluid);
+        if (requiredAmount.isPresent())
+            return requiredAmount.getAsInt();
         return GenericItemFilling.getRequiredAmountForItem(level, stack, availableFluid);
     }
 
-    public static ItemStack fillItem(Level level, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
+    public static Optional<ItemStack> fillItemWithExtraHandler(int requiredAmount, ItemStack stack, FluidStack availableFluid) {
         for (var handler : EXTRA_HANDLERS) {
             var result = handler.fillItem(requiredAmount, stack, availableFluid);
             if (result.isPresent())
-                return result.get();
+                return result;
         }
+        return Optional.empty();
+    }
+
+    public static ItemStack fillItem(Level level, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
+        var result = fillItemWithExtraHandler(requiredAmount, stack, availableFluid);
+        if (result.isPresent())
+            return result.get();
         return GenericItemFilling.fillItem(level, requiredAmount, stack, availableFluid);
     }
 

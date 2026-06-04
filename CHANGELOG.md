@@ -13,3 +13,4 @@
 * Bring back Bulgarian Localization (by @Boris Valkov)
 * Fix Automated Brewing with Liquid Dragon's Breath doesn't respect priority
 * Fix Major TPS Lag: ColoringFanProcessingType performs expensive recipe lookups on every Chute/BlockEntity tick
+* Fix fluid hatch algorithm prevents fluid from being operated in certain cases. (such as conflict with create stuff additions tank)
