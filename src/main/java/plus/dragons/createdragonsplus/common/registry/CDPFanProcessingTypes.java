@@ -25,12 +25,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingFanProcessingType;
@@ -39,13 +38,11 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProc
 public class CDPFanProcessingTypes {
     private static final DeferredRegister<FanProcessingType> TYPES = DeferredRegister
             .create(CreateRegistries.FAN_PROCESSING_TYPE, CDPCommon.ID);
-    public static final Map<DyeColor, Supplier<ColoringFanProcessingType>> COLORING = Util.make(() -> {
-        var builder = ImmutableMap.<DyeColor, Supplier<ColoringFanProcessingType>>builder();
-        for (var color : DyeColors.ALL) {
-            // In case there are modded DyeColor
-            var name = "coloring_" + ResourceLocation.parse(color.getName()).getPath();
-            var type = TYPES.register(name, () -> new ColoringFanProcessingType(color));
-            builder.put(color, type);
+    public static final Map<ResourceLocation, Supplier<ColoringFanProcessingType>> COLORING = Util.make(() -> {
+        var builder = ImmutableMap.<ResourceLocation, Supplier<ColoringFanProcessingType>>builder();
+        for (var variant : DyeVariantRegistry.all()) {
+            var type = TYPES.register(variant.fanProcessingName(), () -> new ColoringFanProcessingType(variant));
+            builder.put(variant.id(), type);
         }
         return builder.build();
     });

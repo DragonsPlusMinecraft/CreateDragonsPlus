@@ -24,7 +24,6 @@ import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.joml.Vector3f;
@@ -32,15 +31,15 @@ import plus.dragons.createdragonsplus.common.fluids.SolidRenderFluidType;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public final class DyeFluidType extends SolidRenderFluidType {
-    private final DyeColor color;
+    private final DyeVariant variant;
 
-    private DyeFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier, DyeColor color) {
+    private DyeFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier, DyeVariant variant) {
         super(properties, stillTexture, flowingTexture, tintColor, fogColor, fogDistanceModifier);
-        this.color = color;
+        this.variant = variant;
     }
 
-    public static FluidTypeFactory create(DyeColor color) {
-        int tintColor = FastColor.ARGB32.opaque(color.getTextureDiffuseColor());
+    public static FluidTypeFactory create(DyeVariant variant) {
+        int tintColor = FastColor.ARGB32.opaque(variant.color());
         Vector3f fogColor = new Color(tintColor).asVectorF();
         return (properties, stillTexture, flowingTexture) -> new DyeFluidType(properties,
                 stillTexture,
@@ -48,15 +47,15 @@ public final class DyeFluidType extends SolidRenderFluidType {
                 tintColor,
                 fogColor,
                 DyeFluidType::getVisibility,
-                color);
+                variant);
     }
 
     private static float getVisibility() {
         return CDPConfig.client().dyeVisionMultiplier.getF() / 256;
     }
 
-    public DyeColor getColor() {
-        return this.color;
+    public DyeVariant getVariant() {
+        return this.variant;
     }
 
     @Override

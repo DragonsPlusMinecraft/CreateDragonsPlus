@@ -24,30 +24,30 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import java.util.function.Function;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
 public class ColoringRecipeParams extends ProcessingRecipeParams {
     public static final MapCodec<ColoringRecipeParams> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             codec(ColoringRecipeParams::new).forGetter(Function.identity()),
-            DyeColor.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)).apply(instance, ColoringRecipeParams::setColor));
+            ResourceLocation.CODEC.fieldOf("color").forGetter(ColoringRecipeParams::getColor)).apply(instance, ColoringRecipeParams::setColor));
     public static final StreamCodec<RegistryFriendlyByteBuf, ColoringRecipeParams> STREAM_CODEC = streamCodec(ColoringRecipeParams::new);
-    protected DyeColor color;
+    protected ResourceLocation color;
 
     protected ColoringRecipeParams() {
         super();
     }
 
-    public ColoringRecipeParams(DyeColor color) {
+    public ColoringRecipeParams(ResourceLocation color) {
         this.color = color;
     }
 
-    protected DyeColor getColor() {
+    protected ResourceLocation getColor() {
         return color;
     }
 
-    protected ColoringRecipeParams setColor(DyeColor color) {
+    protected ColoringRecipeParams setColor(ResourceLocation color) {
         this.color = color;
         return this;
     }
@@ -55,12 +55,12 @@ public class ColoringRecipeParams extends ProcessingRecipeParams {
     @Override
     protected void encode(RegistryFriendlyByteBuf buffer) {
         super.encode(buffer);
-        DyeColor.STREAM_CODEC.encode(buffer, color);
+        ResourceLocation.STREAM_CODEC.encode(buffer, color);
     }
 
     @Override
     protected void decode(RegistryFriendlyByteBuf buffer) {
         super.decode(buffer);
-        color = DyeColor.STREAM_CODEC.decode(buffer);
+        color = ResourceLocation.STREAM_CODEC.decode(buffer);
     }
 }

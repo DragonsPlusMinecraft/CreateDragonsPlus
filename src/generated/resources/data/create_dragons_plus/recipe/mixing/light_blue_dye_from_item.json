@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:light_blue_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/light_blue"
     },
     {
       "type": "neoforge:single",

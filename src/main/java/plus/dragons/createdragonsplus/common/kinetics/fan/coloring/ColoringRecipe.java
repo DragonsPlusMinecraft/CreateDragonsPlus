@@ -24,7 +24,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -34,17 +33,17 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
         super(CDPRecipes.COLORING, params);
     }
 
-    public static Builder builder(ResourceLocation id, DyeColor color) {
+    public static Builder builder(ResourceLocation id, ResourceLocation color) {
         return new Builder(id, color);
     }
 
-    public DyeColor getColor() {
+    public ResourceLocation getColor() {
         return params.color;
     }
 
     @Override
     public boolean matches(ColoringRecipeInput input, Level level) {
-        return params.color == input.color() && this.ingredients.getFirst().test(input.item());
+        return params.color.equals(input.color()) && this.ingredients.getFirst().test(input.item());
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
     }
 
     public static class Builder extends ProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe, Builder> {
-        protected Builder(ResourceLocation recipeId, DyeColor color) {
+        protected Builder(ResourceLocation recipeId, ResourceLocation color) {
             super(ColoringRecipe::new, recipeId);
             this.params.color = color;
         }

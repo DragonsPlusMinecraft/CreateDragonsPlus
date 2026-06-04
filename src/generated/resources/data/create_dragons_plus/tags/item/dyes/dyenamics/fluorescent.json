@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "dyenamics:fluorescent_dye",
+      "required": false
+    }
+  ]
+}

@@ -21,7 +21,10 @@ java {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 def allIntegrationSourceSets = [
-        "simulated",
+        "sable",
+        "dye_depot",
+        "dyenamics",
+        "arts_and_crafts",
 ]
 
 def isIntegrationEnabled = { name ->
@@ -198,22 +201,35 @@ dependencies {
     compileOnly("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}:api")
     localRuntime("top.theillusivec4.curios:curios-neoforge:${curios_version}+${curios_minecraft_version}")
 
-    if (hasIntegration("simulated")) {
-        simulatedLocalImplementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}")
-        simulatedLocalImplementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
-        simulatedLocalImplementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
-        simulatedLocalImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+    if (hasIntegration("sable")) {
+        sableLocalImplementation("dev.ryanhcode.sable:sable-neoforge-${minecraft_version}:${sable_version}")
+        sableLocalImplementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+        sableLocalImplementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+        sableLocalImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
     }
 
     compileOnly("maven.modrinth:create-garnished:${create_garnished_version}")
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")
-    localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
+    //localRuntime("maven.modrinth:immersiveengineering:${immersive_engineering_version}")
 
     compileOnly("maven.modrinth:create-dreams-and-desires:${create_d2d_version}")
+
+    if (hasIntegration("dye_depot")) {
+        dye_depotLocalImplementation("maven.modrinth:dye-depot:${dye_depot_version}")
+    }
+
+    if (hasIntegration("dyenamics")) {
+        dyenamicsLocalImplementation("curse.maven:dyenamics-509276:${dyenamics_version}") // 3.4.2
+    }
+
+    if (hasIntegration("arts_and_crafts")) {
+        arts_and_craftsLocalImplementation("curse.maven:jinxedlib-1203401:6727693") // Arts And Crafts dependency
+        arts_and_craftsLocalImplementation("curse.maven:artsandcrafts-1034791:${artsandcrafts_version}") // 1.5.4
+    }
 }
 
 def integrationMixinConfigs = [
-        simulated: "${mod_id}.simulated.mixins.json",
+        sable: "${mod_id}.sable.mixins.json",
 ]
 
 def integrationMixinBlocks = enabledIntegrationSourceSets

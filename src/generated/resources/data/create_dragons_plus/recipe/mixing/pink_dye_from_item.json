@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:pink_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/pink"
     },
     {
       "type": "neoforge:single",

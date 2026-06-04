@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid/dye"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 250,
+      "fluid": "create_dragons_plus:dyenamics_aquamarine_dye"
+    }
+  ],
+  "results": [
+    {
+      "id": "dyenamics:aquamarine_dye"
+    }
+  ]
+}

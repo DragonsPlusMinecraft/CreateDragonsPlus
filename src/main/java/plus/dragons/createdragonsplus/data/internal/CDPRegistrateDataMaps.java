@@ -21,7 +21,7 @@ package plus.dragons.createdragonsplus.data.internal;
 import com.tterrag.registrate.providers.RegistrateDataMapProvider;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
@@ -30,11 +30,13 @@ public class CDPRegistrateDataMaps implements NonNullConsumer<RegistrateDataMapP
     public void accept(RegistrateDataMapProvider provider) {
         var fanColoringCatalystFluids = provider.builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS);
         var garnishedLoaded = new ModLoadedCondition("garnished");
-        for (var color : DyeColors.ALL) {
-            var still = ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_mastic_resin");
+        for (var variant : DyeVariantRegistry.all()) {
+            if (!variant.isVanilla())
+                continue;
+            var still = ModIntegration.CREATE_GARNISHED.asResource(variant.id().getPath() + "_mastic_resin");
             var flowing = still.withPrefix("flowing_");
-            fanColoringCatalystFluids.add(still, color, false, garnishedLoaded);
-            fanColoringCatalystFluids.add(flowing, color, false, garnishedLoaded);
+            fanColoringCatalystFluids.add(still, variant.id(), false, garnishedLoaded);
+            fanColoringCatalystFluids.add(flowing, variant.id(), false, garnishedLoaded);
         }
     }
 }

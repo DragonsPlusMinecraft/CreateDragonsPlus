@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:brown_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/brown"
     },
     {
       "type": "neoforge:single",

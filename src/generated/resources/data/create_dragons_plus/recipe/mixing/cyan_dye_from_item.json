@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:cyan_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/cyan"
     },
     {
       "type": "neoforge:single",

@@ -50,8 +50,6 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Shulker;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -62,6 +60,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -71,7 +70,7 @@ import plus.dragons.createdragonsplus.util.ItemStackKey;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
-    private final DyeColor color;
+    private final DyeVariant variant;
     private final Vector3f rgb;
     private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
@@ -79,19 +78,19 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
             .fromNamespaceAndPath("supplementaries", "sus_crafting");
 
-    public ColoringFanProcessingType(DyeColor color) {
-        this.color = color;
-        this.rgb = new Color(this.color.getTextureDiffuseColor()).asVectorF();
-        this.createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(color.getSerializedName() + "_dye_blowing"));
+    public ColoringFanProcessingType(DyeVariant variant) {
+        this.variant = variant;
+        this.rgb = new Color(this.variant.color()).asVectorF();
+        this.createGarnishedRecipe = DeferredHolder.create(Registries.RECIPE_TYPE, ModIntegration.CREATE_GARNISHED.asResource(variant.serializedName() + "_dye_blowing"));
     }
 
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkColoring.get())
             return false;
-        if (level.getFluidState(pos).holder().getData(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS) == this.color)
+        if (this.variant.id().equals(level.getFluidState(pos).holder().getData(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS)))
             return true;
-        return level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_FAN_COLORING_CATALYSTS) == this.color;
+        return this.variant.id().equals(level.getBlockState(pos).getBlockHolder().getData(CDPDataMaps.BLOCK_FAN_COLORING_CATALYSTS));
     }
 
     public void recreateCache() {
@@ -113,7 +112,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     private boolean canProcessUncached(ItemStack stack, Level level) {
         var recipe = level.getRecipeManager()
-                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level);
+                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.variant.id(), stack), level);
         if (recipe.isPresent())
             return true;
         if (canProcessByCreateGarnished(stack, level))
@@ -124,7 +123,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         return level.getRecipeManager()
-                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level)
+                .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.variant.id(), stack), level)
                 .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
                 .or(() -> processByCreateGarnished(stack, level))
                 .or(() -> processByCrafting(stack, level)
@@ -145,7 +144,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     @Override
     public void morphAirFlow(AirFlowParticleAccess particleAccess, RandomSource random) {
-        particleAccess.setColor(this.color.getTextureDiffuseColor());
+        particleAccess.setColor(this.variant.color());
         particleAccess.setAlpha(1f);
     }
 
@@ -197,13 +196,16 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     private Optional<ItemStack> processByCraftingUncached(ItemStack stack, Level level) {
         // 1 Dye + 1 Colorless = 1 Dyed
-        var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
+        var dye = this.variant.dyeItemStack();
+        if (dye.isEmpty())
+            return Optional.empty();
+        var input = CraftingInput.of(2, 1, List.of(stack, dye));
         var result = findAutomaticColoringCraftingResult(input, level, 1);
         if (result.isPresent())
             return result;
         // 1 Dye + 8 Colorless = 8 Dyed
         var items = NonNullList.withSize(9, stack);
-        items.set(4, new ItemStack(DyeItem.byColor(this.color)));
+        items.set(4, dye);
         input = CraftingInput.of(3, 3, items);
         result = findAutomaticColoringCraftingResult(input, level, 8);
         if (result.isPresent()) {
@@ -233,12 +235,15 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     public void applyColoring(LivingEntity entity, Level level) {
         if (processColoring(entity)) {
-            switch (entity) {
-                case Sheep sheep -> sheep.setColor(this.color);
-                case Shulker shulker -> shulker.setVariant(Optional.of(this.color));
-                case Cat cat -> cat.setCollarColor(this.color);
-                case Wolf wolf -> wolf.setCollarColor(this.color);
-                default -> {}
+            var vanillaColor = this.variant.vanillaColor();
+            if (vanillaColor != null) {
+                switch (entity) {
+                    case Sheep sheep -> sheep.setColor(vanillaColor);
+                    case Shulker shulker -> shulker.setVariant(Optional.of(vanillaColor));
+                    case Cat cat -> cat.setCollarColor(vanillaColor);
+                    case Wolf wolf -> wolf.setCollarColor(vanillaColor);
+                    default -> {}
+                }
             }
             for (var slot : EquipmentSlot.values()) {
                 ItemStack stack = entity.getItemBySlot(slot);
@@ -255,8 +260,8 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private boolean processColoring(LivingEntity entity) {
         CompoundTag nbt = PersistentDataHelper.getOrCreate(entity.getPersistentData(), PERSISTENT_DATA_KEY, "Coloring");
         int sinceLastProcess = 0;
-        if (!(nbt.contains("Color", Tag.TAG_STRING) && nbt.getString("Color").equals(this.color.getName()))) {
-            nbt.putString("Color", this.color.getName());
+        if (!(nbt.contains("Color", Tag.TAG_STRING) && nbt.getString("Color").equals(this.variant.id().toString()))) {
+            nbt.putString("Color", this.variant.id().toString());
             nbt.remove("Time");
         } else if (nbt.contains("LastProcess", Tag.TAG_INT)) {
             int lastProcess = nbt.getInt("LastProcess");
@@ -280,7 +285,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     }
 
     private Optional<ItemStack> applyColoring(ItemStack stack, Level level) {
-        var coloringInput = new ColoringRecipeInput(this.color, stack);
+        var coloringInput = new ColoringRecipeInput(this.variant.id(), stack);
         var coloringRecipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), coloringInput, level);
         if (coloringRecipe.isPresent()) {
             ItemStack result = coloringRecipe.get().value().assemble(coloringInput, level.registryAccess());

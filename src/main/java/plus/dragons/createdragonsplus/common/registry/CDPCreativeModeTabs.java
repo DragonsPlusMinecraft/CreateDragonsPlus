@@ -31,7 +31,7 @@ import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class CDPCreativeModeTabs {
@@ -58,8 +58,10 @@ public class CDPCreativeModeTabs {
         if (CDPConfig.features().blazeUpgradeSmithingTemplate.get())
             output.accept(BLAZE_UPGRADE_SMITHING_TEMPLATE);
         if (CDPConfig.features().dyeFluids.get())
-            for (var color : DyeColors.CREATIVE_MODE_TAB) {
-                CDPFluids.DYES_BY_COLOR.get(color).getBucket().ifPresent(output::accept);
+            for (var variant : DyeVariantRegistry.all()) {
+                if (!variant.isAvailable())
+                    continue;
+                CDPFluids.DYES_BY_VARIANT.get(variant.id()).getBucket().ifPresent(output::accept);
             }
         if (CDPConfig.features().dragonBreathFluid.get())
             CDPFluids.DRAGON_BREATH.getBucket().ifPresent(output::accept);

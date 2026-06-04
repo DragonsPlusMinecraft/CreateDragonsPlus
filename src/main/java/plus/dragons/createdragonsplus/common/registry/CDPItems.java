@@ -27,22 +27,21 @@ import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
-import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SmithingTemplateItem;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.Tags;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
 import plus.dragons.createdragonsplus.common.CDPCommon;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 
 public class CDPItems {
@@ -107,17 +106,16 @@ public class CDPItems {
 
     public static class CommonTags extends ItemTagRegistry {
         public final TagKey<Item> dyeBuckets = tag("buckets/dye", "Dye Buckets");
-        public final EnumMap<DyeColor, TagKey<Item>> dyeBucketsByColor = Util.make(new EnumMap<>(DyeColor.class), map -> {
-            for (var color : DyeColors.ALL) {
-                var tag = tag("buckets/dye/" + color.getName(), DyeColors.LOCALIZATION.get(color) + " Dye Buckets");
-                map.put(color, tag);
-                addTag(this.dyeBuckets, tag);
-            }
-        });
+        public final Map<ResourceLocation, TagKey<Item>> dyeBucketsByVariant = new LinkedHashMap<>();
         public final TagKey<Item> dragonBreathBuckets = tag("buckets/dragon_breath", "Dragon Breath Buckets");
 
         protected CommonTags() {
             super("c");
+            for (var variant : DyeVariantRegistry.all()) {
+                var tag = tag("buckets/dye/" + variant.serializedName(), variant.displayName() + " Dye Buckets");
+                dyeBucketsByVariant.put(variant.id(), tag);
+                addTag(this.dyeBuckets, tag);
+            }
             addTag(Tags.Items.BUCKETS, dyeBuckets);
             addTag(Tags.Items.BUCKETS, dragonBreathBuckets);
         }
@@ -125,9 +123,14 @@ public class CDPItems {
 
     public static class ModTags extends ItemTagRegistry {
         public final TagKey<Item> notApplicableColoring = tag("not_applicable_for_coloring", "Not applicable for automatic Coloring Recipe");
+        public final Map<ResourceLocation, TagKey<Item>> dyeItemsByVariant = new LinkedHashMap<>();
 
         protected ModTags() {
             super(CDPCommon.ID);
+            for (var variant : DyeVariantRegistry.all()) {
+                dyeItemsByVariant.put(variant.id(), variant.dyeItemTag());
+                addOptional(variant.dyeItemTag(), variant.dyeItemId());
+            }
         }
     }
 }

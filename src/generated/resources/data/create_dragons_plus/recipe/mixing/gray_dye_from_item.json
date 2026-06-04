@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:gray_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/gray"
     },
     {
       "type": "neoforge:single",

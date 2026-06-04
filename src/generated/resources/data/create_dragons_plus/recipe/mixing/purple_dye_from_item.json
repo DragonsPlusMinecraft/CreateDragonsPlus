@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:purple_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/purple"
     },
     {
       "type": "neoforge:single",

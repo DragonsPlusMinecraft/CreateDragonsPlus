@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "dyenamics:cherenkov_dye",
+      "required": false
+    }
+  ]
+}

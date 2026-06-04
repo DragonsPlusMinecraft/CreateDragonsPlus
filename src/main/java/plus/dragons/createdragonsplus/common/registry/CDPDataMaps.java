@@ -19,7 +19,7 @@
 package plus.dragons.createdragonsplus.common.registry;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
@@ -28,13 +28,13 @@ import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class CDPDataMaps {
-    public static final DataMapType<Fluid, DyeColor> FLUID_FAN_COLORING_CATALYSTS = DataMapType
-            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.FLUID, DyeColor.CODEC)
-            .synced(DyeColor.CODEC, true)
+    public static final DataMapType<Fluid, ResourceLocation> FLUID_FAN_COLORING_CATALYSTS = DataMapType
+            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.FLUID, ResourceLocation.CODEC)
+            .synced(ResourceLocation.CODEC, true)
             .build();
-    public static final DataMapType<Block, DyeColor> BLOCK_FAN_COLORING_CATALYSTS = DataMapType
-            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.BLOCK, DyeColor.CODEC)
-            .synced(DyeColor.CODEC, true)
+    public static final DataMapType<Block, ResourceLocation> BLOCK_FAN_COLORING_CATALYSTS = DataMapType
+            .builder(CDPCommon.asResource("fan_processing_catalysts/coloring"), Registries.BLOCK, ResourceLocation.CODEC)
+            .synced(ResourceLocation.CODEC, true)
             .build();
 
     public static void register(IEventBus modBus) {

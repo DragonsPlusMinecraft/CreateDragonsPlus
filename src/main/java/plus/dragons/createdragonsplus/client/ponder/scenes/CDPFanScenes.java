@@ -31,6 +31,7 @@ import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -63,7 +64,7 @@ public class CDPFanScenes {
         scene.idle(10);
         var blockInFront = scene.world().makeSectionIndependent(util.select().position(3, 1, 2));
         scene.world().moveSection(blockInFront, util.vector().of(1, 1, 0), 0);
-        var dye = CDPFluids.DYES_BY_COLOR.get(DyeColor.LIME).getSource().defaultFluidState().createLegacyBlock();
+        var dye = CDPFluids.DYES_BY_VARIANT.get(ResourceLocation.withDefaultNamespace("lime")).getSource().defaultFluidState().createLegacyBlock();
         scene.world().setBlock(util.grid().at(4, 2, 2), dye, false);
         scene.idle(10);
         var airCurrent = util.select().fromTo(4, 2, 2, 1, 2, 2);

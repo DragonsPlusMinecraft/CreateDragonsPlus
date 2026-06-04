@@ -8,7 +8,7 @@
   "type": "create:mixing",
   "ingredients": [
     {
-      "item": "minecraft:green_dye"
+      "tag": "create_dragons_plus:dyes/minecraft/green"
     },
     {
       "type": "neoforge:single",

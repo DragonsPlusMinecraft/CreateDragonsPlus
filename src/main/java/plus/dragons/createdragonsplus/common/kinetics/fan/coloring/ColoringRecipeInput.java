@@ -18,11 +18,11 @@
 
 package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
-public record ColoringRecipeInput(DyeColor color, ItemStack item) implements RecipeInput {
+public record ColoringRecipeInput(ResourceLocation color, ItemStack item) implements RecipeInput {
     @Override
     public ItemStack getItem(int index) {
         if (index != 0) {

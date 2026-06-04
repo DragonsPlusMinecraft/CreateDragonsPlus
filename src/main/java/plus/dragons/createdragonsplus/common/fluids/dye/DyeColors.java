@@ -18,15 +18,19 @@
 
 package plus.dragons.createdragonsplus.common.fluids.dye;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.Map;
 import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class DyeColors {
-    public static final DyeColor[] ALL = Util.make(new DyeColor[16], colors -> System.arraycopy(DyeColor.values(), 0, colors, 0, 16));
-    public static final DyeColor[] CREATIVE_MODE_TAB = new DyeColor[] {
+    public static final DyeColor[] VANILLA_CREATIVE_MODE_TAB = new DyeColor[] {
             DyeColor.WHITE,
             DyeColor.LIGHT_GRAY,
             DyeColor.GRAY,
@@ -44,7 +48,7 @@ public class DyeColors {
             DyeColor.MAGENTA,
             DyeColor.PINK
     };
-    public static final EnumMap<DyeColor, String> LOCALIZATION = Util.make(new EnumMap<>(DyeColor.class), map -> {
+    public static final Map<DyeColor, String> LOCALIZATION = Util.make(new EnumMap<>(DyeColor.class), map -> {
         map.put(DyeColor.WHITE, "White");
         map.put(DyeColor.LIGHT_GRAY, "Light Gray");
         map.put(DyeColor.GRAY, "Gray");
@@ -63,8 +67,30 @@ public class DyeColors {
         map.put(DyeColor.PINK, "Pink");
     });
 
-    public static Comparator<DyeColor> creativeModeTabOrder() {
-        var list = Arrays.asList(CREATIVE_MODE_TAB);
-        return Comparator.comparingInt(list::indexOf);
+    public static void registerVanilla(DyeVariantRegistry.Builder builder) {
+        for (var color : VANILLA_CREATIVE_MODE_TAB) {
+            builder.add(new DyeVariant(
+                    ResourceLocation.withDefaultNamespace(color.getSerializedName()),
+                    color.getSerializedName(),
+                    LOCALIZATION.get(color),
+                    color.getTextureDiffuseColor(),
+                    vanillaDyeItemTag(color),
+                    getKey(DyeItem.byColor(color)),
+                    ResourceLocation.withDefaultNamespace(color.getSerializedName() + "_concrete"),
+                    color,
+                    null));
+        }
+    }
+
+    public static TagKey<Item> vanillaDyeItemTag(DyeColor color) {
+        return TagKey.create(Registries.ITEM, CDPCommon.asResource("dyes/minecraft/" + color.getSerializedName()));
+    }
+
+    public static TagKey<Item> modDyeItemTag(String modId, String color) {
+        return TagKey.create(Registries.ITEM, CDPCommon.asResource("dyes/" + modId + "/" + color));
+    }
+
+    private static ResourceLocation getKey(Item item) {
+        return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
     }
 }

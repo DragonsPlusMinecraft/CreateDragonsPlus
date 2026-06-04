@@ -58,7 +58,7 @@ public class IntrinsicTagRegistry<T, P extends RegistrateTagsProvider.IntrinsicI
             this.values.forEach(tag::add);
             this.optionalValues.forEach(tag::addOptional);
             this.tagValues.forEach(tag::addTag);
-            this.optionalValues.forEach(tag::addOptional);
+            this.optionalTagValues.forEach(tag::addOptionalTag);
         }
     }
 }
