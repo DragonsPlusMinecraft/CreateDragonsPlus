@@ -28,8 +28,6 @@ import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
@@ -135,9 +133,8 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
 
         @Override
         protected ItemStack getCatalyst() {
-
             var optional = BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand_bucket"));
-            if (optional.isEmpty()){
+            if (optional.isEmpty()) {
                 var optional2 = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
                 if (optional2.isEmpty())
                     optional2 = BuiltInRegistries.BLOCK.getTag(TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("dndesires", "fan_processing_catalysts/sanding")));
