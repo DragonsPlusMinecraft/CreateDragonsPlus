@@ -25,16 +25,23 @@ import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.logistics.item.filter.attribute.SingletonItemAttribute;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
+import plus.dragons.createdragonsplus.config.CDPConfig;
+import plus.dragons.createdragonsplus.util.ItemStackKey;
 
 public class CDPItemAttributes {
     private static final DeferredRegister<ItemAttributeType> ITEM_ATTRIBUTES = DeferredRegister
             .create(CreateRegistries.ITEM_ATTRIBUTE_TYPE, CDPCommon.ID);
+    private static final Map<ItemStackKey, Boolean> STAINABLE_CACHE = new ConcurrentHashMap<>();
 
     public static final Holder<ItemAttributeType> FREEZABLE = fanProcessing("freezable",
             "can be Frozen",
@@ -65,9 +72,19 @@ public class CDPItemAttributes {
         REGISTRATE.addRawLang(descriptionKey, "can be Stained");
         REGISTRATE.addRawLang(invertedDescriptionKey, "cannot be Stained");
         return ITEM_ATTRIBUTES.register("stainable", () -> new SingletonItemAttribute.Type(type -> new SingletonItemAttribute(type,
-                (itemStack, level) -> processingTypes.stream()
-                        .anyMatch(s -> s.get().canProcess(itemStack, level)),
+                (itemStack, level) -> canProcessByColoring(itemStack, level, processingTypes),
                 CDPCommon.ID + ".stainable")));
+    }
+
+    private static boolean canProcessByColoring(ItemStack stack, Level level, Collection<Supplier<ColoringFanProcessingType>> processingTypes) {
+        if (!CDPConfig.recipes().enableBulkColoring.get())
+            return false;
+        return STAINABLE_CACHE.computeIfAbsent(ItemStackKey.of(stack), key -> processingTypes.stream()
+                .anyMatch(s -> s.get().canProcess(stack, level)));
+    }
+
+    public static void recreateCache() {
+        STAINABLE_CACHE.clear();
     }
 
     public static void register(IEventBus modBus) {

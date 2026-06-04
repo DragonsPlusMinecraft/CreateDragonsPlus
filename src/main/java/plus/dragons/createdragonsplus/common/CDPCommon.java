@@ -65,7 +65,10 @@ public class CDPCommon {
             .addLang("pack", asResource("runtime"), NAME);
     private final Component runtimePackDescription = REGISTRATE
             .addLang("pack", asResource("runtime"), "description", NAME + " Runtime Generated Resources");
-    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> CDPFanProcessingTypes.COLORING.values().forEach(t -> t.get().recreateCache());
+    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> {
+        CDPFanProcessingTypes.COLORING.values().forEach(t -> t.get().recreateCache());
+        CDPItemAttributes.recreateCache();
+    };
 
     public CDPCommon(IEventBus modBus, ModContainer modContainer) {
         this.modContainer = modContainer;

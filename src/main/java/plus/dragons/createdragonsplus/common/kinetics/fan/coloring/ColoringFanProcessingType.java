@@ -25,9 +25,10 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.infrastructure.config.AllConfigs;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -51,7 +52,6 @@ import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -67,13 +67,15 @@ import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.util.ItemStackKey;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeColor color;
     private final Vector3f rgb;
     private final DeferredHolder<RecipeType<?>, RecipeType<ProcessingRecipe<SingleRecipeInput, ?>>> createGarnishedRecipe;
-    private final HashMap<Item, ItemStack> craftingResultCache = new HashMap<>();
+    private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
+    private final Map<ItemStackKey, ItemStack> craftingResultCache = new ConcurrentHashMap<>();
     private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
             .fromNamespaceAndPath("supplementaries", "sus_crafting");
 
@@ -93,6 +95,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     }
 
     public void recreateCache() {
+        canProcessCache.clear();
         craftingResultCache.clear();
     }
 
@@ -105,6 +108,10 @@ public class ColoringFanProcessingType implements FanProcessingType {
     public boolean canProcess(ItemStack stack, Level level) {
         if (!CDPConfig.recipes().enableBulkColoring.get())
             return false;
+        return canProcessCache.computeIfAbsent(ItemStackKey.of(stack), key -> canProcessUncached(stack, level));
+    }
+
+    private boolean canProcessUncached(ItemStack stack, Level level) {
         var recipe = level.getRecipeManager()
                 .getRecipeFor(CDPRecipes.COLORING.getType(), new ColoringRecipeInput(this.color, stack), level);
         if (recipe.isPresent())
@@ -178,16 +185,22 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (stack.is(CDPItems.MOD_TAGS.notApplicableColoring))
             return Optional.empty();
 
-        if (craftingResultCache.containsKey(stack.getItem()))
-            return Optional.of(craftingResultCache.get(stack.getItem()).copy());
+        var key = ItemStackKey.of(stack);
+        var cached = craftingResultCache.get(key);
+        if (cached != null)
+            return cached.isEmpty() ? Optional.empty() : Optional.of(cached.copy());
 
+        var result = processByCraftingUncached(stack, level);
+        craftingResultCache.put(key, result.map(ItemStack::copy).orElse(ItemStack.EMPTY));
+        return result;
+    }
+
+    private Optional<ItemStack> processByCraftingUncached(ItemStack stack, Level level) {
         // 1 Dye + 1 Colorless = 1 Dyed
         var input = CraftingInput.of(2, 1, List.of(stack, new ItemStack(DyeItem.byColor(this.color))));
         var result = findAutomaticColoringCraftingResult(input, level, 1);
-        if (result.isPresent()) {
-            craftingResultCache.put(stack.getItem(), result.get().copy());
+        if (result.isPresent())
             return result;
-        }
         // 1 Dye + 8 Colorless = 8 Dyed
         var items = NonNullList.withSize(9, stack);
         items.set(4, new ItemStack(DyeItem.byColor(this.color)));
@@ -196,7 +209,6 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (result.isPresent()) {
             var craftingResult = result.get();
             craftingResult.setCount(1);
-            craftingResultCache.put(stack.getItem(), craftingResult.copy());
             return Optional.of(craftingResult);
         }
         return Optional.empty();
