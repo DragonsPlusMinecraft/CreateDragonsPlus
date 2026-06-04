@@ -18,10 +18,8 @@
 
 package plus.dragons.createdragonsplus.mixin.create;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
-import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -43,11 +41,14 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
         super(typeIn, pos, state);
     }
 
-    @Inject(method = "getMatchingRecipes", at = @At(value = "FIELD", ordinal = 0, target = "Lcom/simibubi/create/content/kinetics/mixer/MechanicalMixerBlockEntity;level:Lnet/minecraft/world/level/Level;"))
-    private void getMatchingRecipes$checkDragonBreathFluid(CallbackInfoReturnable<List<Recipe<?>>> cir, @Local BasinBlockEntity basin, @Local List<Recipe<?>> matchingRecipes) {
+    @Inject(method = "getMatchingRecipes", at = @At("TAIL"))
+    private void getMatchingRecipes$checkDragonBreathFluid(CallbackInfoReturnable<List<Recipe<?>>> cir) {
         assert level != null;
         if (CDPConfig.features().generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
-            var tanks = level.getCapability(FluidHandler.BLOCK, basin.getBlockPos(), null);
+            var basin = getBasin();
+            if (basin.isEmpty())
+                return;
+            var tanks = level.getCapability(FluidHandler.BLOCK, basin.get().getBlockPos(), null);
             if (tanks == null)
                 return;
             for (int i = 0; i < tanks.getTanks(); i++) {
@@ -56,6 +57,7 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
                     var recipes = PotionMixingRecipes.sortRecipesByItem(level).get(Items.DRAGON_BREATH);
                     if (recipes == null)
                         return;
+                    var matchingRecipes = cir.getReturnValue();
                     for (var recipe : recipes) {
                         if (matchBasinRecipe(recipe))
                             matchingRecipes.add(recipe);

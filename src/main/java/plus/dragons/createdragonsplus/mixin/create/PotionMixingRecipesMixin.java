@@ -21,6 +21,8 @@ package plus.dragons.createdragonsplus.mixin.create;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
@@ -33,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,10 +52,15 @@ public class PotionMixingRecipesMixin {
     @Unique
     private static final List<MixingRecipe> FLUID_DRAGON_BREATH_RECIPES = new ArrayList<>();
 
+    @Inject(method = "createRecipesImpl", at = @At("HEAD"))
+    private static void createRecipesImpl$clearDragonBreathFluidRecipes(Level level, CallbackInfoReturnable<List<RecipeHolder<MixingRecipe>>> cir) {
+        FLUID_DRAGON_BREATH_RECIPES.clear();
+    }
+
     @WrapOperation(method = "createRecipesImpl", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionMixingRecipes;createRecipe(Ljava/lang/String;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/neoforged/neoforge/fluids/FluidStack;)Lnet/minecraft/world/item/crafting/RecipeHolder;"))
     private static RecipeHolder<MixingRecipe> createRecipesImpl$createDragonBreathFluidRecipe(String id, Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid, Operation<RecipeHolder<MixingRecipe>> original, @Local(name = "mixingRecipes") List<RecipeHolder<MixingRecipe>> mixingRecipes) {
         if (CDPConfig.features().generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
-            if (ingredient.test(new ItemStack(Items.DRAGON_BREATH))) {
+            if (shouldCreateDragonBreathFluidRecipe(ingredient, fromFluid, toFluid)) {
                 var recipeId = CDPCommon.asResource(id + "_using_dragon_breath_fluid");
                 var recipe = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
                         .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
@@ -65,6 +73,13 @@ public class PotionMixingRecipesMixin {
             }
         }
         return original.call(id, ingredient, fromFluid, toFluid);
+    }
+
+    @Unique
+    private static boolean shouldCreateDragonBreathFluidRecipe(Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid) {
+        return ingredient.test(new ItemStack(Items.DRAGON_BREATH))
+                && fromFluid.getOrDefault(AllDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR) == BottleType.SPLASH
+                && toFluid.getOrDefault(AllDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR) == BottleType.LINGERING;
     }
 
     @Inject(method = "sortRecipesByItem(Ljava/util/List;)Ljava/util/Map;", at = @At("TAIL"))
