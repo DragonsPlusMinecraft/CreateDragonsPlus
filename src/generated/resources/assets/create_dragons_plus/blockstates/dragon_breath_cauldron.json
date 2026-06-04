@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "level=1": {
+      "model": "create_dragons_plus:block/dragon_breath_cauldron_level1"
+    },
+    "level=2": {
+      "model": "create_dragons_plus:block/dragon_breath_cauldron_level2"
+    },
+    "level=3": {
+      "model": "create_dragons_plus:block/dragon_breath_cauldron_level3"
+    },
+    "level=4": {
+      "model": "create_dragons_plus:block/dragon_breath_cauldron_full"
+    }
+  }
+}

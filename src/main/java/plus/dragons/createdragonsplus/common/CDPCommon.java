@@ -44,6 +44,7 @@ import plus.dragons.createdragonsplus.common.fluids.dye.RegisterDyeVariantsEvent
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockFreezers;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
+import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.common.registry.CDPConditions;
 import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
 import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
@@ -89,6 +90,7 @@ public class CDPCommon {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void construct(final FMLConstructModEvent event) {
         bootstrapDyeVariants();
+        CDPCauldrons.register(modBus);
         CDPFluids.register(modBus);
         CDPBlocks.register(modBus);
         CDPBlockEntities.register(modBus);

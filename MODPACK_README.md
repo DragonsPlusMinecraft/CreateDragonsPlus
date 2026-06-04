@@ -181,6 +181,7 @@ Notable feature flags:
 
 * `fluid/dye`
 * `fluid/dragon_breath`
+* `fluid/dragon_breath/dripstone_duplication`
 * `fluid/dye/lava_interaction_generate_colored_concrete`
 * `block/fluid_hatch`
 * `item/blaze_upgrade_smithing_template`

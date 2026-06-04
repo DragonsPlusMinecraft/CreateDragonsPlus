@@ -30,6 +30,10 @@ public class CDPFeaturesConfig extends FeaturesConfig {
             true,
             "fluid/dragon_breath",
             Comments.dragonBreathFluid).addAlias("dragons_breath_fluid");
+    public final ConfigFeature dragonBreathFluidDripstoneDuplication = feature(
+            true,
+            "fluid/dragon_breath/dripstone_duplication",
+            Comments.dragonBreathFluidDripstoneDuplication);
     public final ConfigFeature dyeFluidsLavaInteractionGenerateColoredConcrete = feature(
             true,
             "fluid/dye/lava_interaction_generate_colored_concrete",
@@ -80,6 +84,7 @@ public class CDPFeaturesConfig extends FeaturesConfig {
         static final String dyeFluids = "If Dye Fluids should be enabled";
         static final String dyeFluidsLavaInteractionGenerateColoredConcrete = "If colored concrete should be generated when Dye Fluid meets Lava";
         static final String dragonBreathFluid = "If Dragon's Breath Fluid should be enabled";
+        static final String dragonBreathFluidDripstoneDuplication = "If Dragon's Breath Fluid should slowly fill cauldrons through Pointed Dripstone";
         static final String block = "Block Feature Elements";
         static final String fluidHatch = "If Fluid Hatch should be enabled";
         static final String item = "Item Feature Elements";

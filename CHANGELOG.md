@@ -3,6 +3,7 @@
 ### Added
 * Added Dye Fluid and Bulk Coloring support for Dye Depot, Dyenamics and Arts & Crafts (Bleachdew as a special "dye"). Dye Fluid bucket variants, recipes, tags, JEI entries, lava interactions and break effects for Fragile Fluid Tanks for supported extra dye colors.
 * Player can search recipes in JEI via dye fluid and dye fluid bucket.
+* Liquid Dragon's Breath can now slowly fill cauldrons through pointed dripstone. Dragon's Breath Cauldrons hold four bottle-sized levels and can be filled or emptied with Dragon's Breath bottles and buckets.
 
 ### Changed
 * Bulk Coloring now supports namespaced dye variants instead of only vanilla dye colors
