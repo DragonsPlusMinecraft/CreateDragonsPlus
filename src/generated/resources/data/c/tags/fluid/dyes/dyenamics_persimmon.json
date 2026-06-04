@@ -1,6 +1,12 @@
 {
   "values": [
-    "create_dragons_plus:flowing_dyenamics_persimmon_dye",
-    "create_dragons_plus:dyenamics_persimmon_dye"
+    {
+      "id": "create_dragons_plus:dyenamics_persimmon_dye",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:flowing_dyenamics_persimmon_dye",
+      "required": false
+    }
   ]
 }

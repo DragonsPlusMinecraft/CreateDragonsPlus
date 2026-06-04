@@ -1,6 +1,12 @@
 {
   "values": [
-    "create_dragons_plus:flowing_arts_and_crafts_bleached_dye",
-    "create_dragons_plus:arts_and_crafts_bleached_dye"
+    {
+      "id": "create_dragons_plus:arts_and_crafts_bleached_dye",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:flowing_arts_and_crafts_bleached_dye",
+      "required": false
+    }
   ]
 }

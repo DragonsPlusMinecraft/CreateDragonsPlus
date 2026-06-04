@@ -114,7 +114,10 @@ public class CDPItems {
             for (var variant : DyeVariantRegistry.all()) {
                 var tag = tag("buckets/dye/" + variant.serializedName(), variant.displayName() + " Dye Buckets");
                 dyeBucketsByVariant.put(variant.id(), tag);
-                addTag(this.dyeBuckets, tag);
+                if (variant.requiredModId() == null)
+                    addTag(this.dyeBuckets, tag);
+                else
+                    addOptionalTag(this.dyeBuckets, tag.location());
             }
             addTag(Tags.Items.BUCKETS, dyeBuckets);
             addTag(Tags.Items.BUCKETS, dragonBreathBuckets);

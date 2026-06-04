@@ -23,6 +23,8 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.api.event.PipeCollisionEvent;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
+import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.FluidEntry;
@@ -172,11 +174,12 @@ public class CDPFluids {
                 .build()
                 .source(BaseFlowingFluid.Source::new)
                 .bucket()
+                .transform(builder -> tagDyeBucket(builder, variant))
                 .tag(CDPItems.COMMON_TAGS.dyeBucketsByVariant.get(variant.id()))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
                 .color(() -> SimpleItemColors.singleLayer(tintColor))
                 .build()
-                .tag(tag)
+                .transform(builder -> tagDyeFluid(builder, variant, tag))
                 .setData(ProviderType.RECIPE, (ctx, prov) -> {
                     var fromItem = CreateRecipeBuilders.mixing(ctx.getId().withPath(name + "_from_item"))
                             .require(variant.dyeItemTag())
@@ -202,6 +205,20 @@ public class CDPFluids {
                 .register();
     }
 
+    private static <I extends BucketItem, P> ItemBuilder<I, P> tagDyeBucket(ItemBuilder<I, P> builder, DyeVariant variant) {
+        if (variant.requiredModId() != null)
+            builder.asOptional();
+        return builder;
+    }
+
+    private static <T extends BaseFlowingFluid, P> FluidBuilder<T, P> tagDyeFluid(FluidBuilder<T, P> builder, DyeVariant variant, TagKey<Fluid> tag) {
+        if (variant.requiredModId() == null)
+            return builder.tag(tag);
+        COMMON_TAGS.addOptional(tag, CDPCommon.asResource(variant.fluidName()));
+        COMMON_TAGS.addOptional(tag, CDPCommon.asResource("flowing_" + variant.fluidName()));
+        return builder;
+    }
+
     public static class ModTags extends IntrinsicTagRegistry<Fluid, IntrinsicImpl<Fluid>> {
         public final TagKey<Fluid> fanEndingCatalysts = tag("fan_processing_catalysts/ending", "Bulk Ending Catalysts");
 
@@ -217,7 +234,10 @@ public class CDPFluids {
             for (var variant : DyeVariantRegistry.all()) {
                 var tag = tag("dyes/" + variant.serializedName(), variant.displayName() + " Dye");
                 dyesByVariant.put(variant.id(), tag);
-                addTag(this.dyes, tag);
+                if (variant.requiredModId() == null)
+                    addTag(this.dyes, tag);
+                else
+                    addOptionalTag(this.dyes, tag.location());
             }
         }
         public final TagKey<Fluid> dragonBreath = tag("dragon_breath", "Dragon's Breath");

@@ -1,5 +1,8 @@
 {
   "values": [
-    "create_dragons_plus:dyenamics_wine_dye_bucket"
+    {
+      "id": "create_dragons_plus:dyenamics_wine_dye_bucket",
+      "required": false
+    }
   ]
 }

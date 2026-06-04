@@ -1,6 +1,12 @@
 {
   "values": [
-    "create_dragons_plus:flowing_dyenamics_icy_blue_dye",
-    "create_dragons_plus:dyenamics_icy_blue_dye"
+    {
+      "id": "create_dragons_plus:dyenamics_icy_blue_dye",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:flowing_dyenamics_icy_blue_dye",
+      "required": false
+    }
   ]
 }

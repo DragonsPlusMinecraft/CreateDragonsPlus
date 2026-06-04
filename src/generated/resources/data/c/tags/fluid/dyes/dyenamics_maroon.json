@@ -1,6 +1,12 @@
 {
   "values": [
-    "create_dragons_plus:flowing_dyenamics_maroon_dye",
-    "create_dragons_plus:dyenamics_maroon_dye"
+    {
+      "id": "create_dragons_plus:dyenamics_maroon_dye",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:flowing_dyenamics_maroon_dye",
+      "required": false
+    }
   ]
 }

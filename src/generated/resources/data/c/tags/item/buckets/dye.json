@@ -16,40 +16,145 @@
     "#c:buckets/dye/purple",
     "#c:buckets/dye/magenta",
     "#c:buckets/dye/pink",
-    "#c:buckets/dye/arts_and_crafts_bleached",
-    "#c:buckets/dye/dyenamics_amber",
-    "#c:buckets/dye/dyenamics_aquamarine",
-    "#c:buckets/dye/dyenamics_bubblegum",
-    "#c:buckets/dye/dyenamics_cherenkov",
-    "#c:buckets/dye/dyenamics_conifer",
-    "#c:buckets/dye/dyenamics_fluorescent",
-    "#c:buckets/dye/dyenamics_honey",
-    "#c:buckets/dye/dyenamics_icy_blue",
-    "#c:buckets/dye/dyenamics_lavender",
-    "#c:buckets/dye/dyenamics_maroon",
-    "#c:buckets/dye/dyenamics_mint",
-    "#c:buckets/dye/dyenamics_navy",
-    "#c:buckets/dye/dyenamics_peach",
-    "#c:buckets/dye/dyenamics_persimmon",
-    "#c:buckets/dye/dyenamics_rose",
-    "#c:buckets/dye/dyenamics_spring_green",
-    "#c:buckets/dye/dyenamics_ultramarine",
-    "#c:buckets/dye/dyenamics_wine",
-    "#c:buckets/dye/dye_depot_amber",
-    "#c:buckets/dye/dye_depot_aqua",
-    "#c:buckets/dye/dye_depot_beige",
-    "#c:buckets/dye/dye_depot_coral",
-    "#c:buckets/dye/dye_depot_forest",
-    "#c:buckets/dye/dye_depot_ginger",
-    "#c:buckets/dye/dye_depot_indigo",
-    "#c:buckets/dye/dye_depot_maroon",
-    "#c:buckets/dye/dye_depot_mint",
-    "#c:buckets/dye/dye_depot_navy",
-    "#c:buckets/dye/dye_depot_olive",
-    "#c:buckets/dye/dye_depot_rose",
-    "#c:buckets/dye/dye_depot_slate",
-    "#c:buckets/dye/dye_depot_tan",
-    "#c:buckets/dye/dye_depot_teal",
-    "#c:buckets/dye/dye_depot_verdant"
+    {
+      "id": "#c:buckets/dye/arts_and_crafts_bleached",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_amber",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_aquamarine",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_bubblegum",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_cherenkov",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_conifer",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_fluorescent",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_honey",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_icy_blue",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_lavender",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_maroon",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_mint",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_navy",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_peach",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_persimmon",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_rose",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_spring_green",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_ultramarine",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dyenamics_wine",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_amber",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_aqua",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_beige",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_coral",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_forest",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_ginger",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_indigo",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_maroon",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_mint",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_navy",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_olive",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_rose",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_slate",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_tan",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_teal",
+      "required": false
+    },
+    {
+      "id": "#c:buckets/dye/dye_depot_verdant",
+      "required": false
+    }
   ]
 }

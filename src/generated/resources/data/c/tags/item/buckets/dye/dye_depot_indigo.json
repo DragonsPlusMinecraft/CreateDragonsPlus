@@ -1,5 +1,8 @@
 {
   "values": [
-    "create_dragons_plus:dye_depot_indigo_dye_bucket"
+    {
+      "id": "create_dragons_plus:dye_depot_indigo_dye_bucket",
+      "required": false
+    }
   ]
 }

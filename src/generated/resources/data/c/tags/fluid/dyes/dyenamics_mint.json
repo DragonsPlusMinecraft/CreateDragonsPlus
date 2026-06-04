@@ -1,6 +1,12 @@
 {
   "values": [
-    "create_dragons_plus:flowing_dyenamics_mint_dye",
-    "create_dragons_plus:dyenamics_mint_dye"
+    {
+      "id": "create_dragons_plus:dyenamics_mint_dye",
+      "required": false
+    },
+    {
+      "id": "create_dragons_plus:flowing_dyenamics_mint_dye",
+      "required": false
+    }
   ]
 }
