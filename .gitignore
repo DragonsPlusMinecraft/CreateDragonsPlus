@@ -17,10 +17,9 @@ out
 build
 .gradle
 
-# other
-eclipse
-run
-runs
-run-data
-
-repo
+# Minecraft Modding
+run/
+!**/src/**/run/
+**/src/generated/**/.cache/
+repo/
+!**/src/**/repo/
