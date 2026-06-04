@@ -31,7 +31,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,6 +46,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
@@ -51,7 +56,6 @@ import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
-import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
@@ -70,8 +74,20 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
         catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
-        var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, IndustrialFanCompat.catalystWithIndustryFan(catalyst));
+        var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanColoringCategory(info);
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, ColoringRecipe recipe, IFocusGroup focuses) {
+        super.setRecipe(builder, recipe, focuses);
+        var dyeFluid = CDPFluids.DYES_BY_VARIANT.get(recipe.getColor());
+        if (dyeFluid == null)
+            return;
+        builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
+                .addIngredient(NeoForgeTypes.FLUID_STACK, new FluidStack((Fluid) dyeFluid.getSource(), 1000));
+        dyeFluid.getBucket().ifPresent(bucket -> builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
+                .addItemStack(new ItemStack(bucket)));
     }
 
     @Override

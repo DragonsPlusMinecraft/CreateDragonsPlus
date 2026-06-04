@@ -40,7 +40,6 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
-import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
@@ -59,7 +58,7 @@ public class FanEndingCategory extends ProcessingViaFanCategory.MultiOutput<Endi
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, () -> new ItemStack(Items.DRAGON_BREATH));
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
         catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
-        var info = new Info<>(TYPE, title, background, icon, FanEndingCategory::getAllRecipes, IndustrialFanCompat.catalystWithIndustryFan(catalyst));
+        var info = new Info<>(TYPE, title, background, icon, FanEndingCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanEndingCategory(info);
     }
 

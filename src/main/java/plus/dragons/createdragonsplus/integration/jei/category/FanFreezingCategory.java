@@ -37,7 +37,6 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecip
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
-import plus.dragons.createdragonsplus.integration.industrial_fan.IndustrialFanCompat;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
@@ -54,7 +53,7 @@ public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<Fr
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, Items.POWDER_SNOW_BUCKET::getDefaultInstance);
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
         catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
-        var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, IndustrialFanCompat.catalystWithIndustryFan(catalyst));
+        var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanFreezingCategory(info);
     }
 
