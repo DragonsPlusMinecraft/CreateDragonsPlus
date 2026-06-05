@@ -55,10 +55,6 @@ public class DyeVariantRegistry {
         return Optional.ofNullable(byId.get(id));
     }
 
-    public static Comparator<DyeVariant> creativeModeTabOrder() {
-        return Comparator.comparingInt(variant -> order.getOrDefault(variant.id(), Integer.MAX_VALUE));
-    }
-
     public static int creativeModeTabIndex(ResourceLocation id) {
         return order.getOrDefault(id, Integer.MAX_VALUE);
     }

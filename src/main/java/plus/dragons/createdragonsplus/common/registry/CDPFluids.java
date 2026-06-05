@@ -55,6 +55,7 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.StandardDispenserBehaviour;
@@ -250,6 +251,7 @@ public class CDPFluids {
     @EventBusSubscriber
     public static class Reactions {
         private static final Map<FluidType, BlockState> LAVA_INTERACTIONS = new HashMap<>();
+        private static final Map<FluidType, BlockState> DYE_LAVA_INTERACTIONS = new HashMap<>();
 
         @SubscribeEvent
         public static void onPipeCollisionFlow(final PipeCollisionEvent.Flow event) {
@@ -268,19 +270,27 @@ public class CDPFluids {
             Fluid pipe = event.getPipeFluid();
             FluidType worldType = world.getFluidType();
             FluidType pipeType = pipe.getFluidType();
-            if (worldType == NeoForgeMod.LAVA_TYPE.value() && LAVA_INTERACTIONS.containsKey(pipeType)) {
-                if (world.isSource(world.defaultFluidState())) {
-                    event.setState(Blocks.OBSIDIAN.defaultBlockState());
-                } else {
-                    event.setState(LAVA_INTERACTIONS.get(pipeType));
+            if (worldType == NeoForgeMod.LAVA_TYPE.value()) {
+                if (DYE_LAVA_INTERACTIONS.containsKey(pipeType)) {
+                    event.setState(DYE_LAVA_INTERACTIONS.get(pipeType));
+                } else if (LAVA_INTERACTIONS.containsKey(pipeType)) {
+                    event.setState(world.isSource(world.defaultFluidState())
+                            ? Blocks.OBSIDIAN.defaultBlockState()
+                            : LAVA_INTERACTIONS.get(pipeType));
                 }
-            } else if (pipeType == NeoForgeMod.LAVA_TYPE.value() && LAVA_INTERACTIONS.containsKey(worldType)) {
-                if (pipe.isSource(pipe.defaultFluidState())) {
-                    event.setState(Blocks.OBSIDIAN.defaultBlockState());
-                } else {
-                    event.setState(LAVA_INTERACTIONS.get(worldType));
+            } else if (pipeType == NeoForgeMod.LAVA_TYPE.value()) {
+                if (DYE_LAVA_INTERACTIONS.containsKey(worldType)) {
+                    event.setState(DYE_LAVA_INTERACTIONS.get(worldType));
+                } else if (LAVA_INTERACTIONS.containsKey(worldType)) {
+                    event.setState(pipe.isSource(pipe.defaultFluidState())
+                            ? Blocks.OBSIDIAN.defaultBlockState()
+                            : LAVA_INTERACTIONS.get(worldType));
                 }
             }
+        }
+
+        public static @Nullable BlockState getDyeLavaInteraction(FluidType type) {
+            return DYE_LAVA_INTERACTIONS.get(type);
         }
 
         static void registerFluidInteractions() {
@@ -291,11 +301,10 @@ public class CDPFluids {
                 var block = BuiltInRegistries.BLOCK.get(variant.concreteBlockId());
                 var result = genConcrete && block != Blocks.AIR ? block.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState();
                 LAVA_INTERACTIONS.put(type, result);
+                DYE_LAVA_INTERACTIONS.put(type, result);
                 FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
                         type,
-                        fluidState -> fluidState.isSource()
-                                ? Blocks.OBSIDIAN.defaultBlockState()
-                                : result));
+                        result));
             });
             LAVA_INTERACTIONS.put(DRAGON_BREATH.getType(), Blocks.END_STONE.defaultBlockState());
             FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(

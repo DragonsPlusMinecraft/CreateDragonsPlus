@@ -18,15 +18,21 @@
 
 package plus.dragons.createdragonsplus.mixin.create;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.fluids.OpenEndedPipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
 @Mixin(OpenEndedPipe.class)
 public class OpenEndedPipeMixin {
@@ -43,5 +49,25 @@ public class OpenEndedPipeMixin {
             type.onVaporize(null, world, outputPos, fluid);
             cir.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "provideFluidToSpace", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/FluidReactions;handlePipeSpillCollision(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/material/FluidState;)V"), cancellable = true)
+    private void provideFluidToSpace$handleDyeLavaCollision(FluidStack fluid, boolean simulate, CallbackInfoReturnable<Boolean> cir, @Local FluidState fluidState) {
+        BlockState result = null;
+        var pipeType = fluid.getFluidType();
+        var worldType = fluidState.getFluidType();
+        if (pipeType == NeoForgeMod.LAVA_TYPE.value()) {
+            result = CDPFluids.Reactions.getDyeLavaInteraction(worldType);
+        } else if (worldType == NeoForgeMod.LAVA_TYPE.value()) {
+            result = CDPFluids.Reactions.getDyeLavaInteraction(pipeType);
+        }
+        if (result == null)
+            return;
+        if (!simulate) {
+            var placed = EventHooks.fireFluidPlaceBlockEvent(world, outputPos, outputPos, result);
+            world.setBlockAndUpdate(outputPos, placed);
+            world.levelEvent(1501, outputPos, 0);
+        }
+        cir.setReturnValue(true);
     }
 }
