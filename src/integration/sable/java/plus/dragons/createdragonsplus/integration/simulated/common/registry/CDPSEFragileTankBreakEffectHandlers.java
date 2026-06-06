@@ -27,10 +27,15 @@ import com.simibubi.create.impl.effect.MilkEffectHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -47,24 +52,26 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.joml.Vector3d;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringFanProcessingType;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankBreakEffectHandler;
+import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankImpactContext;
 import plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank.DefaultRangedEffectHandler;
 import plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank.OpenEndedPipeEffectHandlerWrapper;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
 public class CDPSEFragileTankBreakEffectHandlers {
+    public static final TagKey<Fluid> EXPLOSIVE_FLUIDS = TagKey.create(Registries.FLUID, CDPCommon.asResource("fragile_fluid_tank/explosive"));
     private static final List<Runnable> RELOAD_FUNCTION = new ArrayList<>();
     private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> RELOAD_FUNCTION.forEach(Runnable::run);
 
@@ -73,6 +80,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.LAVA, new LavaHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.WATER, new WaterHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(CDPFluids.COMMON_TAGS.dragonBreath, new DragonBreathHandler()));
+        FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(EXPLOSIVE_FLUIDS, new ExplosiveFluidHandler()));
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.POTION.getSource(), new PotionHandler());
         FragileFluidTankBreakEffectHandler.REGISTRY.register(AllFluids.TEA.getSource(), new TeaHandler());
         for (var variant : DyeVariantRegistry.all()) {
@@ -116,11 +124,14 @@ public class CDPSEFragileTankBreakEffectHandlers {
         }
 
         @Override
-        public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            var duration = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get() * 100;
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(Entity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && !entity.isInWater())
-                    .forEach(livingEntity -> livingEntity.setRemainingFireTicks(duration));
+        public void onHitDoRest(FragileFluidTankImpactContext context) {
+            var duration = context.effectAmplifier() * 100;
+            forEntitiesInRange(context, Entity.class, entity -> !entity.isInWater(), entity -> entity.setRemainingFireTicks(duration));
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "lava";
         }
     }
 
@@ -141,42 +152,54 @@ public class CDPSEFragileTankBreakEffectHandlers {
         }
 
         @Override
-        public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(Entity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange) && entity.isOnFire()).forEach(Entity::extinguishFire);
+        public void onHitDoRest(FragileFluidTankImpactContext context) {
+            forEntitiesInRange(context, Entity.class, Entity::isOnFire, Entity::extinguishFire);
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "water";
         }
     }
 
     private static class TeaHandler extends DefaultRangedEffectHandler {
         @Override
-        public void onHit(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            var duration = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get() * 300;
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(LivingEntity.class, area, (livingEntity) -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange))
-                    .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, duration, 0, false, false, false)));
+        public void onHit(FragileFluidTankImpactContext context) {
+            var duration = context.effectAmplifier() * 300;
+            forEntitiesInRange(context, LivingEntity.class, livingEntity -> true,
+                    livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, duration, 0, false, false, false)));
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "tea";
         }
     }
 
     private static class DragonBreathHandler extends DefaultRangedEffectHandler {
         @Override
-        public void onHit(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            var amplifier = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get();
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(LivingEntity.class, area, (livingEntity) -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange))
-                    .forEach(livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, amplifier + 1, false, false, false)));
+        public void onHit(FragileFluidTankImpactContext context) {
+            var amplifier = context.effectAmplifier();
+            forEntitiesInRange(context, LivingEntity.class, livingEntity -> true,
+                    livingEntity -> livingEntity.addEffect(new MobEffectInstance(MobEffects.HARM, 1, amplifier + 1, false, false, false)));
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "dragon_breath";
         }
     }
 
     @CodeReference(source = "com.simibubi.create.impl.effect.PotionEffectHandler", license = "mit")
     public static class PotionHandler extends DefaultRangedEffectHandler {
         @Override
-        public void onHit(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            var amplifier = fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankEffectAmplifiedUnit.get();
-            PotionContents contents = getContents(fluid);
+        public void onHit(FragileFluidTankImpactContext context) {
+            var amplifier = context.effectAmplifier();
+            PotionContents contents = getContents(context.fluid());
             if (contents == PotionContents.EMPTY)
                 return;
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, livingEntity -> isEntityInRangeConsideringSubLevel(level, livingEntity, hitPos, validRange) && livingEntity.isAffectedByPotions());
+            List<LivingEntity> entities = context.level().getEntitiesOfClass(LivingEntity.class, context.area(),
+                    livingEntity -> isEntityInRangeConsideringSubLevel(context, livingEntity) && livingEntity.isAffectedByPotions());
             for (LivingEntity entity : entities) {
                 contents.forEachEffect(effectInstance -> {
                     MobEffect effect = effectInstance.getEffect().value();
@@ -187,6 +210,11 @@ public class CDPSEFragileTankBreakEffectHandlers {
                     }
                 });
             }
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "effect";
         }
 
         private static PotionContents getContents(FluidStack fluid) {
@@ -238,16 +266,43 @@ public class CDPSEFragileTankBreakEffectHandlers {
         }
 
         @Override
-        public void onHitDoRest(Level level, AABB area, Vector3d hitPos, FluidStack fluid) {
-            double validRange = (double) fluid.getAmount() / CDPSEConfig.fluid().fragileFluidTankCapacity.get() * CDPSEConfig.fluid().fragileFluidTankAffectMaxRadius.get();
-            level.getEntitiesOfClass(LivingEntity.class, area, entity -> isEntityInRangeConsideringSubLevel(level, entity, hitPos, validRange))
-                    .forEach(entity -> {
-                        if (entity instanceof LivingEntity livingEntity)
-                            borrow().applyColoring(livingEntity, level);
-                        if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM || entity.getType() == EntityType.BLAZE) {
-                            entity.hurt(entity.damageSources().drown(), 2);
-                        }
-                    });
+        public void onHitDoRest(FragileFluidTankImpactContext context) {
+            forEntitiesInRange(context, LivingEntity.class, entity -> true, entity -> {
+                borrow().applyColoring(entity, context.level());
+                if (entity instanceof EnderMan || entity.getType() == EntityType.SNOW_GOLEM || entity.getType() == EntityType.BLAZE) {
+                    entity.hurt(entity.damageSources().drown(), 2);
+                }
+            });
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "dye";
+        }
+    }
+
+    private static class ExplosiveFluidHandler extends DefaultRangedEffectHandler {
+        @Override
+        protected void onHit(FragileFluidTankImpactContext context) {
+            if (!CDPSEConfig.fluid().fragileFluidTankExplosiveFluidExplosion.get())
+                return;
+            float min = CDPSEConfig.fluid().fragileFluidTankExplosiveFluidMinPower.getF();
+            float max = CDPSEConfig.fluid().fragileFluidTankExplosiveFluidMaxPower.getF();
+            float power = Mth.lerp(Mth.clamp(context.fullness(), 0.0f, 1.0f), min, max);
+            if (power <= 0)
+                return;
+            context.level().explode(null,
+                    context.hitPos().x,
+                    context.hitPos().y,
+                    context.hitPos().z,
+                    power,
+                    CDPSEConfig.fluid().fragileFluidTankExplosiveFluidCausesFire.get(),
+                    Level.ExplosionInteraction.TNT);
+        }
+
+        @Override
+        public String getImpactEffectDescriptionKey(FluidStack fluid) {
+            return "explosive";
         }
     }
 }

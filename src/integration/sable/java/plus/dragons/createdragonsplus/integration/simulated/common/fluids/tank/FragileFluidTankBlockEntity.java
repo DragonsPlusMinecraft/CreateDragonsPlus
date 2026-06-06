@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import java.util.List;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -31,6 +33,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
+import plus.dragons.createdragonsplus.data.internal.CDPLang;
+import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankBreakEffectHandler;
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 
 public class FragileFluidTankBlockEntity extends SmartBlockEntity implements IHaveGoggleInformation {
@@ -56,6 +60,21 @@ public class FragileFluidTankBlockEntity extends SmartBlockEntity implements IHa
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        return containedFluidTooltip(tooltip, isPlayerSneaking, tank.getPrimaryHandler());
+        boolean added = containedFluidTooltip(tooltip, isPlayerSneaking, tank.getPrimaryHandler());
+        FluidStack fluid = getFluidInTank();
+        if (fluid.isEmpty())
+            return added;
+        var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(fluid.getFluid());
+        var key = handler.getImpactEffectDescriptionKey(fluid);
+        if (key != null) {
+            CDPLang.translate("fragile_fluid_tank.effect.header").style(ChatFormatting.WHITE).forGoggles(tooltip);
+            CDPLang.translate("fragile_fluid_tank.effect." + key).style(ChatFormatting.GRAY).forGoggles(tooltip,1);
+            return true;
+        }
+        if (isPlayerSneaking) {
+            CDPLang.translate("fragile_fluid_tank.effect.none").style(ChatFormatting.WHITE).forGoggles(tooltip);
+            return true;
+        }
+        return added;
     }
 }

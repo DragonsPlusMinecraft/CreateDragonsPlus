@@ -42,6 +42,18 @@ public class CDPSEFluidConfig extends ConfigBase {
     public final ConfigBool fragileFluidTankDyeColorBlock = b(true,
             "fragileFluidTankDyeColorBlock",
             Comments.fragileFluidTankDyeColorBlock);
+    public final ConfigBool fragileFluidTankExplosiveFluidExplosion = b(true,
+            "fragileFluidTankExplosiveFluidExplosion",
+            Comments.fragileFluidTankExplosiveFluidExplosion);
+    public final ConfigBool fragileFluidTankExplosiveFluidCausesFire = b(true,
+            "fragileFluidTankExplosiveFluidCausesFire",
+            Comments.fragileFluidTankExplosiveFluidCausesFire);
+    public final ConfigFloat fragileFluidTankExplosiveFluidMinPower = f(1.0f, 0.0f, 128.0f,
+            "fragileFluidTankExplosiveFluidMinPower",
+            Comments.fragileFluidTankExplosiveFluidMinPower);
+    public final ConfigFloat fragileFluidTankExplosiveFluidMaxPower = f(4.0f, 0.0f, 128.0f,
+            "fragileFluidTankExplosiveFluidMaxPower",
+            Comments.fragileFluidTankExplosiveFluidMaxPower);
 
     @Override
     public String getName() {
@@ -56,5 +68,9 @@ public class CDPSEFluidConfig extends ConfigBase {
         static final String fragileFluidTankLavaIgniteBlock = "Should Fragile Fluid Tank containing lava ignite block when it breaks";
         static final String fragileFluidTankLavaSpreadFire = "Should Fragile Fluid Tank containing lava spread fire when it breaks";
         static final String fragileFluidTankDyeColorBlock = "Should Fragile Fluid Tank containing dye fluid color block when it breaks";
+        static final String fragileFluidTankExplosiveFluidExplosion = "Should Fragile Fluid Tank containing explosive fluid explode when it breaks";
+        static final String fragileFluidTankExplosiveFluidCausesFire = "Should explosions from Fragile Fluid Tank containing explosive fluid cause fire";
+        static final String fragileFluidTankExplosiveFluidMinPower = "The explosion power of a Fragile Fluid Tank containing a very small amount of explosive fluid";
+        static final String fragileFluidTankExplosiveFluidMaxPower = "The explosion power of a full Fragile Fluid Tank containing explosive fluid";
     }
 }

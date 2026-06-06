@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import plus.dragons.createdragonsplus.common.advancements.AdvancementBehaviour;
 import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankBreakEffectHandler;
+import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankImpactContext;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
 
 public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<FragileFluidTankBlockEntity>, BlockWithSubLevelCollisionCallback {
@@ -111,7 +112,7 @@ public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<Fra
                         var helper = Sable.HELPER;
                         var p = BlockPos.containing(helper.projectOutOfSubLevel(level, pos.getCenter()));
                         var hp = helper.projectOutOfSubLevel(level, hitPos);
-                        handler.apply(level, p, hp, be.getFluidInTank());
+                        handler.apply(FragileFluidTankImpactContext.create(level, p, hp, be.getFluidInTank()));
                     }
                 }
             });

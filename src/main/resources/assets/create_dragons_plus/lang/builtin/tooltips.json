@@ -3,5 +3,15 @@
   "block.create_dragons_plus.fluid_hatch.tooltip.condition1": "When R-Clicked",
   "block.create_dragons_plus.fluid_hatch.tooltip.behaviour1": "_Deposits_ _contained fluid_ from your _held item_ into the _tank_ it is placed on. If the held item cannot be emptied, it _fills_ the item from the _tank_ instead.",
   "block.create_dragons_plus.fluid_hatch.tooltip.condition2": "When Sneak R-Clicked",
-  "block.create_dragons_plus.fluid_hatch.tooltip.behaviour2": "_Fills_ your _held fluid container_ from the _tank_ first. If it cannot be filled, contained fluid is _deposited_ into the _tank_ instead."
+  "block.create_dragons_plus.fluid_hatch.tooltip.behaviour2": "_Fills_ your _held fluid container_ from the _tank_ first. If it cannot be filled, contained fluid is _deposited_ into the _tank_ instead.",
+  "create_dragons_plus.fragile_fluid_tank.effect.header": "Impact Effect",
+  "create_dragons_plus.fragile_fluid_tank.effect.none": "No special impact effect",
+  "create_dragons_plus.fragile_fluid_tank.effect.milk": "Clears potion effects in range",
+  "create_dragons_plus.fragile_fluid_tank.effect.lava": "Ignites blocks, spreads fire, and burns entities in range",
+  "create_dragons_plus.fragile_fluid_tank.effect.water": "Extinguishes fire and hydrates or cools supported blocks",
+  "create_dragons_plus.fragile_fluid_tank.effect.tea": "Grants Haste to nearby living entities",
+  "create_dragons_plus.fragile_fluid_tank.effect.dragon_breath": "Damages nearby living entities with Dragon's Breath",
+  "create_dragons_plus.fragile_fluid_tank.effect.potion": "Applies the contained potion effects in range",
+  "create_dragons_plus.fragile_fluid_tank.effect.dye": "Colors nearby entities and compatible blocks",
+  "create_dragons_plus.fragile_fluid_tank.effect.explosive": "Explodes on impact"
 }

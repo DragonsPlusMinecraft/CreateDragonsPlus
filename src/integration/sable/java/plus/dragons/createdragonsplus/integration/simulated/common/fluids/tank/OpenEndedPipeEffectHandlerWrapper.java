@@ -19,10 +19,10 @@
 package plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
+import java.util.Optional;
+import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.joml.Vector3d;
+import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankImpactContext;
 
 /**
  * Wrap OpenEndedPipeEffectHandler to FragileFluidTankBreakEffectHandler. <p>
@@ -40,7 +40,12 @@ public class OpenEndedPipeEffectHandlerWrapper extends DefaultRangedEffectHandle
     }
 
     @Override
-    public void onHit(Level level, AABB aabb, Vector3d hitPos, FluidStack fluid) {
-        handler.apply(level, aabb, fluid);
+    public void onHit(FragileFluidTankImpactContext context) {
+        handler.apply(context.level(), context.area(), context.fluid());
+    }
+
+    @Override
+    public String getImpactEffectDescriptionKey(FluidStack fluid) {
+        return "milk";
     }
 }
