@@ -18,8 +18,8 @@
 
 package plus.dragons.createdragonsplus.integration.aether;
 
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
@@ -32,20 +32,26 @@ import plus.dragons.createdragonsplus.integration.aether.config.CDPAetherConfig;
 
 @Mod(CDPCommon.ID)
 public class AetherExtension {
-    private final IEventBus modBus;
-    private final ModContainer modContainer;
-
     public AetherExtension(IEventBus modBus, ModContainer modContainer) {
-        this.modBus = modBus;
-        this.modContainer = modContainer;
         if (ModIntegration.AETHER.enabled())
-            modBus.addListener(EventPriority.HIGH, this::construct);
+            modBus.register(new Common(modBus, modContainer));
     }
 
-    private void construct(final FMLConstructModEvent event) {
-        CDPAetherFanProcessingTypes.register(modBus);
-        CDPAetherItemAttributes.register(modBus);
-        modBus.register(new CDPAetherConfig(modContainer));
-        AetherFreezingCompat.register();
+    public static class Common {
+        private final IEventBus modBus;
+        private final ModContainer modContainer;
+
+        public Common(IEventBus modBus, ModContainer modContainer) {
+            this.modBus = modBus;
+            this.modContainer = modContainer;
+        }
+
+        @SubscribeEvent
+        private void construct(final FMLConstructModEvent event) {
+            CDPAetherFanProcessingTypes.register(modBus);
+            CDPAetherItemAttributes.register(modBus);
+            modBus.register(new CDPAetherConfig(modContainer));
+            AetherFreezingCompat.register();
+        }
     }
 }

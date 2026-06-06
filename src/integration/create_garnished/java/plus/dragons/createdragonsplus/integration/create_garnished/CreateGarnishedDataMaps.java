@@ -19,7 +19,6 @@
 package plus.dragons.createdragonsplus.integration.create_garnished;
 
 import com.tterrag.registrate.providers.RegistrateDataMapProvider;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
@@ -27,14 +26,13 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 public class CreateGarnishedDataMaps {
     public static void accept(RegistrateDataMapProvider provider) {
         var fanColoringCatalystFluids = provider.builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS);
-        var garnishedLoaded = new ModLoadedCondition(ModIntegration.Constants.CREATE_GARNISHED);
         for (var variant : DyeVariantRegistry.all()) {
             if (!variant.isVanilla())
                 continue;
             var still = ModIntegration.CREATE_GARNISHED.asResource(variant.id().getPath() + "_mastic_resin");
             var flowing = still.withPrefix("flowing_");
-            fanColoringCatalystFluids.add(still, variant.id(), false, garnishedLoaded);
-            fanColoringCatalystFluids.add(flowing, variant.id(), false, garnishedLoaded);
+            fanColoringCatalystFluids.add(still, variant.id(), false, ModIntegration.CREATE_GARNISHED.condition());
+            fanColoringCatalystFluids.add(flowing, variant.id(), false, ModIntegration.CREATE_GARNISHED.condition());
         }
     }
 }

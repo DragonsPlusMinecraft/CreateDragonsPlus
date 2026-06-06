@@ -19,10 +19,9 @@
 package plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank;
 
 import com.simibubi.create.api.registry.SimpleRegistry;
+import javax.annotation.Nullable;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import javax.annotation.Nullable;
 
 public interface FragileFluidTankBreakEffectHandler {
     SimpleRegistry<Fluid, FragileFluidTankBreakEffectHandler> REGISTRY = SimpleRegistry.create();

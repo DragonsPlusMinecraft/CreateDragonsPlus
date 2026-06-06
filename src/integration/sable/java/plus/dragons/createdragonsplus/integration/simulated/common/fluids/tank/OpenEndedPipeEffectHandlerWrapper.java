@@ -19,8 +19,6 @@
 package plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank;
 
 import com.simibubi.create.api.effect.OpenPipeEffectHandler;
-import java.util.Optional;
-import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.integration.simulated.api.fluids.tank.FragileFluidTankImpactContext;
 

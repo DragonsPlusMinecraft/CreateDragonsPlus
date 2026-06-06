@@ -26,8 +26,6 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class DyenamicsDyeVariants {
     public static void register(RegisterDyeVariantsEvent event) {
-        if (!ModIntegration.DYENAMICS.enabled())
-            return;
         register(event, "amber", "Amber", 0xFFBF00);
         register(event, "aquamarine", "Aquamarine", 0x7FFFD4);
         register(event, "bubblegum", "Bubblegum", 0xFF85C8);

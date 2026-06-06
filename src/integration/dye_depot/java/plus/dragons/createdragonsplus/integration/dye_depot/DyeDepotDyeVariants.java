@@ -26,8 +26,6 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class DyeDepotDyeVariants {
     public static void register(RegisterDyeVariantsEvent event) {
-        if (!ModIntegration.DYE_DEPOT.enabled())
-            return;
         register(event, "amber", "Amber", 0xF0A11B);
         register(event, "aqua", "Aqua", 0x48C8C8);
         register(event, "beige", "Beige", 0xC9B38C);

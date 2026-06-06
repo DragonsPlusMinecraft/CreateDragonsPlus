@@ -20,8 +20,8 @@ package plus.dragons.createdragonsplus.integration.create_dnd;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -32,13 +32,16 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 public class CreateDndExtension {
     public CreateDndExtension(IEventBus modBus) {
         if (ModIntegration.CREATE_DND.enabled())
-            modBus.addListener(EventPriority.HIGH, this::construct);
+            modBus.register(new Common());
     }
 
-    private void construct(final FMLConstructModEvent event) {
-        CreateDndFanCompat.register();
-        CDPIntegrationContributions.registerSandingCatalystTag(TagKey.create(
-                Registries.BLOCK,
-                ModIntegration.CREATE_DND.asResource("fan_processing_catalysts/sanding")));
+    public static class Common {
+        @SubscribeEvent
+        private void construct(final FMLConstructModEvent event) {
+            CreateDndFanCompat.register();
+            CDPIntegrationContributions.registerSandingCatalystTag(TagKey.create(
+                    Registries.BLOCK,
+                    ModIntegration.CREATE_DND.asResource("fan_processing_catalysts/sanding")));
+        }
     }
 }

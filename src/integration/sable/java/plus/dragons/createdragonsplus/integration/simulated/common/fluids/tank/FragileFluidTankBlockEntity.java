@@ -23,7 +23,6 @@ import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import java.util.List;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -68,7 +67,7 @@ public class FragileFluidTankBlockEntity extends SmartBlockEntity implements IHa
         var key = handler.getImpactEffectDescriptionKey(fluid);
         if (key != null) {
             CDPLang.translate("fragile_fluid_tank.effect.header").style(ChatFormatting.WHITE).forGoggles(tooltip);
-            CDPLang.translate("fragile_fluid_tank.effect." + key).style(ChatFormatting.GRAY).forGoggles(tooltip,1);
+            CDPLang.translate("fragile_fluid_tank.effect." + key).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
             return true;
         }
         if (isPlayerSneaking) {

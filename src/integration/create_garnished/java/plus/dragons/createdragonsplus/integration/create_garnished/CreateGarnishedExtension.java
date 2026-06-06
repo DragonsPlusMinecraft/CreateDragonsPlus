@@ -18,8 +18,8 @@
 
 package plus.dragons.createdragonsplus.integration.create_garnished;
 
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -30,11 +30,14 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 public class CreateGarnishedExtension {
     public CreateGarnishedExtension(IEventBus modBus) {
         if (ModIntegration.CREATE_GARNISHED.enabled())
-            modBus.addListener(EventPriority.HIGH, this::construct);
+            modBus.register(new Common());
     }
 
-    private void construct(final FMLConstructModEvent event) {
-        CreateGarnishedFanCompat.register();
-        CDPIntegrationContributions.registerDataMaps(CreateGarnishedDataMaps::accept);
+    public static class Common {
+        @SubscribeEvent
+        private void construct(final FMLConstructModEvent event) {
+            CreateGarnishedFanCompat.register();
+            CDPIntegrationContributions.registerDataMaps(CreateGarnishedDataMaps::accept);
+        }
     }
 }

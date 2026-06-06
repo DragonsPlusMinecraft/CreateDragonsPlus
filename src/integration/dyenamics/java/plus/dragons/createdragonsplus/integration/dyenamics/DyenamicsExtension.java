@@ -18,20 +18,27 @@
 
 package plus.dragons.createdragonsplus.integration.dyenamics;
 
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 @Mod(CDPCommon.ID)
 public class DyenamicsExtension {
     public DyenamicsExtension(IEventBus modBus) {
-        modBus.addListener(EventPriority.HIGH, this::construct);
+        // Actually there is no need to make it like this since there is no class loading at all. But for possible future extension I still made it.
+        if (ModIntegration.DYENAMICS.enabled()) {
+            modBus.register(new Common());
+        }
     }
 
-    private void construct(final FMLConstructModEvent event) {
-        CDPIntegrationContributions.registerDyeVariants(DyenamicsDyeVariants::register);
+    public static class Common {
+        @SubscribeEvent
+        private void construct(final FMLConstructModEvent event) {
+            CDPIntegrationContributions.registerDyeVariants(DyenamicsDyeVariants::register);
+        }
     }
 }
