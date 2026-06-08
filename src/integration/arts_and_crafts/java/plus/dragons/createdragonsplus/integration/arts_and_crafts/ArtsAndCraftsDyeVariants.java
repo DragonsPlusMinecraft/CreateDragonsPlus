@@ -32,7 +32,7 @@ public class ArtsAndCraftsDyeVariants {
         event.register(new DyeVariant(
                 ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleached"),
                 ModIntegration.Constants.ARTS_AND_CRAFTS + "_bleached",
-                "Bleached",
+                "Bleachdew",
                 0xDDE7DD,
                 DyeColors.modDyeItemTag(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleached"),
                 ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleachdew"),
