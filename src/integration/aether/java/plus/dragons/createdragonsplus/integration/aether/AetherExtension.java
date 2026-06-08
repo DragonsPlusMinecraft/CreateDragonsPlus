@@ -18,13 +18,21 @@
 
 package plus.dragons.createdragonsplus.integration.aether;
 
+import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
+
+import net.createmod.ponder.foundation.PonderIndex;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
+import plus.dragons.createdragonsplus.integration.aether.client.ponder.CDPAetherPonderPlugin;
 import plus.dragons.createdragonsplus.integration.aether.common.kinetics.fan.freezing.AetherFreezingCompat;
 import plus.dragons.createdragonsplus.integration.aether.common.registry.CDPAetherFanProcessingTypes;
 import plus.dragons.createdragonsplus.integration.aether.common.registry.CDPAetherItemAttributes;
@@ -33,8 +41,11 @@ import plus.dragons.createdragonsplus.integration.aether.config.CDPAetherConfig;
 @Mod(CDPCommon.ID)
 public class AetherExtension {
     public AetherExtension(IEventBus modBus, ModContainer modContainer) {
-        if (ModIntegration.AETHER.enabled())
+        if (ModIntegration.AETHER.enabled()) {
             modBus.register(new Common(modBus, modContainer));
+            if (FMLLoader.getDist() == Dist.CLIENT)
+                modBus.register(new Client());
+        }
     }
 
     public static class Common {
@@ -52,6 +63,16 @@ public class AetherExtension {
             CDPAetherItemAttributes.register(modBus);
             modBus.register(new CDPAetherConfig(modContainer));
             AetherFreezingCompat.register();
+            if (!DatagenModLoader.isRunningDataGen())
+                return;
+            REGISTRATE.registerPonderLocalization(CDPAetherPonderPlugin::new);
+        }
+    }
+
+    public static class Client {
+        @SubscribeEvent
+        public void setup(final FMLClientSetupEvent event) {
+            PonderIndex.addPlugin(new CDPAetherPonderPlugin());
         }
     }
 }
