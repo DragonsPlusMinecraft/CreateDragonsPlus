@@ -23,15 +23,13 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.impl.effect.MilkEffectHandler;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
@@ -46,13 +44,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -70,8 +66,6 @@ import plus.dragons.createdragonsplus.util.CodeReference;
 
 public class CDPSEFragileTankBreakEffectHandlers {
     public static final TagKey<Fluid> EXPLOSIVE_FLUIDS = TagKey.create(Registries.FLUID, CDPCommon.asResource("fragile_fluid_tank/explosive"));
-    private static final List<Runnable> RELOAD_FUNCTION = new ArrayList<>();
-    private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> RELOAD_FUNCTION.forEach(Runnable::run);
 
     public static void registerDefaults() {
         FragileFluidTankBreakEffectHandler.REGISTRY.registerProvider(SimpleRegistry.Provider.forFluidTag(Tags.Fluids.MILK, OpenEndedPipeEffectHandlerWrapper.of(new MilkEffectHandler())));
@@ -87,10 +81,6 @@ public class CDPSEFragileTankBreakEffectHandlers {
                 FragileFluidTankBreakEffectHandler.REGISTRY.register(fluid.getSource(), new DyeFluidHandler(variant));
             }
         }
-    }
-
-    public static void addReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(RELOAD_LISTENER);
     }
 
     private static class LavaHandler extends DefaultRangedEffectHandler.AffectBlock {
@@ -118,7 +108,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
             }
             var r = state.getBlockHolder().getData(CDPSEDataMaps.FRAGILE_FLUID_TANK_LAVA);
             if (r != null)
-                level.setBlockAndUpdate(pos, r.defaultBlockState());
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(state, r.defaultBlockState()));
         }
 
         @Override
@@ -146,7 +136,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
             }
             var r = state.getBlockHolder().getData(CDPSEDataMaps.FRAGILE_FLUID_TANK_WATER);
             if (r != null)
-                level.setBlockAndUpdate(pos, r.defaultBlockState());
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(state, r.defaultBlockState()));
         }
 
         @Override
@@ -226,15 +216,9 @@ public class CDPSEFragileTankBreakEffectHandlers {
     private static class DyeFluidHandler extends DefaultRangedEffectHandler.AffectBlock {
         private final DyeVariant variant;
         private ColoringFanProcessingType borrow;
-        private final HashMap<Block, Block> transformingResultCache = new HashMap<>();
 
         private DyeFluidHandler(DyeVariant variant) {
             this.variant = variant;
-            CDPSEFragileTankBreakEffectHandlers.RELOAD_FUNCTION.add(this::recreateCache);
-        }
-
-        public void recreateCache() {
-            transformingResultCache.clear();
         }
 
         private ColoringFanProcessingType borrow() {
@@ -248,18 +232,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
         protected void onHitDoBlock(Level level, BlockPos pos, BlockState state, FluidStack fluid) {
             if (state.isAir()) return;
             if (CDPSEConfig.fluid().fragileFluidTankDyeColorBlock.get()) {
-                if (transformingResultCache.containsKey(state.getBlock())) {
-                    if (!transformingResultCache.get(state.getBlock()).equals(Blocks.AIR))
-                        level.setBlockAndUpdate(pos, transformingResultCache.get(state.getBlock()).defaultBlockState());
-                } else {
-                    var result = borrow().process(new ItemStack(state.getBlock()), level);
-                    if (result == null || result.size() != 1) {
-                        transformingResultCache.put(state.getBlock(), Blocks.AIR);
-                    } else {
-                        transformingResultCache.put(state.getBlock(), Block.byItem(result.get(0).getItem()));
-                        level.setBlockAndUpdate(pos, Block.byItem(result.get(0).getItem()).defaultBlockState());
-                    }
-                }
+                borrow().processBlockState(state, level).ifPresent(result -> level.setBlockAndUpdate(pos, result));
             }
         }
 

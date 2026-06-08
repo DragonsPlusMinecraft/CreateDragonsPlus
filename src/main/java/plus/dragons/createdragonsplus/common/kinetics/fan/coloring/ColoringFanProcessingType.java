@@ -23,6 +23,7 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.PERSISTENT_DATA_KE
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +50,14 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -70,6 +75,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private final Vector3f rgb;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
     private final Map<ItemStackKey, ItemStack> craftingResultCache = new ConcurrentHashMap<>();
+    private final Map<Block, Block> blockColoringResultCache = new ConcurrentHashMap<>();
     private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
             .fromNamespaceAndPath("supplementaries", "sus_crafting");
 
@@ -90,6 +96,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     public void recreateCache() {
         canProcessCache.clear();
         craftingResultCache.clear();
+        blockColoringResultCache.clear();
     }
 
     @Override
@@ -123,6 +130,23 @@ public class ColoringFanProcessingType implements FanProcessingType {
                 .or(() -> processByCrafting(stack, level)
                         .map(result -> ItemHelper.multipliedOutput(stack, result)))
                 .orElse(null);
+    }
+
+    public Optional<BlockState> processBlockState(BlockState state, Level level) {
+        var block = state.getBlock();
+        if (block.asItem() == Items.AIR)
+            return Optional.empty();
+        var result = blockColoringResultCache.computeIfAbsent(block, key -> processBlockUncached(key, level));
+        if (result == Blocks.AIR)
+            return Optional.empty();
+        return Optional.of(BlockHelper.copyProperties(state, result.defaultBlockState()));
+    }
+
+    private Block processBlockUncached(Block block, Level level) {
+        var result = process(new ItemStack(block), level);
+        if (result == null || result.size() != 1)
+            return Blocks.AIR;
+        return Block.byItem(result.get(0).getItem());
     }
 
     @Override

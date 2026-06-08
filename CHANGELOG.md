@@ -1,6 +1,4 @@
-## Create: Dragons Plus 1.11.1b
-
-If there is no crash happening, player can ignore this update.
+## Create: Dragons Plus 1.11.2
 
 ### Fix
-* Minor fixes to prevent inappropriate class loading from happening
+* Fixed Bulk Coloring air current block interaction resetting the blockstate of colored blocks.

@@ -30,7 +30,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -73,7 +72,6 @@ public class SimulatedExtension {
             modBus.register(new CDPSEConfig(modContainer));
             modBus.addListener(Common::commonSetup);
             modBus.addListener(Common::buildContents);
-            NeoForge.EVENT_BUS.addListener(CDPSEFragileTankBreakEffectHandlers::addReloadListeners);
             if (!DatagenModLoader.isRunningDataGen())
                 return;
             REGISTRATE.registerPonderLocalization(CDPSEPonderPlugin::new);
