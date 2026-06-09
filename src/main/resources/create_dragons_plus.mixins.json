@@ -8,7 +8,6 @@
     "create.AirCurrentMixin$AirCurrentSegmentMixin",
     "create.BlockEntityBehaviourMixin",
     "create.ContraptionMixin",
-    "create.FanProcessingAccessor",
     "create.FluidFillingBehaviourMixin",
     "create.MechanicalMixerBlockEntityMixin",
     "create.OpenEndedPipeMixin",

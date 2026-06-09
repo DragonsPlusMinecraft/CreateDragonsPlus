@@ -22,17 +22,13 @@ import com.aetherteam.aether.block.AetherBlocks;
 import com.aetherteam.aether.entity.AetherEntityTypes;
 import com.aetherteam.aether.entity.passive.Moa;
 import com.aetherteam.aether.item.AetherItems;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
 import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.WalkAnimationState;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -45,19 +41,19 @@ public class CDPAetherFanScenes {
         scene.showBasePlate();
         scene.idle(5);
 
-        scene.world().showSection(util.select().fromTo(3,1,2,4,1,2), Direction.UP);
+        scene.world().showSection(util.select().fromTo(3, 1, 2, 4, 1, 2), Direction.UP);
         scene.idle(10);
         var fan = util.grid().at(4, 2, 2);
         var catalyst = util.grid().at(3, 2, 2);
         scene.world().showSection(util.select().position(fan).add(util.select().position(catalyst)), Direction.DOWN);
         scene.idle(10);
-        scene.world().showSection(util.select().position(5,2,2), Direction.WEST);
+        scene.world().showSection(util.select().position(5, 2, 2), Direction.WEST);
         scene.idle(5);
-        scene.world().showSection(util.select().position(5,1,3), Direction.WEST);
+        scene.world().showSection(util.select().position(5, 1, 3), Direction.WEST);
         scene.idle(5);
 
-        scene.world().setKineticSpeed(util.select().position(fan).add(util.select().position(5,2,2)), -8);
-        scene.world().setKineticSpeed(util.select().position(5,1,3), 4);
+        scene.world().setKineticSpeed(util.select().position(fan).add(util.select().position(5, 2, 2)), -8);
+        scene.world().setKineticSpeed(util.select().position(5, 1, 3), 4);
         var airCurrent = util.select().fromTo(3, 2, 2, 0, 2, 2);
         scene.overlay().showOutline(PonderPalette.OUTPUT, airCurrent, airCurrent, 30);
         scene.overlay().showText(80)

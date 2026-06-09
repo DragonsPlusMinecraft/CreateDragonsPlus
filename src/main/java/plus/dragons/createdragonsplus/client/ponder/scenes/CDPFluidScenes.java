@@ -18,36 +18,24 @@
 
 package plus.dragons.createdragonsplus.client.ponder.scenes;
 
-import com.google.common.collect.ImmutableList;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
-import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
-import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.math.Pointing;
-import net.createmod.catnip.nbt.NBTHelper;
-import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.WalkAnimationState;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
-import plus.dragons.createdragonsplus.common.fluids.dragonBreath.DragonBreathCauldronBlock;
-import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
-import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
 public class CDPFluidScenes {
@@ -62,7 +50,7 @@ public class CDPFluidScenes {
         var basin = util.grid().at(1, 2, 2);
         var mixer = util.grid().at(1, 4, 2);
         var sect = scene.world().showIndependentSection(util.select().position(basin).add(util.select().position(mixer)), Direction.DOWN);
-        scene.world().moveSection(sect, new Vec3(0,-1,0),0);
+        scene.world().moveSection(sect, new Vec3(0, -1, 0), 0);
         scene.idle(10);
         scene.overlay().showText(70)
                 .attachKeyFrame()
@@ -74,20 +62,20 @@ public class CDPFluidScenes {
         scene.overlay().showControls(util.vector().topOf(basin.below()).add(0.55, 0, 0), Pointing.DOWN, 40)
                 .withItem(Items.WATER_BUCKET.getDefaultInstance());
         scene.world().createItemOnBeltLike(basin, Direction.UP, Items.LIME_DYE.getDefaultInstance());
-        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be->{
-            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(Fluids.WATER,4000));
+        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be -> {
+            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(Fluids.WATER, 4000));
         });
         scene.idle(10);
-        scene.world().setKineticSpeed(util.select().position(mixer),32);
+        scene.world().setKineticSpeed(util.select().position(mixer), 32);
         scene.world().modifyBlockEntity(mixer, MechanicalMixerBlockEntity.class, MechanicalMixerBlockEntity::startProcessingBasin);
         scene.idle(40);
-        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be->{
-            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(CDPFluids.DYES_BY_VARIANT.get(ResourceLocation.withDefaultNamespace("lime")),4000));
+        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be -> {
+            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(CDPFluids.DYES_BY_VARIANT.get(ResourceLocation.withDefaultNamespace("lime")), 4000));
         });
         scene.idle(45);
 
         var burner = util.grid().at(1, 1, 2);
-        scene.world().moveSection(sect, new Vec3(0,1,0),10);
+        scene.world().moveSection(sect, new Vec3(0, 1, 0), 10);
         scene.idle(10);
         scene.world().showSection(util.select().position(burner), Direction.UP);
         scene.overlay().showText(70)
@@ -97,8 +85,8 @@ public class CDPFluidScenes {
                 .text("Heated mixing can recover the dye item from the fluid");
         scene.world().modifyBlockEntity(mixer, MechanicalMixerBlockEntity.class, MechanicalMixerBlockEntity::startProcessingBasin);
         scene.idle(40);
-        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be->{
-            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(Fluids.WATER,4000));
+        scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be -> {
+            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(Fluids.WATER, 4000));
         });
         scene.idle(40);
 
@@ -161,7 +149,7 @@ public class CDPFluidScenes {
         var cauldron = util.grid().at(2, 1, 2);
         scene.world().showSection(util.select().position(cauldron), Direction.DOWN);
         scene.idle(3);
-        scene.world().showSection(util.select().fromTo(2,2,2,2,3,2).add(util.select().fromTo(1,4,1,3,4,3)), Direction.DOWN);
+        scene.world().showSection(util.select().fromTo(2, 2, 2, 2, 3, 2).add(util.select().fromTo(1, 4, 1, 3, 4, 3)), Direction.DOWN);
         scene.overlay().showText(75)
                 .attachKeyFrame()
                 .pointAt(util.vector().topOf(cauldron))

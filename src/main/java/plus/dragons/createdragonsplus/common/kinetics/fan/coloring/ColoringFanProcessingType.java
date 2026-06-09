@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,6 +48,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Shulker;
 import net.minecraft.world.item.ItemStack;
@@ -71,6 +73,7 @@ import plus.dragons.createdragonsplus.util.ItemStackKey;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
+    private static final int CONTACT_COLORING_COOLDOWN = 10;
     private final DyeVariant variant;
     private final Vector3f rgb;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
@@ -237,26 +240,97 @@ public class ColoringFanProcessingType implements FanProcessingType {
 
     public void applyColoring(LivingEntity entity, Level level) {
         if (processColoring(entity)) {
-            var vanillaColor = this.variant.vanillaColor();
-            if (vanillaColor != null) {
-                switch (entity) {
-                    case Sheep sheep -> sheep.setColor(vanillaColor);
-                    case Shulker shulker -> shulker.setVariant(Optional.of(vanillaColor));
-                    case Cat cat -> cat.setCollarColor(vanillaColor);
-                    case Wolf wolf -> wolf.setCollarColor(vanillaColor);
-                    default -> {}
+            applyColoringImmediately(entity, level);
+        }
+    }
+
+    public boolean applyContactColoring(ItemEntity entity, Level level) {
+        if (level.isClientSide || entity.isRemoved())
+            return false;
+        var processed = process(entity.getItem(), level);
+        if (processed == null)
+            return false;
+        var stacks = new ArrayList<>(processed);
+        if (stacks.isEmpty()) {
+            entity.discard();
+            return true;
+        }
+        entity.setItem(stacks.remove(0));
+        for (ItemStack additional : stacks) {
+            if (additional.isEmpty())
+                continue;
+            var additionalEntity = new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), additional.copy());
+            additionalEntity.setDeltaMovement(entity.getDeltaMovement());
+            level.addFreshEntity(additionalEntity);
+        }
+        return true;
+    }
+
+    public boolean applyContactColoring(LivingEntity entity, Level level) {
+        if (level.isClientSide || entity.isRemoved() || !canApplyContactColoring(entity))
+            return false;
+        return applyColoringImmediately(entity, level);
+    }
+
+    private boolean canApplyContactColoring(LivingEntity entity) {
+        CompoundTag nbt = PersistentDataHelper.getOrCreate(entity.getPersistentData(), PERSISTENT_DATA_KEY, "ContactColoring");
+        var color = this.variant.id().toString();
+        if (nbt.contains("Color", Tag.TAG_STRING)
+                && nbt.getString("Color").equals(color)
+                && nbt.contains("LastProcess", Tag.TAG_INT)
+                && entity.tickCount - nbt.getInt("LastProcess") < CONTACT_COLORING_COOLDOWN) {
+            return false;
+        }
+        nbt.putString("Color", color);
+        nbt.putInt("LastProcess", entity.tickCount);
+        return true;
+    }
+
+    private boolean applyColoringImmediately(LivingEntity entity, Level level) {
+        boolean changed = false;
+        var vanillaColor = this.variant.vanillaColor();
+        if (vanillaColor != null) {
+            switch (entity) {
+                case Sheep sheep -> {
+                    if (sheep.getColor() != vanillaColor) {
+                        sheep.setColor(vanillaColor);
+                        changed = true;
+                    }
                 }
-            }
-            for (var slot : EquipmentSlot.values()) {
-                ItemStack stack = entity.getItemBySlot(slot);
-                if (stack.isEmpty())
-                    continue;
-                this.applyColoring(stack, level).ifPresent(it -> {
-                    it.setCount(stack.getCount());
-                    entity.setItemSlot(slot, it);
-                });
+                case Shulker shulker -> {
+                    if (!shulker.getVariant().equals(Optional.of(vanillaColor))) {
+                        shulker.setVariant(Optional.of(vanillaColor));
+                        changed = true;
+                    }
+                }
+                case Cat cat -> {
+                    if (cat.getCollarColor() != vanillaColor) {
+                        cat.setCollarColor(vanillaColor);
+                        changed = true;
+                    }
+                }
+                case Wolf wolf -> {
+                    if (wolf.getCollarColor() != vanillaColor) {
+                        wolf.setCollarColor(vanillaColor);
+                        changed = true;
+                    }
+                }
+                default -> {}
             }
         }
+        for (var slot : EquipmentSlot.values()) {
+            ItemStack stack = entity.getItemBySlot(slot);
+            if (stack.isEmpty())
+                continue;
+            var result = this.applyColoring(stack, level);
+            if (result.isPresent()) {
+                var colored = result.get();
+                colored.setCount(stack.getCount());
+                entity.setItemSlot(slot, colored);
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private boolean processColoring(LivingEntity entity) {

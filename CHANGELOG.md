@@ -1,7 +1,4 @@
-## Create: Dragons Plus 1.11.2
-
-### Update
-* Added Ponder for Bulk Enchanting, Fluid Dye, Dragon's Breath.
+## Create: Dragons Plus 1.11.2b
 
 ### Fix
-* Fixed Bulk Coloring air current block interaction resetting the blockstate of colored blocks.
+* Fixed Liquid Dye not coloring items and entities on contact.

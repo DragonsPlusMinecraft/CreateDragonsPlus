@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
-import plus.dragons.createdragonsplus.mixin.create.FanProcessingAccessor;
 
 public class DyeLiquidBlock extends LiquidBlock {
     private final DyeVariant variant;
@@ -38,12 +37,12 @@ public class DyeLiquidBlock extends LiquidBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) { // TODO it did not work?
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         var type = CDPFanProcessingTypes.COLORING.get(this.variant.id()).get();
         if (entity instanceof ItemEntity itemEntity) {
-            FanProcessingAccessor.invokeApplyProcessing(itemEntity, type);
+            type.applyContactColoring(itemEntity, level);
         } else if (entity instanceof LivingEntity livingEntity) {
-            type.applyColoring(livingEntity, level);
+            type.applyContactColoring(livingEntity, level);
         }
     }
 }
