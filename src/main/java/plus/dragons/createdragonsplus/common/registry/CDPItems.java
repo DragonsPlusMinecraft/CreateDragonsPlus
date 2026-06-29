@@ -49,7 +49,7 @@ public class CDPItems {
     public static final ModTags MOD_TAGS = new ModTags();
 
     public static final ItemEntry<PackageItem> RARE_BLAZE_PACKAGE = REGISTRATE
-            .item("rare_blaze_pacakge", prop -> new PackageItem(prop,
+            .item("rare_blaze_package", prop -> new PackageItem(prop,
                     new PackageStyle("rare_blaze", 12, 10, 21, true)))
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .properties(prop -> prop.stacksTo(1).component(DataComponents.FIRE_RESISTANT, Unit.INSTANCE))
@@ -59,7 +59,7 @@ public class CDPItems {
                     .texture("2", prov.modLoc("item/package/rare_blaze")))
             .register();
     public static final ItemEntry<PackageItem> RARE_MARBLE_GATE_PACKAGE = REGISTRATE
-            .item("rare_marble_gate_pacakge", prop -> new PackageItem(prop,
+            .item("rare_marble_gate_package", prop -> new PackageItem(prop,
                     new PackageStyle("rare_marble_gate", 12, 10, 21, true)))
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .properties(prop -> prop.stacksTo(1))
