@@ -73,7 +73,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_BLASTING);
             if (result != null) {
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
                 return;
             }
 
@@ -112,7 +112,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SMOKING);
             if (result != null)
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
         }
     }
 
@@ -138,7 +138,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SPLASHING);
             if (result != null) {
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
                 return;
             }
 
@@ -167,7 +167,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_HAUNTING);
             if (result != null)
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
         }
     }
 
@@ -188,7 +188,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_FREEZING);
             if (result != null)
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
         }
     }
 
@@ -209,7 +209,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_ENDING);
             if (result != null)
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
         }
     }
 
@@ -230,7 +230,7 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             var result = blockState.getBlockHolder().getData(CDPSEDataMaps.BLOCK_INTERACTION_SANDING);
             if (result != null)
-                level.setBlockAndUpdate(pos, copyProperties(blockState, result.defaultBlockState()));
+                level.setBlockAndUpdate(pos, BlockHelper.copyProperties(blockState, result.defaultBlockState()));
         }
     }
 
@@ -254,9 +254,5 @@ public class ProcessingTypeMixins {
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
             processBlockState(blockState, level).ifPresent(result -> level.setBlockAndUpdate(pos, result));
         }
-    }
-
-    private static BlockState copyProperties(BlockState oldState, BlockState newState) {
-        return BlockHelper.copyProperties(oldState, newState);
     }
 }
