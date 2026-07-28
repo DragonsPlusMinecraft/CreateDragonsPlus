@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -54,6 +55,9 @@ public class CDPItems {
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .properties(prop -> prop.stacksTo(1).component(DataComponents.FIRE_RESISTANT, Unit.INSTANCE))
             .tag(AllItemTags.PACKAGES.tag)
+            .onRegister(item -> BuiltInRegistries.ITEM.addAlias(
+                    REGISTRATE.asResource("rare_blaze_pacakge"),
+                    REGISTRATE.asResource("rare_blaze_package")))
             .model((ctx, prov) -> prov
                     .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
                     .texture("2", prov.modLoc("item/package/rare_blaze")))
@@ -64,6 +68,9 @@ public class CDPItems {
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .properties(prop -> prop.stacksTo(1))
             .tag(AllItemTags.PACKAGES.tag)
+            .onRegister(item -> BuiltInRegistries.ITEM.addAlias(
+                    REGISTRATE.asResource("rare_marble_gate_pacakge"),
+                    REGISTRATE.asResource("rare_marble_gate_package")))
             .model((ctx, prov) -> prov
                     .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
                     .texture("2", prov.modLoc("item/package/rare_marble_gate")))
