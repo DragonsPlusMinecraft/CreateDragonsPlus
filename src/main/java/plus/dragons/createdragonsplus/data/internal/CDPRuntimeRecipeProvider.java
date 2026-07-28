@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.data.internal;
 
+import com.simibubi.create.AllRecipeTypes;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.advancements.Advancement.Builder;
 import net.minecraft.advancements.AdvancementHolder;
@@ -64,16 +65,38 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                         return;
                     var polishedItem = holder.value().asItem();
                     var baseBlock = BuiltInRegistries.BLOCK.getHolder(baseId);
-                    if (baseBlock.isEmpty() || baseBlock.get().is(CDPBlocks.MOD_TAGS.notApplicablePolishing))
+                    if (baseBlock.isEmpty())
                         return;
                     var baseItem = baseBlock.get().value().asItem();
                     if (polishedItem == Items.AIR || baseItem == Items.AIR)
                         return;
-                    var recipeId = CDPCommon.asResource(baseId.toString().replace(':', '/'));
-                    CreateRecipeBuilders.polishing(recipeId)
+                    CreateRecipeBuilders.polishing(automaticPolishingRecipeId(baseId))
                             .require(baseItem)
                             .output(polishedItem)
                             .build(output);
+                });
+    }
+
+    private static ResourceLocation automaticPolishingRecipeId(ResourceLocation baseId) {
+        return CDPCommon.asResource(baseId.toString().replace(':', '/'));
+    }
+
+    private static void removeNotApplicablePolishedBlockRecipes(UpdateRecipesEvent event) {
+        BuiltInRegistries.BLOCK.holders()
+                .filter(holder -> holder.key().location().getPath().contains("polished_"))
+                .forEach(holder -> {
+                    var polishedId = holder.key().location();
+                    var baseId = polishedId.withPath(name -> name.replace("polished_", ""));
+                    var baseBlock = BuiltInRegistries.BLOCK.getHolder(baseId);
+                    if (baseBlock.isEmpty() || !baseBlock.get().is(CDPBlocks.MOD_TAGS.notApplicablePolishing))
+                        return;
+                    var polishedItem = holder.value().asItem();
+                    var baseItem = baseBlock.get().value().asItem();
+                    if (polishedItem == Items.AIR || baseItem == Items.AIR)
+                        return;
+                    event.getRecipe(automaticPolishingRecipeId(baseId))
+                            .filter(recipe -> recipe.value().getType() == AllRecipeTypes.SANDPAPER_POLISHING.getType())
+                            .ifPresent(event::removeRecipe);
                 });
     }
 
@@ -109,6 +132,9 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
 
     @SubscribeEvent
     public static void buildRecipesForUpdate(final UpdateRecipesEvent event) {
+        if (CDPConfig.features().generateSandPaperPolishingRecipeForPolishedBlocks.get()) {
+            removeNotApplicablePolishedBlockRecipes(event);
+        }
         final RecipeOutput output = new RecipeOutput() {
             @Override
             public Builder advancement() {

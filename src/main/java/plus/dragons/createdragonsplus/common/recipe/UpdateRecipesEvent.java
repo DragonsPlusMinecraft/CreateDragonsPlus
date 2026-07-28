@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
 import java.util.Map;
+import java.util.Optional;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -65,6 +66,16 @@ public class UpdateRecipesEvent extends Event {
      */
     public RecipeManager getRecipeManager() {
         return recipeManager;
+    }
+
+    /**
+     * Gets a recipe from the current mutable recipe collection.
+     *
+     * @param id the recipe id
+     * @return the recipe, if present
+     */
+    public Optional<RecipeHolder<?>> getRecipe(ResourceLocation id) {
+        return Optional.ofNullable(byName.get(id));
     }
 
     /**
