@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -52,6 +53,7 @@ public class CDPCauldrons {
     public static final BlockEntry<DragonBreathCauldronBlock> DRAGON_BREATH_CAULDRON = REGISTRATE
             .block("dragon_breath_cauldron", DragonBreathCauldronBlock::new)
             .initialProperties(() -> Blocks.CAULDRON)
+            .transform(pickaxeOnly())
             .blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.get())
                     .partialState().with(DragonBreathCauldronBlock.LEVEL, 1)
                     .modelForState().modelFile(prov.models().getExistingFile(prov.modLoc("block/dragon_breath_cauldron_level1"))).addModel()
@@ -61,6 +63,7 @@ public class CDPCauldrons {
                     .modelForState().modelFile(prov.models().getExistingFile(prov.modLoc("block/dragon_breath_cauldron_level3"))).addModel()
                     .partialState().with(DragonBreathCauldronBlock.LEVEL, 4)
                     .modelForState().modelFile(prov.models().getExistingFile(prov.modLoc("block/dragon_breath_cauldron_full"))).addModel())
+            .loot((provider, block) -> provider.dropOther(block, Blocks.CAULDRON))
             .lang("Dragon's Breath Cauldron")
             .register();
 
