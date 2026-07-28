@@ -64,7 +64,7 @@ public class FragileFluidTankBlockEntity extends SmartBlockEntity implements IHa
         if (fluid.isEmpty())
             return added;
         var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(fluid.getFluid());
-        var key = handler.getImpactEffectDescriptionKey(fluid);
+        var key = handler == null ? null : handler.getImpactEffectDescriptionKey(fluid);
         if (key != null) {
             CDPLang.translate("fragile_fluid_tank.effect.header").style(ChatFormatting.WHITE).forGoggles(tooltip);
             CDPLang.translate("fragile_fluid_tank.effect." + key).style(ChatFormatting.GRAY).forGoggles(tooltip, 1);
