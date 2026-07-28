@@ -205,14 +205,14 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (dye.isEmpty())
             return Optional.empty();
         var input = CraftingInput.of(2, 1, List.of(stack, dye));
-        var result = findAutomaticColoringCraftingResult(input, level, 1);
+        var result = findAutomaticColoringCraftingResult(input, dye, level, 1);
         if (result.isPresent())
             return result;
         // 1 Dye + 8 Colorless = 8 Dyed
         var items = NonNullList.withSize(9, stack);
         items.set(4, dye);
         input = CraftingInput.of(3, 3, items);
-        result = findAutomaticColoringCraftingResult(input, level, 8);
+        result = findAutomaticColoringCraftingResult(input, dye, level, 8);
         if (result.isPresent()) {
             var craftingResult = result.get();
             craftingResult.setCount(1);
@@ -221,13 +221,14 @@ public class ColoringFanProcessingType implements FanProcessingType {
         return Optional.empty();
     }
 
-    private static Optional<ItemStack> findAutomaticColoringCraftingResult(CraftingInput input, Level level, int resultCount) {
+    private static Optional<ItemStack> findAutomaticColoringCraftingResult(CraftingInput input, ItemStack dye, Level level,
+            int resultCount) {
         for (var holder : level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
             var recipe = holder.value();
             if (isIgnoredAutomaticColoringRecipe(recipe) || !recipe.matches(input, level))
                 continue;
             var result = recipe.assemble(input, level.registryAccess());
-            if (result.getCount() == resultCount)
+            if (result.getCount() == resultCount && !result.is(dye.getItem()))
                 return Optional.of(result);
         }
         return Optional.empty();
