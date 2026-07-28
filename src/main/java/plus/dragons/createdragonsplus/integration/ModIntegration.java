@@ -39,7 +39,9 @@ public enum ModIntegration {
     DYENAMICS(Constants.DYENAMICS),
     ARTS_AND_CRAFTS(Constants.ARTS_AND_CRAFTS),
     AETHER(Constants.AETHER),
-    SABLE(Constants.SABLE),;
+    SABLE(Constants.SABLE),
+    SIMULATED(Constants.SIMULATED),
+    AERONAUTICS(Constants.AERONAUTICS);
 
     private final String id;
 
@@ -73,6 +75,8 @@ public enum ModIntegration {
         public static final String ARTS_AND_CRAFTS = "arts_and_crafts";
         public static final String AETHER = "aether";
         public static final String SABLE = "sable";
+        public static final String SIMULATED = "simulated";
+        public static final String AERONAUTICS = "aeronautics";
     }
 
     public DeferredHolder<FanProcessingType, FanProcessingType> fanType(String path) {

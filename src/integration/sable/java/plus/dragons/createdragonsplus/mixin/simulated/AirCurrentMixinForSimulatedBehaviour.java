@@ -43,7 +43,7 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.simulated.api.kinetics.fan.FanProcessingTypeSimulatedExtension;
 
-@Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+@Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
 @Mixin(AirCurrent.class)
 public class AirCurrentMixinForSimulatedBehaviour {
     @Shadow

@@ -48,7 +48,7 @@ import plus.dragons.createdragonsplus.integration.simulated.data.internal.CDPSER
 @Mod(CDPCommon.ID)
 public class SimulatedExtension {
     public SimulatedExtension(IEventBus modBus, ModContainer modContainer) {
-        if (ModIntegration.SABLE.enabled()) {
+        if (ModIntegration.SIMULATED.enabled()) {
             modBus.register(new Common(modBus, modContainer));
             if (FMLLoader.getDist() == Dist.CLIENT)
                 modBus.register(new Client());

@@ -45,7 +45,7 @@ import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPS
 import plus.dragons.createdragonsplus.integration.simulated.config.CDPSEConfig;
 
 public class ProcessingTypeMixins {
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(AllFanProcessingTypes.BlastingType.class)
     public static class BlastingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -95,7 +95,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(AllFanProcessingTypes.SmokingType.class)
     public static class SmokingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -116,7 +116,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(AllFanProcessingTypes.SplashingType.class)
     public static class SplashingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -150,7 +150,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(AllFanProcessingTypes.HauntingType.class)
     public static class HauntingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -171,7 +171,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(FreezingFanProcessingType.class)
     public static class FreezingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -192,7 +192,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(EndingFanProcessingType.class)
     public static class EndingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -213,7 +213,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(SandingFanProcessingType.class)
     public static class SandingTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Override
@@ -234,7 +234,7 @@ public class ProcessingTypeMixins {
         }
     }
 
-    @Restriction(require = @Condition(ModIntegration.Constants.SABLE))
+    @Restriction(require = @Condition(ModIntegration.Constants.SIMULATED))
     @Mixin(ColoringFanProcessingType.class)
     public static abstract class ColoringTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Shadow(remap = false)

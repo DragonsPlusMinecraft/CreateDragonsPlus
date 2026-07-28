@@ -51,7 +51,7 @@ public class CDPSERecipeProvider extends RegistrateRecipeProvider {
                 .pattern(" t ")
                 .unlockedBy("has_copper_sheet", has(COPPER_SHEET))
                 .withCondition(CDPConfig.features().fragileFluidTank)
-                .withCondition(ModIntegration.SABLE.condition())
+                .withCondition(ModIntegration.SIMULATED.condition())
                 .accept(output);
 
         shaped().output(LEVITITE_FRAGILE_FLUID_TANK, 8)
@@ -62,7 +62,8 @@ public class CDPSERecipeProvider extends RegistrateRecipeProvider {
                 .pattern("lll")
                 .unlockedBy("has_fragile_fluid_tank", has(AeroFluidsNeoForge.LEVITITE_BLEND.getBucket().get()))
                 .withCondition(CDPConfig.features().fragileFluidTank)
-                .withCondition(ModIntegration.SABLE.condition())
+                .withCondition(ModIntegration.SIMULATED.condition())
+                .withCondition(ModIntegration.AERONAUTICS.condition())
                 .accept(output);
     }
 

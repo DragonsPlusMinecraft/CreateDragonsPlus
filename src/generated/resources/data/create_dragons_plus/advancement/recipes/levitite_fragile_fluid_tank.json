@@ -6,7 +6,11 @@
     },
     {
       "type": "neoforge:mod_loaded",
-      "modid": "sable"
+      "modid": "simulated"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "aeronautics"
     }
   ],
   "criteria": {
