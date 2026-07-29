@@ -106,13 +106,15 @@ public class FragileFluidTankBlock extends Block implements IWrenchable, IBE<Fra
     private class ImpactCallback extends FragileBlockCallback {
         public CollisionResult onHit(final ServerLevel level, final BlockPos pos, final BlockState state, final Vector3d hitPos) {
             withBlockEntityDo(level, pos, (be) -> {
-                if (!be.getFluidInTank().isEmpty()) {
-                    var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(be.getFluidInTank().getFluid());
+                var fluid = be.getFluidInTank().copy();
+                if (!fluid.isEmpty()) {
+                    var handler = FragileFluidTankBreakEffectHandler.REGISTRY.get(fluid.getFluid());
                     if (handler != null) {
                         var helper = Sable.HELPER;
                         var p = BlockPos.containing(helper.projectOutOfSubLevel(level, pos.getCenter()));
                         var hp = helper.projectOutOfSubLevel(level, hitPos);
-                        handler.apply(FragileFluidTankImpactContext.create(level, p, hp, be.getFluidInTank()));
+                        var context = FragileFluidTankImpactContext.create(level, p, hp, fluid);
+                        FragileFluidTankImpactDispatcher.enqueue(level, handler, context);
                     }
                 }
             });

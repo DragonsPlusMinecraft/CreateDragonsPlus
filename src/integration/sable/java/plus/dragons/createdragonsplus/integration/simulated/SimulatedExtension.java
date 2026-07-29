@@ -38,6 +38,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 import plus.dragons.createdragonsplus.integration.simulated.client.ponder.CDPSEPonderPlugin;
+import plus.dragons.createdragonsplus.integration.simulated.common.fluids.tank.FragileFluidTankImpactDispatcher;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlockEntities;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEBlocks;
 import plus.dragons.createdragonsplus.integration.simulated.common.registry.CDPSEDataMaps;
@@ -66,6 +67,7 @@ public class SimulatedExtension {
 
         @SubscribeEvent
         public void construct(final FMLConstructModEvent event) {
+            FragileFluidTankImpactDispatcher.register();
             CDPSEBlocks.register(modBus);
             CDPSEBlockEntities.register(modBus);
             CDPSEDataMaps.register(modBus);
