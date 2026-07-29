@@ -20,7 +20,11 @@ package plus.dragons.createdragonsplus.common.fluids.dragonBreath;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +32,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.HitResult;
 import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.config.CDPConfig;
@@ -52,6 +57,11 @@ public class DragonBreathCauldronBlock extends AbstractCauldronBlock {
     @Override
     public boolean isFull(BlockState state) {
         return state.getValue(LEVEL) == MAX_LEVEL;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        return new ItemStack(Items.CAULDRON);
     }
 
     @Override
