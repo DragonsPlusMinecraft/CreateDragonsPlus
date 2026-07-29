@@ -22,6 +22,7 @@ import net.createmod.catnip.config.ConfigBase;
 
 public class CDPServerConfig extends ConfigBase {
     public final CDPRecipesConfig recipes = nested(1, CDPRecipesConfig::new, Comments.recipes);
+    public final CDPDyeFluidConfig dyeFluid = nested(1, CDPDyeFluidConfig::new, Comments.dyeFluid);
 
     @Override
     public String getName() {
@@ -30,5 +31,6 @@ public class CDPServerConfig extends ConfigBase {
 
     static class Comments {
         static final String recipes = "Packmakers' control panel for internal recipe compat";
+        static final String dyeFluid = "Dye Fluid contact coloring";
     }
 }

@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.integration;
 
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import com.tterrag.registrate.providers.RegistrateDataMapProvider;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -84,6 +85,15 @@ public class CDPIntegrationContributions {
     public static Optional<List<ItemStack>> processColoringByCompat(DyeVariant variant, ItemStack stack, Level level) {
         for (var compat : COLORING_COMPATS) {
             var result = compat.process(variant, stack, level);
+            if (result.isPresent())
+                return result;
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<ProcessingOutput>> getColoringProcessingOutputsByCompat(DyeVariant variant, ItemStack stack, Level level) {
+        for (var compat : COLORING_COMPATS) {
+            var result = compat.getProcessingOutputs(variant, stack, level);
             if (result.isPresent())
                 return result;
         }
@@ -209,6 +219,14 @@ public class CDPIntegrationContributions {
         boolean canProcess(DyeVariant variant, ItemStack stack, Level level);
 
         Optional<List<ItemStack>> process(DyeVariant variant, ItemStack stack, Level level);
+
+        default Optional<List<ProcessingOutput>> getProcessingOutputs(DyeVariant variant, ItemStack stack, Level level) {
+            return process(variant, stack, level)
+                    .map(outputs -> outputs.stream()
+                            .filter(output -> !output.isEmpty())
+                            .map(output -> new ProcessingOutput(output.copy(), 1))
+                            .toList());
+        }
 
         void gatherJeiRecipes(RecipeManager manager, List<RecipeHolder<ColoringRecipe>> recipes);
     }

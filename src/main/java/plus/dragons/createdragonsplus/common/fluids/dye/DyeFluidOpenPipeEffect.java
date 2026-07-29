@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class DyeFluidOpenPipeEffect implements OpenPipeEffectHandler {
     private final DyeVariant variant;
@@ -36,9 +37,18 @@ public class DyeFluidOpenPipeEffect implements OpenPipeEffectHandler {
 
     @Override
     public void apply(Level level, AABB area, FluidStack fluid) {
+        if (level.isClientSide)
+            return;
+        var config = CDPConfig.dyeFluid();
+        boolean colorItems = config.dyeFluidOpenPipeColorsItems.get();
+        boolean colorLivingEntities = config.dyeFluidOpenPipeColorsLivingEntities.get();
+        if (!colorItems && !colorLivingEntities)
+            return;
+
         var type = CDPFanProcessingTypes.COLORING.get(this.variant.id()).get();
         var entities = level.getEntities((Entity) null, area,
-                entity -> entity instanceof ItemEntity || entity instanceof LivingEntity);
+                entity -> colorItems && entity instanceof ItemEntity
+                        || colorLivingEntities && entity instanceof LivingEntity);
         for (var entity : entities) {
             if (entity instanceof ItemEntity itemEntity) {
                 type.applyContactColoring(itemEntity, level);

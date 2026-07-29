@@ -51,6 +51,7 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipeParams;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -134,7 +135,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
     @Deprecated
     protected void renderAttachedBlock(GuiGraphics graphics) {}
 
-    private static List<RecipeHolder<ColoringRecipe>> getAllRecipes() {
+    public static List<RecipeHolder<ColoringRecipe>> getAllRecipes() {
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
         var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
@@ -164,7 +165,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
 
     private static Optional<RecipeHolder<ColoringRecipe>> convert2x1(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
         var dye = variant.dyeItemStack();
-        if (dye.isEmpty())
+        if (dye.isEmpty() || result.is(dye.getItem()))
             return Optional.empty();
         int dyePos;
         if (ingredients.get(0).test(dye)) dyePos = 0;
@@ -177,12 +178,14 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(Ingredient.of(fi))
                     .output(result)
+                    .dyeFluidAmount(ColoringRecipeParams.DYE_ITEM_FLUID_AMOUNT)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
         } else {
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(in)
                     .output(result)
+                    .dyeFluidAmount(ColoringRecipeParams.DYE_ITEM_FLUID_AMOUNT)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
         }
@@ -190,7 +193,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
 
     private static Optional<RecipeHolder<ColoringRecipe>> convert3x3(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
         var dye = variant.dyeItemStack();
-        if (dye.isEmpty())
+        if (dye.isEmpty() || result.is(dye.getItem()))
             return Optional.empty();
         Ingredient dyeable = null;
         boolean hasDye = false;
@@ -215,12 +218,14 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(Ingredient.of(fi))
                     .output(result.copyWithCount(1))
+                    .dyeFluidAmount(ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
         } else {
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(dyeable)
                     .output(result.copyWithCount(1))
+                    .dyeFluidAmount(ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT)
                     .build();
             return Optional.of(new RecipeHolder<>(id, recipe));
         }

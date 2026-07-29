@@ -41,6 +41,10 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
         return params.color;
     }
 
+    public int getDyeFluidAmount() {
+        return params.dyeFluidAmount;
+    }
+
     @Override
     public boolean matches(ColoringRecipeInput input, Level level) {
         return params.color.equals(input.color()) && this.ingredients.getFirst().test(input.item());
@@ -65,6 +69,14 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
         @Override
         protected ColoringRecipeParams createParams() {
             return new ColoringRecipeParams();
+        }
+
+        public Builder dyeFluidAmount(int amount) {
+            if (amount <= 0 || amount > ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT)
+                throw new IllegalArgumentException("Dye Fluid amount must be between 1 and "
+                        + ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT);
+            this.params.dyeFluidAmount = amount;
+            return this;
         }
 
         @Override

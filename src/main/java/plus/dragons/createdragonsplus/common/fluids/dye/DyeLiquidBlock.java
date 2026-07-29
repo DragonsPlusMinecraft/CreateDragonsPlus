@@ -23,10 +23,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
+import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class DyeLiquidBlock extends LiquidBlock {
     private final DyeVariant variant;
@@ -38,11 +40,20 @@ public class DyeLiquidBlock extends LiquidBlock {
 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (level.isClientSide || !level.getFluidState(pos).isSource())
+            return;
+
+        var config = CDPConfig.dyeFluid();
         var type = CDPFanProcessingTypes.COLORING.get(this.variant.id()).get();
+        boolean colored = false;
         if (entity instanceof ItemEntity itemEntity) {
-            type.applyContactColoring(itemEntity, level);
+            if (config.dyeFluidBlockContactColorsItems.get())
+                colored = type.applyContactColoring(itemEntity, level);
         } else if (entity instanceof LivingEntity livingEntity) {
-            type.applyContactColoring(livingEntity, level);
+            if (config.dyeFluidBlockContactColorsLivingEntities.get())
+                colored = type.applyContactColoring(livingEntity, level);
         }
+        if (colored && config.dyeFluidBlockContactConsumesSource.get())
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
     }
 }

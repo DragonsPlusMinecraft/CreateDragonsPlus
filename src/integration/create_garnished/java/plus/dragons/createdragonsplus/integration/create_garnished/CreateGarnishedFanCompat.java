@@ -64,6 +64,16 @@ public class CreateGarnishedFanCompat {
         }
 
         @Override
+        public Optional<List<ProcessingOutput>> getProcessingOutputs(DyeVariant variant, ItemStack stack, Level level) {
+            var recipeType = dyeBlowingRecipe(variant);
+            if (!recipeType.isBound())
+                return Optional.empty();
+            return level.getRecipeManager()
+                    .getRecipeFor(recipeType.get(), new SingleRecipeInput(stack), level)
+                    .map(recipe -> List.copyOf(recipe.value().getRollableResults()));
+        }
+
+        @Override
         public void gatherJeiRecipes(RecipeManager manager, List<RecipeHolder<ColoringRecipe>> recipes) {
             for (var variant : DyeVariantRegistry.all()) {
                 var recipeType = dyeBlowingRecipe(variant);

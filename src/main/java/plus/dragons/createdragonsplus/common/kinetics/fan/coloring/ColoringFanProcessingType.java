@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 import static plus.dragons.createdragonsplus.common.CDPCommon.PERSISTENT_DATA_KEY;
 
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.foundation.utility.BlockHelper;
@@ -77,7 +78,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
     private final DyeVariant variant;
     private final Vector3f rgb;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
-    private final Map<ItemStackKey, ItemStack> craftingResultCache = new ConcurrentHashMap<>();
+    private final Map<ItemStackKey, AutomaticColoringResult> craftingResultCache = new ConcurrentHashMap<>();
     private final Map<Block, Block> blockColoringResultCache = new ConcurrentHashMap<>();
     private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
             .fromNamespaceAndPath("supplementaries", "sus_crafting");
@@ -186,20 +187,24 @@ public class ColoringFanProcessingType implements FanProcessingType {
     }
 
     private Optional<ItemStack> processByCrafting(ItemStack stack, Level level) {
+        return getAutomaticColoringResult(stack, level).map(AutomaticColoringResult::result);
+    }
+
+    private Optional<AutomaticColoringResult> getAutomaticColoringResult(ItemStack stack, Level level) {
         if (stack.is(CDPItems.MOD_TAGS.notApplicableColoring))
             return Optional.empty();
 
         var key = ItemStackKey.of(stack);
         var cached = craftingResultCache.get(key);
         if (cached != null)
-            return cached.isEmpty() ? Optional.empty() : Optional.of(cached.copy());
+            return cached.result().isEmpty() ? Optional.empty() : Optional.of(cached.copy());
 
         var result = processByCraftingUncached(stack, level);
-        craftingResultCache.put(key, result.map(ItemStack::copy).orElse(ItemStack.EMPTY));
+        craftingResultCache.put(key, result.map(AutomaticColoringResult::copy).orElse(AutomaticColoringResult.EMPTY));
         return result;
     }
 
-    private Optional<ItemStack> processByCraftingUncached(ItemStack stack, Level level) {
+    private Optional<AutomaticColoringResult> processByCraftingUncached(ItemStack stack, Level level) {
         // 1 Dye + 1 Colorless = 1 Dyed
         var dye = this.variant.dyeItemStack();
         if (dye.isEmpty())
@@ -207,7 +212,7 @@ public class ColoringFanProcessingType implements FanProcessingType {
         var input = CraftingInput.of(2, 1, List.of(stack, dye));
         var result = findAutomaticColoringCraftingResult(input, dye, level, 1);
         if (result.isPresent())
-            return result;
+            return Optional.of(new AutomaticColoringResult(result.get(), ColoringRecipeParams.DYE_ITEM_FLUID_AMOUNT));
         // 1 Dye + 8 Colorless = 8 Dyed
         var items = NonNullList.withSize(9, stack);
         items.set(4, dye);
@@ -216,9 +221,43 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (result.isPresent()) {
             var craftingResult = result.get();
             craftingResult.setCount(1);
-            return Optional.of(craftingResult);
+            return Optional.of(new AutomaticColoringResult(craftingResult, ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT));
         }
         return Optional.empty();
+    }
+
+    public Optional<DyeFluidMixingResult> processForDyeFluidMixing(ItemStack stack, Level level) {
+        var input = stack.copyWithCount(1);
+        var coloringInput = new ColoringRecipeInput(this.variant.id(), input);
+        var coloringRecipe = level.getRecipeManager().getRecipeFor(CDPRecipes.COLORING.getType(), coloringInput, level);
+        if (coloringRecipe.isPresent()) {
+            var recipe = coloringRecipe.get().value();
+            return createDyeFluidMixingResult(input, recipe.getRollableResults(), recipe.getDyeFluidAmount());
+        }
+
+        var compatResult = CDPIntegrationContributions.getColoringProcessingOutputsByCompat(this.variant, input, level);
+        if (compatResult.isPresent()) {
+            return createDyeFluidMixingResult(input, compatResult.get(), ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT);
+        }
+
+        return getAutomaticColoringResult(input, level)
+                .flatMap(result -> createDyeFluidMixingResult(input,
+                        List.of(new ProcessingOutput(result.result().copy(), 1)),
+                        result.dyeFluidAmount()));
+    }
+
+    private static Optional<DyeFluidMixingResult> createDyeFluidMixingResult(ItemStack input,
+            List<ProcessingOutput> outputs, int dyeFluidAmount) {
+        var nonEmptyOutputs = outputs.stream()
+                .filter(output -> !output.getStack().isEmpty())
+                .toList();
+        if (nonEmptyOutputs.isEmpty())
+            return Optional.empty();
+        if (nonEmptyOutputs.stream()
+                .map(ProcessingOutput::getStack)
+                .anyMatch(output -> ItemStack.isSameItemSameComponents(input, output)))
+            return Optional.empty();
+        return Optional.of(new DyeFluidMixingResult(nonEmptyOutputs, dyeFluidAmount));
     }
 
     private static Optional<ItemStack> findAutomaticColoringCraftingResult(CraftingInput input, ItemStack dye, Level level,
@@ -369,5 +408,19 @@ public class ColoringFanProcessingType implements FanProcessingType {
             return Optional.of(result);
         }
         return this.processByCrafting(stack, level);
+    }
+
+    public record DyeFluidMixingResult(List<ProcessingOutput> outputs, int dyeFluidAmount) {
+        public DyeFluidMixingResult {
+            outputs = List.copyOf(outputs);
+        }
+    }
+
+    private record AutomaticColoringResult(ItemStack result, int dyeFluidAmount) {
+        private static final AutomaticColoringResult EMPTY = new AutomaticColoringResult(ItemStack.EMPTY, 0);
+
+        private AutomaticColoringResult copy() {
+            return result.isEmpty() ? EMPTY : new AutomaticColoringResult(result.copy(), dyeFluidAmount);
+        }
     }
 }
