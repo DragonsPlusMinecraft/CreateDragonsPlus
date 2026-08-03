@@ -20,6 +20,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.PERSISTENT_DATA_KEY;
 
+import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
@@ -60,10 +62,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
@@ -74,14 +78,16 @@ import plus.dragons.createdragonsplus.util.ItemStackKey;
 import plus.dragons.createdragonsplus.util.PersistentDataHelper;
 
 public class ColoringFanProcessingType implements FanProcessingType {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final int CONTACT_COLORING_COOLDOWN = 10;
+    private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
+            .fromNamespaceAndPath("supplementaries", "sus_crafting");
+    private static final Set<ResourceLocation> FAILED_AUTOMATIC_COLORING_RECIPES = ConcurrentHashMap.newKeySet();
     private final DyeVariant variant;
     private final Vector3f rgb;
     private final Map<ItemStackKey, Boolean> canProcessCache = new ConcurrentHashMap<>();
     private final Map<ItemStackKey, AutomaticColoringResult> craftingResultCache = new ConcurrentHashMap<>();
     private final Map<Block, Block> blockColoringResultCache = new ConcurrentHashMap<>();
-    private static final ResourceLocation SUPPLEMENTARIES_SUS_CRAFTING = ResourceLocation
-            .fromNamespaceAndPath("supplementaries", "sus_crafting");
 
     public ColoringFanProcessingType(DyeVariant variant) {
         this.variant = variant;
@@ -144,6 +150,92 @@ public class ColoringFanProcessingType implements FanProcessingType {
         if (result == Blocks.AIR)
             return Optional.empty();
         return Optional.of(BlockHelper.copyProperties(state, result.defaultBlockState()));
+    }
+
+    public boolean canProcessBlock(Level level, BlockPos pos, BlockState state) {
+        return processBlockState(state, level)
+                .filter(result -> canReplaceBlockEntity(level, pos, result))
+                .isPresent();
+    }
+
+    public boolean processBlock(Level level, BlockPos pos, BlockState state) {
+        return processBlockState(state, level)
+                .filter(result -> canReplaceBlockEntity(level, pos, result))
+                .map(result -> replaceBlockState(level, pos, state, result))
+                .orElse(false);
+    }
+
+    private static boolean canReplaceBlockEntity(Level level, BlockPos pos, BlockState result) {
+        var blockEntity = level.getBlockEntity(pos);
+        return blockEntity == null || blockEntity.getType().isValid(result);
+    }
+
+    private static boolean replaceBlockState(Level level, BlockPos pos, BlockState originalState, BlockState result) {
+        if (!level.getBlockState(pos).equals(originalState) || result.equals(originalState))
+            return false;
+
+        var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity == null)
+            return level.setBlockAndUpdate(pos, result);
+
+        CompoundTag data;
+        try {
+            data = blockEntity.saveWithoutMetadata(level.registryAccess());
+        } catch (RuntimeException exception) {
+            LOGGER.error("Failed to save block entity data before coloring block at {}", pos, exception);
+            return false;
+        }
+
+        level.removeBlockEntity(pos);
+        try {
+            if (!level.setBlockAndUpdate(pos, result))
+                throw new IllegalStateException("Failed to set the colored block state");
+
+            var resultBlockEntity = level.getBlockEntity(pos);
+            if (resultBlockEntity == null || resultBlockEntity.getType() != blockEntity.getType())
+                throw new IllegalStateException("Colored block did not create the expected block entity type");
+            resultBlockEntity.loadWithComponents(data, level.registryAccess());
+            resultBlockEntity.setChanged();
+            level.sendBlockUpdated(pos, result, result, Block.UPDATE_CLIENTS);
+            return true;
+        } catch (RuntimeException exception) {
+            boolean restored = false;
+            try {
+                restoreBlockState(level, pos, originalState, blockEntity, data);
+                restored = true;
+            } catch (RuntimeException rollbackException) {
+                exception.addSuppressed(rollbackException);
+            }
+            if (restored) {
+                LOGGER.error("Failed to transfer block entity data while coloring block at {}; restored its original state",
+                        pos, exception);
+            } else {
+                LOGGER.error("Failed to transfer block entity data while coloring block at {}; restoring it also failed",
+                        pos, exception);
+            }
+            return false;
+        }
+    }
+
+    private static void restoreBlockState(Level level, BlockPos pos, BlockState originalState,
+            BlockEntity originalBlockEntity, CompoundTag data) {
+        level.removeBlockEntity(pos);
+        if (!level.getBlockState(pos).equals(originalState))
+            level.setBlockAndUpdate(pos, originalState);
+        if (!level.getBlockState(pos).equals(originalState))
+            throw new IllegalStateException("Failed to restore the original block state after coloring");
+
+        var restoredBlockEntity = level.getBlockEntity(pos);
+        if (restoredBlockEntity == null) {
+            restoredBlockEntity = originalBlockEntity.getType().create(pos, originalState);
+            if (restoredBlockEntity != null)
+                level.setBlockEntity(restoredBlockEntity);
+        }
+        if (restoredBlockEntity == null || restoredBlockEntity.getType() != originalBlockEntity.getType())
+            throw new IllegalStateException("Failed to restore the original block entity after coloring");
+        restoredBlockEntity.loadWithComponents(data, level.registryAccess());
+        restoredBlockEntity.setChanged();
+        level.sendBlockUpdated(pos, originalState, originalState, Block.UPDATE_CLIENTS);
     }
 
     private Block processBlockUncached(Block block, Level level) {
@@ -264,11 +356,20 @@ public class ColoringFanProcessingType implements FanProcessingType {
             int resultCount) {
         for (var holder : level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING)) {
             var recipe = holder.value();
-            if (isIgnoredAutomaticColoringRecipe(recipe) || !recipe.matches(input, level))
+            if (isIgnoredAutomaticColoringRecipe(recipe))
                 continue;
-            var result = recipe.assemble(input, level.registryAccess());
-            if (result.getCount() == resultCount && !result.is(dye.getItem()))
-                return Optional.of(result);
+            try {
+                if (!recipe.matches(input, level))
+                    continue;
+                var result = recipe.assemble(input, level.registryAccess());
+                if (result != null && !result.isEmpty() && result.getCount() == resultCount && !result.is(dye.getItem()))
+                    return Optional.of(result);
+            } catch (RuntimeException exception) {
+                if (FAILED_AUTOMATIC_COLORING_RECIPES.add(holder.id())) {
+                    LOGGER.warn("Crafting recipe {} threw while probing an automatic Bulk Coloring input; ignoring that probe",
+                            holder.id(), exception);
+                }
+            }
         }
         return Optional.empty();
     }

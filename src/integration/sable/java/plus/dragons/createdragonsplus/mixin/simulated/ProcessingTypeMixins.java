@@ -22,7 +22,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
-import java.util.Optional;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
 import net.minecraft.core.BlockPos;
@@ -238,7 +237,10 @@ public class ProcessingTypeMixins {
     @Mixin(ColoringFanProcessingType.class)
     public static abstract class ColoringTypeMixin implements FanProcessingTypeSimulatedExtension {
         @Shadow(remap = false)
-        public abstract Optional<BlockState> processBlockState(BlockState state, Level level);
+        public abstract boolean canProcessBlock(Level level, BlockPos pos, BlockState state);
+
+        @Shadow(remap = false)
+        public abstract boolean processBlock(Level level, BlockPos pos, BlockState state);
 
         @Override
         public boolean active() {
@@ -247,12 +249,12 @@ public class ProcessingTypeMixins {
 
         @Override
         public boolean canAffectBlock(Level level, BlockPos pos, BlockState blockState) {
-            return processBlockState(blockState, level).isPresent();
+            return canProcessBlock(level, pos, blockState);
         }
 
         @Override
         public void affectBlock(Level level, BlockPos pos, BlockState blockState) {
-            processBlockState(blockState, level).ifPresent(result -> level.setBlockAndUpdate(pos, result));
+            processBlock(level, pos, blockState);
         }
     }
 }

@@ -26,22 +26,22 @@ import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class DyeDepotDyeVariants {
     public static void register(RegisterDyeVariantsEvent event) {
-        register(event, "amber", "Amber", 0xF0A11B);
-        register(event, "aqua", "Aqua", 0x48C8C8);
-        register(event, "beige", "Beige", 0xC9B38C);
-        register(event, "coral", "Coral", 0xFF6F61);
-        register(event, "forest", "Forest", 0x2E6B3F);
-        register(event, "ginger", "Ginger", 0xC46A2B);
-        register(event, "indigo", "Indigo", 0x4B3F8F);
-        register(event, "maroon", "Maroon", 0x7F2438);
-        register(event, "mint", "Mint", 0x8ED9A9);
-        register(event, "navy", "Navy", 0x1F355D);
-        register(event, "olive", "Olive", 0x7A7F28);
-        register(event, "rose", "Rose", 0xD75A7A);
-        register(event, "slate", "Slate", 0x5E6A75);
-        register(event, "tan", "Tan", 0xB88B5A);
-        register(event, "teal", "Teal", 0x147A78);
-        register(event, "verdant", "Verdant", 0x5DAF45);
+        register(event, "amber", "Amber", 0xD7AF00);
+        register(event, "aqua", "Aqua", 0x5EF0CC);
+        register(event, "beige", "Beige", 0xE1D5A3);
+        register(event, "coral", "Coral", 0xDF7758);
+        register(event, "forest", "Forest", 0x32A326);
+        register(event, "ginger", "Ginger", 0xCF6121);
+        register(event, "indigo", "Indigo", 0x331E57);
+        register(event, "maroon", "Maroon", 0x7B2713);
+        register(event, "mint", "Mint", 0x38CE7D);
+        register(event, "navy", "Navy", 0x153D64);
+        register(event, "olive", "Olive", 0x8C8F2A);
+        register(event, "rose", "Rose", 0xFF5E64);
+        register(event, "slate", "Slate", 0x4C5E86);
+        register(event, "tan", "Tan", 0xF49C5D);
+        register(event, "teal", "Teal", 0x2F7B67);
+        register(event, "verdant", "Verdant", 0x255714);
     }
 
     private static void register(RegisterDyeVariantsEvent event, String name, String displayName, int color) {

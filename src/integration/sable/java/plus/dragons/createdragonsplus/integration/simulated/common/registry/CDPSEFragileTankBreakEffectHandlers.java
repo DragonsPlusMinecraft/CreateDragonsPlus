@@ -232,7 +232,7 @@ public class CDPSEFragileTankBreakEffectHandlers {
         protected void onHitDoBlock(Level level, BlockPos pos, BlockState state, FluidStack fluid) {
             if (state.isAir()) return;
             if (CDPSEConfig.fluid().fragileFluidTankDyeColorBlock.get()) {
-                borrow().processBlockState(state, level).ifPresent(result -> level.setBlockAndUpdate(pos, result));
+                borrow().processBlock(level, pos, state);
             }
         }
 
