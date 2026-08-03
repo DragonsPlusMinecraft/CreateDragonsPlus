@@ -1,0 +1,14 @@
+{
+  "values": [
+    "create_dragons_plus:flowing_red_dye",
+    "create_dragons_plus:red_dye",
+    {
+      "id": "garnished:red_mastic_resin",
+      "required": false
+    },
+    {
+      "id": "garnished:flowing_red_mastic_resin",
+      "required": false
+    }
+  ]
+}

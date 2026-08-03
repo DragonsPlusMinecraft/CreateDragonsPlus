@@ -19,20 +19,18 @@
 package plus.dragons.createdragonsplus.common.recipe;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.logging.LogUtils;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.mixin.minecraft.RecipeManagerAccessor;
@@ -40,22 +38,22 @@ import plus.dragons.createdragonsplus.mixin.minecraft.RecipeManagerAccessor;
 /**
  * Fired when the {@link RecipeManager} has reloaded and is about sync the recipes from the server to the client.
  *
- * <p>This event is not {@linkplain ICancellableEvent cancellable}, and does not have a result.</p>
+ * <p>This event is not cancellable and does not have a result.</p>
  *
- * <p>This event is fired on the {@linkplain NeoForge#EVENT_BUS game event bus},
+ * <p>This event is fired on the {@linkplain MinecraftForge#EVENT_BUS game event bus},
  * only on the {@linkplain LogicalSide#SERVER logical server}, right after the
  * {@link TagsUpdatedEvent}. Therefore, updated tags and data maps can be retrieved in this event.</p>
  */
 public class UpdateRecipesEvent extends Event {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final RecipeManager recipeManager;
-    private final Multimap<RecipeType<?>, RecipeHolder<?>> byType;
-    private final Map<ResourceLocation, RecipeHolder<?>> byName;
+    private final Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> byType;
+    private final Map<ResourceLocation, Recipe<?>> byName;
     private int added;
     private int removed;
 
     @Internal
-    public UpdateRecipesEvent(RecipeManager recipeManager, Multimap<RecipeType<?>, RecipeHolder<?>> byType, Map<ResourceLocation, RecipeHolder<?>> byName) {
+    public UpdateRecipesEvent(RecipeManager recipeManager, Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> byType, Map<ResourceLocation, Recipe<?>> byName) {
         this.recipeManager = recipeManager;
         this.byType = byType;
         this.byName = byName;
@@ -74,35 +72,39 @@ public class UpdateRecipesEvent extends Event {
      * @param id the recipe id
      * @return the recipe, if present
      */
-    public Optional<RecipeHolder<?>> getRecipe(ResourceLocation id) {
+    public Optional<Recipe<?>> getRecipe(ResourceLocation id) {
         return Optional.ofNullable(byName.get(id));
     }
 
     /**
-     * Adds a {@link RecipeHolder recipe} to the the {@link RecipeManager recipe manager}.
+     * Adds a {@link Recipe recipe} to the {@link RecipeManager recipe manager}.
      * 
      * @param recipe the recipe to add
      */
-    public void addRecipe(RecipeHolder<?> recipe) {
-        byType.put(recipe.value().getType(), recipe);
-        byName.put(recipe.id(), recipe);
+    public void addRecipe(Recipe<?> recipe) {
+        byType.computeIfAbsent(recipe.getType(), $ -> new HashMap<>()).put(recipe.getId(), recipe);
+        byName.put(recipe.getId(), recipe);
         added++;
     }
 
     /**
-     * Removes a {@link RecipeHolder recipe} from the the {@link RecipeManager recipe manager}.
+     * Removes a {@link Recipe recipe} from the {@link RecipeManager recipe manager}.
      * 
      * @param recipe the recipe to remove
      */
-    public void removeRecipe(RecipeHolder<?> recipe) {
-        byType.remove(recipe.value().getType(), recipe);
-        byName.remove(recipe.id());
+    public void removeRecipe(Recipe<?> recipe) {
+        var recipes = byType.get(recipe.getType());
+        if (recipes != null)
+            recipes.remove(recipe.getId());
+        byName.remove(recipe.getId());
         removed++;
     }
 
     @Internal
     public void apply() {
-        ((RecipeManagerAccessor) recipeManager).setByType(ImmutableMultimap.copyOf(byType));
+        var immutableByType = ImmutableMap.<RecipeType<?>, Map<ResourceLocation, Recipe<?>>>builder();
+        byType.forEach((type, recipes) -> immutableByType.put(type, ImmutableMap.copyOf(recipes)));
+        ((RecipeManagerAccessor) recipeManager).setRecipes(immutableByType.build());
         ((RecipeManagerAccessor) recipeManager).setByName(ImmutableMap.copyOf(byName));
         LOGGER.debug("Added {} recipes to RecipeManager", added);
         LOGGER.debug("Removed {} recipes from RecipeManager", removed);

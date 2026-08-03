@@ -30,16 +30,13 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SmithingTemplateItem;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.eventbus.api.IEventBus;
 import plus.dragons.createdragonsplus.client.texture.CDPGuiTextures;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
@@ -53,13 +50,10 @@ public class CDPItems {
             .item("rare_blaze_package", prop -> new PackageItem(prop,
                     new PackageStyle("rare_blaze", 12, 10, 21, true)))
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
-            .properties(prop -> prop.stacksTo(1).component(DataComponents.FIRE_RESISTANT, Unit.INSTANCE))
+            .properties(prop -> prop.stacksTo(1).fireResistant())
             .tag(AllItemTags.PACKAGES.tag)
-            .onRegister(item -> BuiltInRegistries.ITEM.addAlias(
-                    REGISTRATE.asResource("rare_blaze_pacakge"),
-                    REGISTRATE.asResource("rare_blaze_package")))
-            .model((ctx, prov) -> prov
-                    .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
+            .model((ctx, prov) -> prov.getBuilder(ctx.getName())
+                    .parent(new ModelFile.UncheckedModelFile(Create.asResource("item/package/custom_12x10")))
                     .texture("2", prov.modLoc("item/package/rare_blaze")))
             .register();
     public static final ItemEntry<PackageItem> RARE_MARBLE_GATE_PACKAGE = REGISTRATE
@@ -68,11 +62,8 @@ public class CDPItems {
             .setData(ProviderType.LANG, NonNullBiConsumer.noop())
             .properties(prop -> prop.stacksTo(1))
             .tag(AllItemTags.PACKAGES.tag)
-            .onRegister(item -> BuiltInRegistries.ITEM.addAlias(
-                    REGISTRATE.asResource("rare_marble_gate_pacakge"),
-                    REGISTRATE.asResource("rare_marble_gate_package")))
-            .model((ctx, prov) -> prov
-                    .withExistingParent(ctx.getName(), Create.asResource("item/package/custom_12x10"))
+            .model((ctx, prov) -> prov.getBuilder(ctx.getName())
+                    .parent(new ModelFile.UncheckedModelFile(Create.asResource("item/package/custom_12x10")))
                     .texture("2", prov.modLoc("item/package/rare_marble_gate")))
             .register();
     public static final ItemEntry<SmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
@@ -112,12 +103,13 @@ public class CDPItems {
     }
 
     public static class CommonTags extends ItemTagRegistry {
+        private final TagKey<Item> buckets = tag("buckets");
         public final TagKey<Item> dyeBuckets = tag("buckets/dye", "Dye Buckets");
         public final Map<ResourceLocation, TagKey<Item>> dyeBucketsByVariant = new LinkedHashMap<>();
         public final TagKey<Item> dragonBreathBuckets = tag("buckets/dragon_breath", "Dragon Breath Buckets");
 
         protected CommonTags() {
-            super("c");
+            super("forge");
             for (var variant : DyeVariantRegistry.all()) {
                 var tag = tag("buckets/dye/" + variant.serializedName(), variant.displayName() + " Dye Buckets");
                 dyeBucketsByVariant.put(variant.id(), tag);
@@ -126,8 +118,8 @@ public class CDPItems {
                 else
                     addOptionalTag(this.dyeBuckets, tag.location());
             }
-            addTag(Tags.Items.BUCKETS, dyeBuckets);
-            addTag(Tags.Items.BUCKETS, dragonBreathBuckets);
+            addTag(buckets, dyeBuckets);
+            addTag(buckets, dragonBreathBuckets);
         }
     }
 

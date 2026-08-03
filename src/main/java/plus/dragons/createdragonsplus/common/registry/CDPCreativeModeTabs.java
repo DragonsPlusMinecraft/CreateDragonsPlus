@@ -23,13 +23,13 @@ import static plus.dragons.createdragonsplus.common.registry.CDPBlocks.*;
 import static plus.dragons.createdragonsplus.common.registry.CDPItems.*;
 
 import com.simibubi.create.AllCreativeModeTabs;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.config.CDPConfig;
@@ -37,13 +37,14 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 public class CDPCreativeModeTabs {
     private static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister
             .create(Registries.CREATIVE_MODE_TAB, CDPCommon.ID);
-    public static final Holder<CreativeModeTab> BASE = TABS.register("base", CDPCreativeModeTabs::base);
+    public static final RegistryObject<CreativeModeTab> BASE = TABS.register("base", CDPCreativeModeTabs::base);
 
     public static void register(IEventBus modBus) {
         TABS.register(modBus);
     }
 
-    private static CreativeModeTab base(ResourceLocation id) {
+    private static CreativeModeTab base() {
+        ResourceLocation id = CDPCommon.asResource("base");
         return CreativeModeTab.builder()
                 .title(REGISTRATE.addLang("itemGroup", id, CDPCommon.NAME))
                 .withTabsBefore(AllCreativeModeTabs.BASE_CREATIVE_TAB.getId())

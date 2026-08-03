@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import plus.dragons.createdragonsplus.common.fluids.WaterAndLavaLoggedBlock;
 
-@Mixin(Contraption.class)
+@Mixin(value = Contraption.class, remap = false)
 public abstract class ContraptionMixin {
     @Inject(method = "removeBlocksFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", shift = At.Shift.AFTER))
     private void removeBlocksFromWorld$fixRemoveBlockLeaveNoFluid(Level world, BlockPos offset, CallbackInfo ci, @Local Block blockIn, @Local BlockState oldState, @Local(ordinal = 1) BlockPos add) {

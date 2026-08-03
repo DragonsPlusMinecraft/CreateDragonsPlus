@@ -22,7 +22,7 @@ import com.simibubi.create.api.effect.OpenPipeEffectHandler;
 import com.simibubi.create.content.fluids.OpenEndedPipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
@@ -48,6 +48,8 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
                             "exceeding contained effect amount: %s"
                                     .formatted(contained));
         }
-        return fluid.copyWithAmount(contained - consumed);
+        FluidStack remainder = fluid.copy();
+        remainder.setAmount(contained - consumed);
+        return remainder;
     }
 }

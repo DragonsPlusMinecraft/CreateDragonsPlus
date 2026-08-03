@@ -31,27 +31,26 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.createmod.catnip.animation.AnimationTickHolder;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipe;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipeParams;
+import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.ColoringRecipeWrapper;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItems;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -62,7 +61,8 @@ import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<ColoringRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.COLORING.getId());
+    public static final mezz.jei.api.recipe.RecipeType<ColoringRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(
+            CDPRecipes.COLORING.getId(), ColoringRecipe.class);
 
     private FanColoringCategory(Info<ColoringRecipe> info) {
         super(info);
@@ -74,7 +74,8 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         var background = new EmptyBackground(178, 72);
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component()
+                .withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanColoringCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanColoringCategory(info);
     }
@@ -86,7 +87,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
         if (dyeFluid == null)
             return;
         builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
-                .addIngredient(NeoForgeTypes.FLUID_STACK, new FluidStack((Fluid) dyeFluid.getSource(), 1000));
+                .addIngredient(ForgeTypes.FLUID_STACK, new FluidStack((Fluid) dyeFluid.getSource(), 1000));
         dyeFluid.getBucket().ifPresent(bucket -> builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
                 .addItemStack(new ItemStack(bucket)));
     }
@@ -135,35 +136,36 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
     @Deprecated
     protected void renderAttachedBlock(GuiGraphics graphics) {}
 
-    public static List<RecipeHolder<ColoringRecipe>> getAllRecipes() {
+    public static List<ColoringRecipe> getAllRecipes() {
         var level = CDPJeiPlugin.getLevel();
         var manager = CDPJeiPlugin.getRecipeManager();
-        var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.COLORING.getType()));
+        var recipes = new ArrayList<>(manager.<ColoringRecipeWrapper, ColoringRecipe>getAllRecipesFor(CDPRecipes.COLORING.getType()));
         CDPIntegrationContributions.gatherColoringJeiRecipes(manager, recipes);
-        for (var holder : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
-            var crafting = holder.value();
+        for (var crafting : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
             if (crafting.isSpecial())
                 continue;
             var ingredients = crafting.getIngredients();
             var result = crafting.getResultItem(level.registryAccess());
             if (crafting.canCraftInDimensions(2, 1) && ingredients.size() == 2 && result.getCount() == 1) {
                 for (var variant : DyeVariantRegistry.all()) {
-                    convert2x1(holder.id().withSuffix("_as_coloring"), variant, ingredients, result).ifPresent(recipes::add);
+                    convert2x1(new ResourceLocation(crafting.getId().getNamespace(), crafting.getId().getPath() + "_as_coloring"),
+                            variant, ingredients, result).ifPresent(recipes::add);
                 }
             } else if (crafting.canCraftInDimensions(3, 3) && ingredients.size() == 9 && result.getCount() == 8) {
                 for (var variant : DyeVariantRegistry.all()) {
-                    convert3x3(holder.id().withSuffix("_as_coloring"), variant, ingredients, result).ifPresent(recipes::add);
+                    convert3x3(new ResourceLocation(crafting.getId().getNamespace(), crafting.getId().getPath() + "_as_coloring"),
+                            variant, ingredients, result).ifPresent(recipes::add);
                 }
             }
         }
-        recipes.removeIf(holder -> !CDPFluids.DYES_BY_VARIANT.containsKey(holder.value().getColor()));
+        recipes.removeIf(recipe -> !CDPFluids.DYES_BY_VARIANT.containsKey(recipe.getColor()));
         recipes.sort(Comparator
-                .<RecipeHolder<ColoringRecipe>>comparingInt(holder -> DyeVariantRegistry.creativeModeTabIndex(holder.value().getColor()))
-                .thenComparing(RecipeHolder::id));
+                .comparingInt((ColoringRecipe recipe) -> DyeVariantRegistry.creativeModeTabIndex(recipe.getColor()))
+                .thenComparing(ColoringRecipe::getId));
         return recipes;
     }
 
-    private static Optional<RecipeHolder<ColoringRecipe>> convert2x1(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
+    private static Optional<ColoringRecipe> convert2x1(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
         var dye = variant.dyeItemStack();
         if (dye.isEmpty() || result.is(dye.getItem()))
             return Optional.empty();
@@ -180,25 +182,25 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
                     .output(result)
                     .dyeFluidAmount(ColoringRecipeParams.DYE_ITEM_FLUID_AMOUNT)
                     .build();
-            return Optional.of(new RecipeHolder<>(id, recipe));
+            return Optional.of(recipe);
         } else {
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(in)
                     .output(result)
                     .dyeFluidAmount(ColoringRecipeParams.DYE_ITEM_FLUID_AMOUNT)
                     .build();
-            return Optional.of(new RecipeHolder<>(id, recipe));
+            return Optional.of(recipe);
         }
     }
 
-    private static Optional<RecipeHolder<ColoringRecipe>> convert3x3(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
+    private static Optional<ColoringRecipe> convert3x3(ResourceLocation id, DyeVariant variant, List<Ingredient> ingredients, ItemStack result) {
         var dye = variant.dyeItemStack();
         if (dye.isEmpty() || result.is(dye.getItem()))
             return Optional.empty();
         Ingredient dyeable = null;
         boolean hasDye = false;
         for (var ingredient : ingredients) {
-            if (ingredient.hasNoItems()) {
+            if (ingredient.isEmpty()) {
                 return Optional.empty();
             } else if (ingredient.test(dye)) {
                 if (hasDye)
@@ -217,18 +219,24 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
             if (fi.findAny().isEmpty()) return Optional.empty();
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(Ingredient.of(fi))
-                    .output(result.copyWithCount(1))
+                    .output(copyWithCount(result, 1))
                     .dyeFluidAmount(ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT)
                     .build();
-            return Optional.of(new RecipeHolder<>(id, recipe));
+            return Optional.of(recipe);
         } else {
             var recipe = ColoringRecipe.builder(id, variant.id())
                     .require(dyeable)
-                    .output(result.copyWithCount(1))
+                    .output(copyWithCount(result, 1))
                     .dyeFluidAmount(ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT)
                     .build();
-            return Optional.of(new RecipeHolder<>(id, recipe));
+            return Optional.of(recipe);
         }
+    }
+
+    private static ItemStack copyWithCount(ItemStack stack, int count) {
+        ItemStack copy = stack.copy();
+        copy.setCount(count);
+        return copy;
     }
 
     @FieldsNullabilityUnknownByDefault

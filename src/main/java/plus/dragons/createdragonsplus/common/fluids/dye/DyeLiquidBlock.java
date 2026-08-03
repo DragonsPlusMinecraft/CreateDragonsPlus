@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.common.fluids.dye;
 
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,13 +34,13 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 public class DyeLiquidBlock extends LiquidBlock {
     private final DyeVariant variant;
 
-    public DyeLiquidBlock(DyeVariant variant, FlowingFluid fluid, Properties properties) {
+    public DyeLiquidBlock(DyeVariant variant, Supplier<? extends FlowingFluid> fluid, Properties properties) {
         super(fluid, properties);
         this.variant = variant;
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level.isClientSide || !level.getFluidState(pos).isSource())
             return;
 

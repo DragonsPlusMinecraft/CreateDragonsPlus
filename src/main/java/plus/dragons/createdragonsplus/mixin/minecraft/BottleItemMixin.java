@@ -18,19 +18,17 @@
 
 package plus.dragons.createdragonsplus.mixin.minecraft;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.function.Predicate;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.item.BottleItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(BottleItem.class)
 public class BottleItemMixin {
-    @WrapOperation(method = "lambda$use$0", at = @At(value = "CONSTANT", args = "classValue=net/minecraft/world/entity/boss/enderdragon/EnderDragon"))
-    private static boolean use$checkDragonBreathFluid(Object object, Operation<Boolean> original, AreaEffectCloud aoe) {
-        if (aoe.getPersistentData().getBoolean("DragonBreath"))
-            return true;
-        return original.call(object);
+    @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getEntitiesOfClass(Ljava/lang/Class;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;"), index = 2)
+    private Predicate<AreaEffectCloud> use$checkDragonBreathFluid(Predicate<AreaEffectCloud> original) {
+        return aoe -> aoe.getPersistentData().getBoolean("DragonBreath") || original.test(aoe);
     }
 }

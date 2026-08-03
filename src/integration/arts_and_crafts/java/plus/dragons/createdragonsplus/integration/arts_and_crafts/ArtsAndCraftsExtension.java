@@ -18,20 +18,17 @@
 
 package plus.dragons.createdragonsplus.integration.arts_and_crafts;
 
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
-@Mod(CDPCommon.ID)
+@Mod.EventBusSubscriber(modid = CDPCommon.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ArtsAndCraftsExtension {
-    public ArtsAndCraftsExtension(IEventBus modBus) {
-        modBus.addListener(EventPriority.HIGH, this::construct);
-    }
-
-    private void construct(final FMLConstructModEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void construct(final FMLConstructModEvent event) {
         CDPIntegrationContributions.registerDyeVariants(ArtsAndCraftsDyeVariants::register);
     }
 }

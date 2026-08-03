@@ -28,22 +28,22 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public class CDPLoots {
-    @EventBusSubscriber
+    @Mod.EventBusSubscriber
     public static class TableInjections {
         public static final Object2IntMap<ResourceLocation> BLAZE_UPGRADE_SMITHING_TEMPLATE = Util.make(
                 new Object2IntOpenHashMap<>(),
                 map -> {
-                    map.put(BuiltInLootTables.BASTION_TREASURE.location(), 1);
-                    map.put(BuiltInLootTables.BASTION_OTHER.location(), 10);
-                    map.put(BuiltInLootTables.BASTION_BRIDGE.location(), 10);
-                    map.put(BuiltInLootTables.BASTION_HOGLIN_STABLE.location(), 10);
-                    map.put(BuiltInLootTables.NETHER_BRIDGE.location(), 10);
+                    map.put(BuiltInLootTables.BASTION_TREASURE, 1);
+                    map.put(BuiltInLootTables.BASTION_OTHER, 10);
+                    map.put(BuiltInLootTables.BASTION_BRIDGE, 10);
+                    map.put(BuiltInLootTables.BASTION_HOGLIN_STABLE, 10);
+                    map.put(BuiltInLootTables.NETHER_BRIDGE, 10);
                 });
 
         @SubscribeEvent
@@ -58,7 +58,7 @@ public class CDPLoots {
 
         private static void addBlazeUpgradeSmithingTemplate(LootTable table, int totalWeight) {
             var pool = LootPool.lootPool()
-                    .name(CDPItems.BLAZE_UPGRADE_SMITHING_TEMPLATE.getRegisteredName())
+                    .name(CDPItems.BLAZE_UPGRADE_SMITHING_TEMPLATE.getId().toString())
                     .setRolls(ConstantValue.exactly(1.0F))
                     .add(LootItem.lootTableItem(CDPItems.BLAZE_UPGRADE_SMITHING_TEMPLATE).setWeight(1));
             if (totalWeight > 1) {

@@ -20,20 +20,16 @@ package plus.dragons.createdragonsplus.data.recipe;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.data.recipes.RecipeBuilder;
+import java.util.concurrent.atomic.AtomicReference;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import org.jetbrains.annotations.Nullable;
 
 public class ShapelessRecipeBuilder extends BaseShapelessRecipeBuilder<ShapelessRecipe, ShapelessRecipeBuilder> {
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
     private RecipeCategory category = RecipeCategory.MISC;
     private String group = "";
 
@@ -41,7 +37,7 @@ public class ShapelessRecipeBuilder extends BaseShapelessRecipeBuilder<Shapeless
         super(directory);
     }
 
-    public ShapelessRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public ShapelessRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         criteria.put(name, criterion);
         return this;
     }
@@ -62,26 +58,16 @@ public class ShapelessRecipeBuilder extends BaseShapelessRecipeBuilder<Shapeless
     }
 
     @Override
-    public RecipeHolder<ShapelessRecipe> build() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var recipe = new ShapelessRecipe(this.group, RecipeBuilder.determineBookCategory(this.category), this.result, this.ingredients);
-        return new RecipeHolder<>(this.id, recipe);
-    }
-
-    @Override
-    public @Nullable AdvancementHolder buildAdvancement() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var builder = Advancement.Builder.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
-        if (!this.criteria.isEmpty()) {
-            this.criteria.forEach(builder::addCriterion);
-        }
-        return builder.build(this.id.withPrefix("recipes/"));
+    public FinishedRecipe build() {
+        if (id == null)
+            id = BuiltInRegistries.ITEM.getKey(result.getItem());
+        net.minecraft.data.recipes.ShapelessRecipeBuilder vanilla = net.minecraft.data.recipes.ShapelessRecipeBuilder
+                .shapeless(category, result.getItem(), result.getCount());
+        ingredients.forEach(vanilla::requires);
+        criteria.forEach(vanilla::unlockedBy);
+        vanilla.group(group);
+        AtomicReference<FinishedRecipe> built = new AtomicReference<>();
+        vanilla.save(built::set, outputId());
+        return built.get();
     }
 }

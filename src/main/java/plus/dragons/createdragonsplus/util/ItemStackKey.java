@@ -18,12 +18,17 @@
 
 package plus.dragons.createdragonsplus.util;
 
-import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public record ItemStackKey(Item item, DataComponentPatch components) {
+public record ItemStackKey(Item item, @Nullable CompoundTag tag) {
+    public ItemStackKey {
+        tag = tag == null ? null : tag.copy();
+    }
+
     public static ItemStackKey of(ItemStack stack) {
-        return new ItemStackKey(stack.getItem(), stack.getComponentsPatch());
+        return new ItemStackKey(stack.getItem(), stack.getTag());
     }
 }

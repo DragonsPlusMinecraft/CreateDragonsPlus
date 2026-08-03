@@ -22,7 +22,7 @@ import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import plus.dragons.createdragonsplus.common.fluids.hatch.FluidHatchBlockEntity;
 
 public class CDPBlockEntities {

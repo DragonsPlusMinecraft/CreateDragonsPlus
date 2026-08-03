@@ -19,7 +19,7 @@
 package plus.dragons.createdragonsplus.common.fluids;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
@@ -34,11 +34,11 @@ public class StandardDispenserBehaviour extends DefaultDispenseItemBehavior {
 
     public ItemStack execute(BlockSource source, ItemStack itemStack) {
         DispensibleContainerItem dispensiblecontaineritem = (DispensibleContainerItem) itemStack.getItem();
-        BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
-        Level level = source.level();
+        BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+        Level level = source.getLevel();
         if (dispensiblecontaineritem.emptyContents(null, level, blockpos, null, itemStack)) {
             dispensiblecontaineritem.checkExtraContent(null, level, itemStack, blockpos);
-            return this.consumeWithRemainder(source, itemStack, new ItemStack(Items.BUCKET));
+            return new ItemStack(Items.BUCKET);
         } else {
             return this.defaultDispenseItemBehavior.dispense(source, itemStack);
         }

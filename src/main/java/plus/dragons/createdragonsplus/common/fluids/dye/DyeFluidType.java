@@ -23,9 +23,8 @@ import java.util.function.Supplier;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.fluids.SolidRenderFluidType;
 import plus.dragons.createdragonsplus.config.CDPConfig;
@@ -40,7 +39,7 @@ public final class DyeFluidType extends SolidRenderFluidType {
 
     public static FluidTypeFactory create(DyeVariant variant) {
         int rgbColor = variant.color();
-        int tintColor = FastColor.ARGB32.opaque(rgbColor);
+        int tintColor = 0xFF000000 | rgbColor;
         Vector3f fogColor = new Color(rgbColor, false).asVectorF();
         return (properties, stillTexture, flowingTexture) -> new DyeFluidType(properties,
                 stillTexture,

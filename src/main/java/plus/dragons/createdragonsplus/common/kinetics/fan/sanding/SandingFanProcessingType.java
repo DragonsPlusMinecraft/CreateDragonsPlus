@@ -20,7 +20,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.List;
@@ -31,13 +31,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.kinetics.fan.DynamicParticleFanProcessingType;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingFanProcessingType.ParticleData;
@@ -47,6 +47,8 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class SandingFanProcessingType implements DynamicParticleFanProcessingType<ParticleData> {
+    private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
+
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkSanding.get())
@@ -66,12 +68,14 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
         if (!CDPConfig.recipes().enableBulkSanding.get())
             return false;
         var recipeManager = level.getRecipeManager();
-        var input = new SingleRecipeInput(stack);
+        RECIPE_WRAPPER.setItem(0, stack);
         var recipe = recipeManager
-                .getRecipeFor((RecipeType<? extends StandardProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
-                .or(() -> recipeManager.getRecipeFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), input, level))
+                .getRecipeFor(CDPRecipes.SANDING.getType(), RECIPE_WRAPPER, level)
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED);
         if (recipe.isPresent())
+            return true;
+        if (SandPaperPolishingRecipe.getMatchingRecipes(level, stack).stream()
+                .anyMatch(AllRecipeTypes.CAN_BE_AUTOMATED))
             return true;
         return CDPIntegrationContributions.canSandByCompat(stack, level);
     }
@@ -79,12 +83,18 @@ public class SandingFanProcessingType implements DynamicParticleFanProcessingTyp
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         var recipeManager = level.getRecipeManager();
-        var input = new SingleRecipeInput(stack);
-        return recipeManager
-                .getRecipeFor((RecipeType<? extends StandardProcessingRecipe<SingleRecipeInput>>) CDPRecipes.SANDING.getType(), input, level)
-                .or(() -> recipeManager.getRecipeFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), input, level))
+        RECIPE_WRAPPER.setItem(0, stack);
+        var sanding = recipeManager
+                .getRecipeFor(CDPRecipes.SANDING.getType(), RECIPE_WRAPPER, level)
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe, false));
+        if (sanding.isPresent())
+            return sanding.get();
+        var polishing = SandPaperPolishingRecipe.getMatchingRecipes(level, stack).stream()
+                .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
+                .findFirst()
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe, false));
+        return polishing
                 .or(() -> CDPIntegrationContributions.processSandingByCompat(stack, level))
                 .orElse(null);
     }

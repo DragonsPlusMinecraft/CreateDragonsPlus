@@ -46,13 +46,13 @@ public class DyeDepotDyeVariants {
 
     private static void register(RegisterDyeVariantsEvent event, String name, String displayName, int color) {
         event.register(new DyeVariant(
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYE_DEPOT, name),
+                new ResourceLocation(ModIntegration.Constants.DYE_DEPOT, name),
                 ModIntegration.Constants.DYE_DEPOT + "_" + name,
                 displayName,
                 color,
                 DyeColors.modDyeItemTag(ModIntegration.Constants.DYE_DEPOT, name),
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYE_DEPOT, name + "_dye"),
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYE_DEPOT, name + "_concrete"),
+                new ResourceLocation(ModIntegration.Constants.DYE_DEPOT, name + "_dye"),
+                new ResourceLocation(ModIntegration.Constants.DYE_DEPOT, name + "_concrete"),
                 null,
                 ModIntegration.Constants.DYE_DEPOT));
     }

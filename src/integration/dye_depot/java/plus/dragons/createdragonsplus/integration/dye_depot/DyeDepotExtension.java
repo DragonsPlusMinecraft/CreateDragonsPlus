@@ -18,27 +18,18 @@
 
 package plus.dragons.createdragonsplus.integration.dye_depot;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
-@Mod(CDPCommon.ID)
+@Mod.EventBusSubscriber(modid = CDPCommon.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DyeDepotExtension {
-    public DyeDepotExtension(IEventBus modBus) {
-        // Actually there is no need to make it like this since there is no class loading at all. But for possible future extension I still made it.
-        if (ModIntegration.DYE_DEPOT.enabled()) {
-            modBus.register(new Common());
-        }
-    }
-
-    public static class Common {
-        @SubscribeEvent
-        private void construct(final FMLConstructModEvent event) {
+    @SubscribeEvent
+    public static void construct(final FMLConstructModEvent event) {
+        if (ModIntegration.DYE_DEPOT.enabled())
             CDPIntegrationContributions.registerDyeVariants(DyeDepotDyeVariants::register);
-        }
     }
 }

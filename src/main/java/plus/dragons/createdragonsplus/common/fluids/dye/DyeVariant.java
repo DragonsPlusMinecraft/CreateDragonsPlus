@@ -19,14 +19,18 @@
 package plus.dragons.createdragonsplus.common.fluids.dye;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.fml.ModList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public record DyeVariant(
         ResourceLocation id,
@@ -52,6 +56,16 @@ public record DyeVariant(
 
     public String fanProcessingName() {
         return "coloring_" + serializedName;
+    }
+
+    public TagKey<Fluid> coloringCatalystFluidTag() {
+        return TagKey.create(Registries.FLUID,
+                CDPCommon.asResource("fan_processing_catalysts/coloring/" + serializedName));
+    }
+
+    public TagKey<Block> coloringCatalystBlockTag() {
+        return TagKey.create(Registries.BLOCK,
+                CDPCommon.asResource("fan_processing_catalysts/coloring/" + serializedName));
     }
 
     public ItemStack dyeItemStack() {

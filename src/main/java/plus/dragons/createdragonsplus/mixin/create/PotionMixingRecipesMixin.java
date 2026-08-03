@@ -21,24 +21,21 @@ package plus.dragons.createdragonsplus.mixin.create;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.createmod.catnip.nbt.NBTHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.minecraftforge.fluids.FluidStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -48,32 +45,30 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
-@Mixin(PotionMixingRecipes.class)
+@Mixin(value = PotionMixingRecipes.class, remap = false)
 public class PotionMixingRecipesMixin {
     @Unique
     private static final List<MixingRecipe> FLUID_DRAGON_BREATH_RECIPES = new ArrayList<>();
 
-    @Inject(method = "createRecipesImpl", at = @At("HEAD"))
-    private static void createRecipesImpl$clearDragonBreathFluidRecipes(Level level, CallbackInfoReturnable<List<RecipeHolder<MixingRecipe>>> cir) {
+    @Inject(method = "createRecipes", at = @At("HEAD"), remap = false)
+    private static void createRecipes$clearDragonBreathFluidRecipes(CallbackInfoReturnable<List<MixingRecipe>> cir) {
         FLUID_DRAGON_BREATH_RECIPES.clear();
     }
 
-    @WrapOperation(method = "createRecipesImpl", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionMixingRecipes;createRecipe(Ljava/lang/String;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/neoforged/neoforge/fluids/FluidStack;)Lnet/minecraft/world/item/crafting/RecipeHolder;"))
-    private static RecipeHolder<MixingRecipe> createRecipesImpl$createDragonBreathFluidRecipe(String id, Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid, Operation<RecipeHolder<MixingRecipe>> original, @Local(name = "mixingRecipes") List<RecipeHolder<MixingRecipe>> mixingRecipes) {
+    @WrapOperation(method = "createRecipes", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionMixingRecipes;createRecipe(Ljava/lang/String;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraftforge/fluids/FluidStack;Lnet/minecraftforge/fluids/FluidStack;)Lcom/simibubi/create/content/kinetics/mixer/MixingRecipe;", remap = false), remap = false)
+    private static MixingRecipe createRecipes$createDragonBreathFluidRecipe(String id, Ingredient ingredient, FluidStack fromFluid,
+            FluidStack toFluid, Operation<MixingRecipe> original, @Local(name = "mixingRecipes") List<MixingRecipe> mixingRecipes) {
         if (CDPConfig.features().generateAutomaticBrewingRecipeForDragonBreathFluid.get()) {
             if (shouldCreateDragonBreathFluidRecipe(ingredient, fromFluid, toFluid)) {
                 var recipeId = CDPCommon.asResource(id + "_using_dragon_breath_fluid");
-                var recipe = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
+                var recipe = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
                         .require(CDPFluids.COMMON_TAGS.dragonBreath, 250)
-                        .require(new SizedFluidIngredient(
-                                DataComponentFluidIngredient.of(false, fromFluid),
-                                fromFluid.getAmount()
-                        ))
+                        .require(FluidIngredient.fromFluidStack(fromFluid))
                         .output(toFluid)
                         .requiresHeat(HeatCondition.HEATED)
                         .build();
                 FLUID_DRAGON_BREATH_RECIPES.add(recipe);
-                mixingRecipes.add(new RecipeHolder<>(recipeId, recipe));
+                mixingRecipes.add(recipe);
             }
         }
         return original.call(id, ingredient, fromFluid, toFluid);
@@ -82,12 +77,13 @@ public class PotionMixingRecipesMixin {
     @Unique
     private static boolean shouldCreateDragonBreathFluidRecipe(Ingredient ingredient, FluidStack fromFluid, FluidStack toFluid) {
         return ingredient.test(new ItemStack(Items.DRAGON_BREATH))
-                && fromFluid.getOrDefault(AllDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR) == BottleType.SPLASH
-                && toFluid.getOrDefault(AllDataComponents.POTION_FLUID_BOTTLE_TYPE, BottleType.REGULAR) == BottleType.LINGERING;
+                && NBTHelper.readEnum(fromFluid.getOrCreateTag(), "Bottle", BottleType.class) == BottleType.SPLASH
+                && NBTHelper.readEnum(toFluid.getOrCreateTag(), "Bottle", BottleType.class) == BottleType.LINGERING;
     }
 
-    @Inject(method = "sortRecipesByItem(Ljava/util/List;)Ljava/util/Map;", at = @At("TAIL"))
-    private static void sortRecipesByItem$sortDragonBreathFluidRecipes(List<RecipeHolder<MixingRecipe>> all, CallbackInfoReturnable<Map<Item, List<MixingRecipe>>> cir) {
+    @Inject(method = "sortRecipesByItem", at = @At("TAIL"), remap = false)
+    private static void sortRecipesByItem$sortDragonBreathFluidRecipes(List<MixingRecipe> all,
+            CallbackInfoReturnable<Map<Item, List<MixingRecipe>>> cir) {
         var byItem = cir.getReturnValue();
         byItem.computeIfAbsent(Items.DRAGON_BREATH, ignored -> new ArrayList<>()).addAll(FLUID_DRAGON_BREATH_RECIPES);
     }

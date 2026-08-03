@@ -18,7 +18,6 @@
 
 package plus.dragons.createdragonsplus.client.ponder.scenes;
 
-import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.depot.DepotBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
@@ -26,32 +25,14 @@ import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 
 public class SandingScenes {
-    public static BlockState SANDING_CATALYST;
+    public static final BlockState SANDING_CATALYST = Blocks.SAND.defaultBlockState();
 
     public static void bulkSanding(SceneBuilder builder, SceneBuildingUtil util) {
         CreateSceneBuilder scene = new CreateSceneBuilder(builder);
-        if (SANDING_CATALYST == null) {
-            var optional = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand"));
-            if (optional.isEmpty()) {
-                var optional2 = SandingCatalysts.findBlockTag();
-                if (optional2.isEmpty() || optional2.get().size() == 0) {
-                    LogUtils.getLogger().error("Sanding catalysts not found! Please report this to Author with log!");
-                    SANDING_CATALYST = Blocks.SAND.defaultBlockState();
-                } else {
-                    SANDING_CATALYST = optional2.get().stream().findFirst().get().value().defaultBlockState();
-                }
-            } else {
-                SANDING_CATALYST = optional.get().defaultBlockState();
-            }
-
-        }
         scene.world().setBlock(util.grid().at(3, 2, 3), SANDING_CATALYST, false);
 
         scene.title("bulk_sanding", "Bulk Sanding");
@@ -76,7 +57,7 @@ public class SandingScenes {
                 .showText(80)
                 .pointAt(util.vector().topOf(1, 1, 3))
                 .attachKeyFrame()
-                .text("Air Flows passing through Bulk Sanding Catalysts (Example: Quicksand) create a Sanding Setup");
+                .text("Air Flows passing through Sand create a Sanding Setup");
         scene.world().showSection(util.select().position(1, 1, 3), Direction.DOWN);
         scene.idle(10);
         scene.world().modifyBlockEntity(util.grid().at(1, 1, 3), DepotBlockEntity.class, depot -> depot.setHeldItem(Blocks.DIORITE.asItem().getDefaultInstance()));

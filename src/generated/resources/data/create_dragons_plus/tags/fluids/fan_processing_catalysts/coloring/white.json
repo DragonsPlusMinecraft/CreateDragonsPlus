@@ -1,0 +1,14 @@
+{
+  "values": [
+    "create_dragons_plus:flowing_white_dye",
+    "create_dragons_plus:white_dye",
+    {
+      "id": "garnished:white_mastic_resin",
+      "required": false
+    },
+    {
+      "id": "garnished:flowing_white_mastic_resin",
+      "required": false
+    }
+  ]
+}

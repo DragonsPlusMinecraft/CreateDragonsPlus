@@ -19,28 +19,27 @@
 package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class SandingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
+public class SandingRecipe extends ProcessingRecipe<RecipeWrapper> {
     public SandingRecipe(ProcessingRecipeParams params) {
         super(CDPRecipes.SANDING, params);
     }
 
-    public static RecipeHolder<SandingRecipe> convertSandPaperPolishing(RecipeHolder<SandPaperPolishingRecipe> original) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
-                original.id().getNamespace(),
-                original.id().getPath() + "_as_sanding");
-        SandingRecipe recipe = builder(id)
-                .require(original.value().getIngredients().getFirst())
-                .output(original.value().getRollableResults().getFirst())
+    public static SandingRecipe convertSandPaperPolishing(SandPaperPolishingRecipe original) {
+        ResourceLocation id = new ResourceLocation(
+                original.getId().getNamespace(),
+                original.getId().getPath() + "_as_sanding");
+        return builder(id)
+                .require(original.getIngredients().get(0))
+                .output(original.getRollableResults().get(0))
                 .build();
-        return new RecipeHolder<>(id, recipe);
     }
 
     @Override
@@ -54,11 +53,11 @@ public class SandingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
     }
 
     @Override
-    public boolean matches(SingleRecipeInput input, Level level) {
-        return getIngredients().getFirst().test(input.item());
+    public boolean matches(RecipeWrapper input, Level level) {
+        return !input.isEmpty() && getIngredients().get(0).test(input.getItem(0));
     }
 
-    public static StandardProcessingRecipe.Builder<SandingRecipe> builder(ResourceLocation id) {
-        return new StandardProcessingRecipe.Builder<>(SandingRecipe::new, id);
+    public static ProcessingRecipeBuilder<SandingRecipe> builder(ResourceLocation id) {
+        return new ProcessingRecipeBuilder<>(SandingRecipe::new, id);
     }
 }

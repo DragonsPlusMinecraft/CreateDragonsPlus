@@ -21,18 +21,13 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.sanding;
 import java.util.Optional;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class SandingCatalysts {
-    private static final ResourceLocation QUICKSAND = ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand");
-
     public static boolean hasAnyCatalyst() {
-        if (BuiltInRegistries.BLOCK.getOptional(QUICKSAND).isPresent())
-            return true;
         return findBlockTag().isPresent();
     }
 

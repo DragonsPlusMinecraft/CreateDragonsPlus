@@ -46,7 +46,7 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.ModIntegration.Constants;
 
 @Restriction(require = @Condition(Constants.CREATE_GARNISHED))
-@Mixin({
+@Mixin(value = {
         RedDyeBlowingFanProcessingType.class,
         OrangeDyeBlowingFanProcessingType.class,
         YellowDyeBlowingFanProcessingType.class,
@@ -63,7 +63,7 @@ import plus.dragons.createdragonsplus.integration.ModIntegration.Constants;
         LightGrayDyeBlowingFanProcessingType.class,
         WhiteDyeBlowingFanProcessingType.class,
         BrownDyeBlowingFanProcessingType.class
-})
+}, remap = false)
 public class DyeBlowingFanProcessingMixin {
     @Inject(method = "isValidAt", at = @At("HEAD"), cancellable = true)
     private void disableDyeBlowing(Level level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {

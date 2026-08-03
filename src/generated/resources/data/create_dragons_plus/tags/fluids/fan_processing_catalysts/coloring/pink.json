@@ -1,0 +1,14 @@
+{
+  "values": [
+    "create_dragons_plus:flowing_pink_dye",
+    "create_dragons_plus:pink_dye",
+    {
+      "id": "garnished:pink_mastic_resin",
+      "required": false
+    },
+    {
+      "id": "garnished:flowing_pink_mastic_resin",
+      "required": false
+    }
+  ]
+}

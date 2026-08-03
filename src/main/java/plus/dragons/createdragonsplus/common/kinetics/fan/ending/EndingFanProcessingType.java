@@ -30,9 +30,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
@@ -41,6 +42,8 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class EndingFanProcessingType implements FanProcessingType {
+    private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
+
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkEnding.get())
@@ -64,9 +67,9 @@ public class EndingFanProcessingType implements FanProcessingType {
         if (!CDPConfig.recipes().enableBulkEnding.get())
             return false;
         var recipeManager = level.getRecipeManager();
-        var input = new SingleRecipeInput(stack);
+        RECIPE_WRAPPER.setItem(0, stack);
         if (recipeManager
-                .getRecipeFor(CDPRecipes.ENDING.getType(), input, level)
+                .getRecipeFor(CDPRecipes.ENDING.getType(), RECIPE_WRAPPER, level)
                 .isPresent())
             return true;
         return CDPIntegrationContributions.canEndByCompat(stack, level);
@@ -75,10 +78,10 @@ public class EndingFanProcessingType implements FanProcessingType {
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
         var recipeManager = level.getRecipeManager();
-        var input = new SingleRecipeInput(stack);
+        RECIPE_WRAPPER.setItem(0, stack);
         return recipeManager
-                .getRecipeFor(CDPRecipes.ENDING.getType(), input, level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
+                .getRecipeFor(CDPRecipes.ENDING.getType(), RECIPE_WRAPPER, level)
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe, false))
                 .or(() -> CDPIntegrationContributions.processEndingByCompat(stack, level))
                 .orElse(null);
     }

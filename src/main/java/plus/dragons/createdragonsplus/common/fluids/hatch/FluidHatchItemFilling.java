@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidHatchItemFilling {
     private static final List<Handler> EXTRA_HANDLERS = new ArrayList<>();

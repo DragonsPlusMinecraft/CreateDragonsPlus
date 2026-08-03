@@ -24,18 +24,15 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class FluidHatchFillingRecipeTransfer {
     public static boolean canItemBeFilled(Level level, ItemStack stack) {
-        SingleRecipeInput input = new SingleRecipeInput(stack);
+        RecipeWrapper input = input(stack);
         if (SequencedAssemblyRecipe.getRecipe(level, input, AllRecipeTypes.FILLING.getType(), FillingRecipe.class).isPresent())
             return true;
         return AllRecipeTypes.FILLING.find(input, level).isPresent();
@@ -43,9 +40,8 @@ public class FluidHatchFillingRecipeTransfer {
 
     public static OptionalInt getRequiredAmountForItem(Level level, ItemStack stack, FluidStack availableFluid) {
         return findRecipe(level, stack, availableFluid)
-                .map(RecipeHolder::value)
                 .map(FillingRecipe::getRequiredFluid)
-                .map(SizedFluidIngredient::amount)
+                .map(ingredient -> ingredient.getRequiredAmount())
                 .map(OptionalInt::of)
                 .orElseGet(OptionalInt::empty);
     }
@@ -55,36 +51,35 @@ public class FluidHatchFillingRecipeTransfer {
         toFill.setAmount(requiredAmount);
 
         return findRecipe(level, stack, toFill)
-                .map(RecipeHolder::value)
                 .map(recipe -> {
-                    List<ItemStack> results = recipe.rollResults(level.random);
+                    List<ItemStack> results = recipe.rollResults();
                     availableFluid.shrink(requiredAmount);
                     stack.shrink(1);
-                    return results.isEmpty() ? ItemStack.EMPTY : results.getFirst();
+                    return results.isEmpty() ? ItemStack.EMPTY : results.get(0);
                 });
     }
 
-    private static Optional<RecipeHolder<FillingRecipe>> findRecipe(Level level, ItemStack stack, FluidStack availableFluid) {
-        SingleRecipeInput input = new SingleRecipeInput(stack);
+    private static Optional<FillingRecipe> findRecipe(Level level, ItemStack stack, FluidStack availableFluid) {
+        RecipeWrapper input = input(stack);
         var sequencedRecipe = SequencedAssemblyRecipe.getRecipe(level,
                 input,
                 AllRecipeTypes.FILLING.getType(),
                 FillingRecipe.class,
-                matchItemAndFluid(level, input, availableFluid));
+                recipe -> recipe.matches(input, level) && recipe.getRequiredFluid().test(availableFluid));
         if (sequencedRecipe.isPresent())
             return sequencedRecipe;
 
-        for (RecipeHolder<Recipe<SingleRecipeInput>> recipe : level.getRecipeManager()
-                .getRecipesFor(AllRecipeTypes.FILLING.getType(), input, level)) {
-            FillingRecipe fillingRecipe = (FillingRecipe) recipe.value();
-            if (fillingRecipe.getRequiredFluid().ingredient().test(availableFluid))
-                return Optional.of(new RecipeHolder<>(recipe.id(), fillingRecipe));
+        for (FillingRecipe recipe : level.getRecipeManager()
+                .<RecipeWrapper, FillingRecipe>getRecipesFor(AllRecipeTypes.FILLING.getType(), input, level)) {
+            if (recipe.getRequiredFluid().test(availableFluid))
+                return Optional.of(recipe);
         }
         return Optional.empty();
     }
 
-    private static Predicate<RecipeHolder<FillingRecipe>> matchItemAndFluid(Level level, SingleRecipeInput input, FluidStack availableFluid) {
-        return recipe -> recipe.value().matches(input, level)
-                && recipe.value().getRequiredFluid().ingredient().test(availableFluid);
+    private static RecipeWrapper input(ItemStack stack) {
+        ItemStackHandler handler = new ItemStackHandler(1);
+        handler.setStackInSlot(0, stack);
+        return new RecipeWrapper(handler);
     }
 }

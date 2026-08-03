@@ -22,7 +22,7 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class ConfigurableFluidTank extends SmartFluidTank {
     protected Predicate<FluidStack> insertion = Predicates.alwaysTrue();

@@ -18,11 +18,15 @@
 
 package plus.dragons.createdragonsplus.mixin.minecraft;
 
-import com.google.common.collect.HashMultimap;
 import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerResources;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,10 +41,14 @@ public class ReloadableServerResourcesMixin {
     @Final
     private RecipeManager recipes;
 
-    @Inject(method = "updateRegistryTags()V", at = @At("TAIL"))
-    private void updateRegistryTags$postBeforeRecipeSyncEvent(CallbackInfo ci) {
-        var byType = HashMultimap.create(((RecipeManagerAccessor) this.recipes).getByType());
-        var byName = new HashMap<>(((RecipeManagerAccessor) this.recipes).getByName());
-        NeoForge.EVENT_BUS.post(new UpdateRecipesEvent(recipes, byType, byName)).apply();
+    @Inject(method = "updateRegistryTags", at = @At("TAIL"))
+    private void updateRegistryTags$postBeforeRecipeSyncEvent(RegistryAccess registryAccess, CallbackInfo ci) {
+        var accessor = (RecipeManagerAccessor) this.recipes;
+        Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> byType = new HashMap<>();
+        accessor.getRecipes().forEach((type, recipes) -> byType.put(type, new HashMap<>(recipes)));
+        var byName = new HashMap<>(accessor.getByName());
+        var event = new UpdateRecipesEvent(recipes, byType, byName);
+        MinecraftForge.EVENT_BUS.post(event);
+        event.apply();
     }
 }

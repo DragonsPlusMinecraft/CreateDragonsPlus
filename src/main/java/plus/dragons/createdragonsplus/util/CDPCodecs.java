@@ -18,6 +18,7 @@
 
 package plus.dragons.createdragonsplus.util;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.stats.Stat;
@@ -25,9 +26,14 @@ import net.minecraft.stats.StatType;
 
 public class CDPCodecs {
     public static final MapCodec<Stat<?>> STAT = BuiltInRegistries.STAT_TYPE.byNameCodec()
-            .dispatchMap(Stat::getType, CDPCodecs::stat);
+            .dispatchMap(Stat::getType, CDPCodecs::statUnchecked);
 
     public static <T> MapCodec<Stat<T>> stat(StatType<T> type) {
         return type.getRegistry().byNameCodec().xmap(type::get, Stat::getValue).fieldOf("value");
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static Codec<? extends Stat<?>> statUnchecked(StatType<?> type) {
+        return stat((StatType) type).codec();
     }
 }

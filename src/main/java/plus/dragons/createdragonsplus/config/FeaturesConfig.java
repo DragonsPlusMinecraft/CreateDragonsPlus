@@ -18,17 +18,16 @@
 
 package plus.dragons.createdragonsplus.config;
 
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.MapCodec;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.createmod.catnip.config.ConfigBase;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
+import plus.dragons.createdragonsplus.common.registry.CDPConditions;
 
 public class FeaturesConfig extends ConfigBase {
     private static final ConcurrentHashMap<ResourceLocation, ConfigFeature> FEATURES = new ConcurrentHashMap<>();
@@ -64,29 +63,24 @@ public class FeaturesConfig extends ConfigBase {
     }
 
     public class ConfigFeature extends ConfigBool implements ICondition {
-        public static final MapCodec<ConfigFeature> CODEC = ResourceLocation.CODEC.comapFlatMap(
-                id -> FEATURES.containsKey(id)
-                        ? DataResult.success(FEATURES.get(id))
-                        : DataResult.error(() -> "No config features with id [" + id + "] exists"),
-                ConfigFeature::getId).fieldOf("feature");
         private final ResourceLocation id;
         private final @Nullable Boolean override;
 
         public ConfigFeature(String name, boolean def, String... comment) {
             super(name, def, comment);
-            this.id = ResourceLocation.fromNamespaceAndPath(modid, name);
+            this.id = new ResourceLocation(modid, name);
             this.override = getFeatureOverride(this.id);
             if (FEATURES.containsKey(id))
                 throw new IllegalStateException("Config features with id [" + id + "] already registered");
             FEATURES.put(id, this);
         }
 
-        public ResourceLocation getId() {
+        public ResourceLocation getFeatureId() {
             return id;
         }
 
         public ConfigFeature addAlias(String name) {
-            FEATURES.put(ResourceLocation.fromNamespaceAndPath(modid, name), this);
+            FEATURES.put(new ResourceLocation(modid, name), this);
             return this;
         }
 
@@ -101,8 +95,8 @@ public class FeaturesConfig extends ConfigBase {
         }
 
         @Override
-        public MapCodec<? extends ICondition> codec() {
-            return CODEC;
+        public ResourceLocation getID() {
+            return CDPConditions.CONFIG_FEATURE_ID;
         }
     }
 

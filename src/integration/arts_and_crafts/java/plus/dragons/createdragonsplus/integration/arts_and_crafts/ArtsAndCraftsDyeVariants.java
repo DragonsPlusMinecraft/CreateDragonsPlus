@@ -30,13 +30,13 @@ public class ArtsAndCraftsDyeVariants {
         if (!ModIntegration.ARTS_AND_CRAFTS.enabled())
             return;
         event.register(new DyeVariant(
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleached"),
+                new ResourceLocation(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleached"),
                 ModIntegration.Constants.ARTS_AND_CRAFTS + "_bleached",
                 "Bleachdew",
                 0xDDE7DD,
                 DyeColors.modDyeItemTag(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleached"),
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleachdew"),
-                ResourceLocation.withDefaultNamespace("white_concrete"),
+                new ResourceLocation(ModIntegration.Constants.ARTS_AND_CRAFTS, "bleachdew"),
+                new ResourceLocation("white_concrete"),
                 DyeColor.WHITE,
                 ModIntegration.Constants.ARTS_AND_CRAFTS));
     }

@@ -18,10 +18,9 @@
 
 package plus.dragons.createdragonsplus.mixin.minecraft;
 
-import com.google.common.collect.Multimap;
 import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,14 +29,14 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(RecipeManager.class)
 public interface RecipeManagerAccessor {
     @Accessor
-    Multimap<RecipeType<?>, RecipeHolder<?>> getByType();
+    Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipes();
 
     @Accessor
-    void setByType(Multimap<RecipeType<?>, RecipeHolder<?>> byType);
+    void setRecipes(Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes);
 
     @Accessor
-    Map<ResourceLocation, RecipeHolder<?>> getByName();
+    Map<ResourceLocation, Recipe<?>> getByName();
 
     @Accessor
-    void setByName(Map<ResourceLocation, RecipeHolder<?>> byName);
+    void setByName(Map<ResourceLocation, Recipe<?>> byName);
 }

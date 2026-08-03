@@ -44,7 +44,7 @@ public class TagRegistry<T, P extends RegistrateTagsProvider<T>> {
     }
 
     public final TagKey<T> tag(String path) {
-        return TagKey.create(this.registry, ResourceLocation.fromNamespaceAndPath(this.namespace, path));
+        return TagKey.create(this.registry, new ResourceLocation(this.namespace, path));
     }
 
     public final TagKey<T> tag(String path, String localization) {
@@ -78,7 +78,8 @@ public class TagRegistry<T, P extends RegistrateTagsProvider<T>> {
     }
 
     public void generate(RegistrateLangProvider provider) {
-        this.localizations.forEach(provider::add);
+        String prefix = "tag." + this.registry.location().getPath();
+        this.localizations.forEach((tag, localization) -> provider.add(tag.location().toLanguageKey(prefix), localization));
     }
 
     protected class ProviderEntry {

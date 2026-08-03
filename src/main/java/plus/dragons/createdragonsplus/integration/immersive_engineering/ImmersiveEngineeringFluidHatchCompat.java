@@ -20,24 +20,17 @@ package plus.dragons.createdragonsplus.integration.immersive_engineering;
 
 import java.util.Optional;
 import java.util.OptionalInt;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.Item;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.fluids.hatch.FluidHatchItemFilling;
 import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class ImmersiveEngineeringFluidHatchCompat implements FluidHatchItemFilling.Handler {
     private static final ImmersiveEngineeringFluidHatchCompat INSTANCE = new ImmersiveEngineeringFluidHatchCompat();
     private static final int BOTTLE_FLUID_AMOUNT = 250;
-    private static final ResourceLocation POTION_BOTTLE_TYPE = ModIntegration.IMMERSIVE_ENGINEERING.asResource("potion_bottle_type");
 
     public static void register() {
         FluidHatchItemFilling.register(INSTANCE);
@@ -63,34 +56,16 @@ public class ImmersiveEngineeringFluidHatchCompat implements FluidHatchItemFilli
 
     private static boolean isPotionFluid(FluidStack fluidStack) {
         return BuiltInRegistries.FLUID.getOptional(ModIntegration.IMMERSIVE_ENGINEERING.asResource("potion"))
-                .filter(fluidStack::is)
+                .filter(fluid -> fluidStack.getFluid() == fluid)
                 .isPresent()
-                && fluidStack.has(DataComponents.POTION_CONTENTS);
+                && fluidStack.hasTag()
+                && fluidStack.getTag().contains("Potion", Tag.TAG_STRING);
     }
 
     private static ItemStack fillGlassBottle(ItemStack stack, FluidStack fluidStack) {
-        ItemStack result = new ItemStack(getPotionBottleItem(fluidStack));
-        result.set(DataComponents.POTION_CONTENTS, fluidStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY));
+        ItemStack result = new ItemStack(Items.POTION);
+        result.setTag(fluidStack.getTag().copy());
         stack.shrink(1);
         return result;
-    }
-
-    private static Item getPotionBottleItem(FluidStack fluidStack) {
-        var bottleType = BuiltInRegistries.DATA_COMPONENT_TYPE
-                .getOptional(ResourceKey.create(Registries.DATA_COMPONENT_TYPE, POTION_BOTTLE_TYPE))
-                .map(fluidStack::get)
-                .map(ImmersiveEngineeringFluidHatchCompat::getBottleTypeName)
-                .orElse("regular");
-        return switch (bottleType) {
-            case "splash" -> Items.SPLASH_POTION;
-            case "lingering" -> Items.LINGERING_POTION;
-            default -> Items.POTION;
-        };
-    }
-
-    private static String getBottleTypeName(Object bottleType) {
-        if (bottleType instanceof StringRepresentable representable)
-            return representable.getSerializedName();
-        return bottleType.toString();
     }
 }

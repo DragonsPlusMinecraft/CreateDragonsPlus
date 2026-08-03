@@ -20,101 +20,122 @@ package plus.dragons.createdragonsplus.common.advancements.criterion;
 
 import com.google.common.collect.Table;
 import com.google.common.collect.Tables;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.google.gson.JsonObject;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
+import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.StatAwardEvent;
-import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger.Instance;
+import net.minecraft.util.GsonHelper;
 import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
-import plus.dragons.createdragonsplus.util.CDPCodecs;
 
-public class StatTrigger implements CriterionTrigger<Instance> {
+public class StatTrigger implements CriterionTrigger<StatTrigger.Instance> {
+    private final ResourceLocation id;
     private final Table<PlayerAdvancements, Stat<?>, Set<Listener<Instance>>> listeners = Tables
             .newCustomTable(new IdentityHashMap<>(), IdentityHashMap::new);
 
-    public StatTrigger() {
-        NeoForge.EVENT_BUS.register(this);
+    public StatTrigger(ResourceLocation id) {
+        this.id = id;
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public final void onStatAwardEvent(final StatAwardEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            Stat<?> stat = event.getStat();
-            PlayerAdvancements advancements = player.getAdvancements();
-            var listeners = this.listeners.get(advancements, stat);
-            if (listeners == null || listeners.isEmpty())
-                return;
-            int value = event.getValue();
-            for (var listener : listeners) {
-                var trigger = listener.trigger();
-                if (trigger.bounds().matches(value)) {
-                    listener.run(advancements);
-                }
-            }
+    public void trigger(ServerPlayer player, Stat<?> stat, int value) {
+        PlayerAdvancements advancements = player.getAdvancements();
+        Set<Listener<Instance>> statListeners = listeners.get(advancements, stat);
+        if (statListeners == null || statListeners.isEmpty())
+            return;
+        for (Listener<Instance> listener : Set.copyOf(statListeners)) {
+            if (listener.getTriggerInstance().bounds().matches(value))
+                listener.run(advancements);
         }
     }
 
     @Override
-    public final void addPlayerListener(PlayerAdvancements advancements, CriterionTrigger.Listener<Instance> listener) {
-        var stat = listener.trigger().stat;
-        var set = this.listeners.get(advancements, stat);
-        if (set == null) {
-            set = new HashSet<>();
-            this.listeners.put(advancements, stat, set);
+    public ResourceLocation getId() {
+        return id;
+    }
+
+    @Override
+    public Instance createInstance(JsonObject json, DeserializationContext context) {
+        ResourceLocation typeId = new ResourceLocation(GsonHelper.getAsString(json, "type"));
+        ResourceLocation valueId = new ResourceLocation(GsonHelper.getAsString(json, "value"));
+        StatType<?> type = BuiltInRegistries.STAT_TYPE.get(typeId);
+        if (type == null)
+            throw new IllegalArgumentException("Unknown statistic type " + typeId);
+        return new Instance(getStat(type, valueId), MinMaxBounds.Ints.fromJson(json.get("bounds")));
+    }
+
+    private static <T> Stat<T> getStat(StatType<T> type, ResourceLocation valueId) {
+        T value = type.getRegistry().get(valueId);
+        if (value == null)
+            throw new IllegalArgumentException("Unknown statistic value " + valueId);
+        return type.get(value);
+    }
+
+    @Override
+    public void addPlayerListener(PlayerAdvancements advancements, Listener<Instance> listener) {
+        Stat<?> stat = listener.getTriggerInstance().stat();
+        Set<Listener<Instance>> statListeners = listeners.get(advancements, stat);
+        if (statListeners == null) {
+            statListeners = new HashSet<>();
+            listeners.put(advancements, stat, statListeners);
         }
-        set.add(listener);
+        statListeners.add(listener);
     }
 
     @Override
-    public final void removePlayerListener(PlayerAdvancements advancements, CriterionTrigger.Listener<Instance> listener) {
-        var stat = listener.trigger().stat;
-        var set = this.listeners.get(advancements, stat);
-        if (set != null) {
-            set.remove(listener);
-            if (set.isEmpty())
-                this.listeners.remove(advancements, stat);
-        }
+    public void removePlayerListener(PlayerAdvancements advancements, Listener<Instance> listener) {
+        Stat<?> stat = listener.getTriggerInstance().stat();
+        Set<Listener<Instance>> statListeners = listeners.get(advancements, stat);
+        if (statListeners == null)
+            return;
+        statListeners.remove(listener);
+        if (statListeners.isEmpty())
+            listeners.remove(advancements, stat);
     }
 
     @Override
-    public final void removePlayerListeners(PlayerAdvancements advancements) {
-        this.listeners.rowMap().remove(advancements);
-    }
-
-    @Override
-    public Codec<Instance> codec() {
-        return Instance.CODEC;
+    public void removePlayerListeners(PlayerAdvancements advancements) {
+        listeners.rowMap().remove(advancements);
     }
 
     public record Instance(Stat<?> stat, MinMaxBounds.Ints bounds) implements CriterionTriggerInstance {
-        public static final Codec<Instance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                CDPCodecs.STAT.forGetter(Instance::stat),
-                MinMaxBounds.Ints.CODEC.fieldOf("bounds").forGetter(Instance::bounds)).apply(instance, Instance::new));
-
-        public static Criterion<Instance> of(Stat<?> stat, MinMaxBounds.Ints bounds) {
-            return CDPCriterions.STAT.get().createCriterion(new Instance(stat, bounds));
+        public static Instance of(Stat<?> stat, MinMaxBounds.Ints bounds) {
+            return new Instance(stat, bounds);
         }
 
-        public static Criterion<Instance> of(ResourceLocation stat, MinMaxBounds.Ints bounds) {
-            return CDPCriterions.STAT.get().createCriterion(new Instance(Stats.CUSTOM.get(stat), bounds));
+        public static Instance of(ResourceLocation stat, MinMaxBounds.Ints bounds) {
+            return new Instance(Stats.CUSTOM.get(stat), bounds);
         }
 
         @Override
-        public void validate(CriterionValidator validator) {}
+        public ResourceLocation getCriterion() {
+            return CDPCriterions.STAT.getId();
+        }
+
+        @Override
+        public JsonObject serializeToJson(SerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", BuiltInRegistries.STAT_TYPE.getKey(stat.getType()).toString());
+            json.addProperty("value", getValueId(stat).toString());
+            json.add("bounds", bounds.serializeToJson());
+            return json;
+        }
+
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        private static ResourceLocation getValueId(Stat<?> stat) {
+            Registry registry = stat.getType().getRegistry();
+            return registry.getKey(stat.getValue());
+        }
     }
 }

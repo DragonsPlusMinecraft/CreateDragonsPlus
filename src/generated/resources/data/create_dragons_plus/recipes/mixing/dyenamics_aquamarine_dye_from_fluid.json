@@ -1,0 +1,26 @@
+{
+  "type": "create:mixing",
+  "conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid/dye"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "amount": 250,
+      "fluid": "create_dragons_plus:dyenamics_aquamarine_dye",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "dyenamics:aquamarine_dye"
+    }
+  ]
+}

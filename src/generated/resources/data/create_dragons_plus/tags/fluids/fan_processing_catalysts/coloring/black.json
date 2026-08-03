@@ -1,0 +1,14 @@
+{
+  "values": [
+    "create_dragons_plus:flowing_black_dye",
+    "create_dragons_plus:black_dye",
+    {
+      "id": "garnished:black_mastic_resin",
+      "required": false
+    },
+    {
+      "id": "garnished:flowing_black_mastic_resin",
+      "required": false
+    }
+  ]
+}

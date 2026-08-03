@@ -1,0 +1,160 @@
+{
+  "values": [
+    "#forge:buckets/dye/white",
+    "#forge:buckets/dye/light_gray",
+    "#forge:buckets/dye/gray",
+    "#forge:buckets/dye/black",
+    "#forge:buckets/dye/brown",
+    "#forge:buckets/dye/red",
+    "#forge:buckets/dye/orange",
+    "#forge:buckets/dye/yellow",
+    "#forge:buckets/dye/lime",
+    "#forge:buckets/dye/green",
+    "#forge:buckets/dye/cyan",
+    "#forge:buckets/dye/light_blue",
+    "#forge:buckets/dye/blue",
+    "#forge:buckets/dye/purple",
+    "#forge:buckets/dye/magenta",
+    "#forge:buckets/dye/pink",
+    {
+      "id": "#forge:buckets/dye/arts_and_crafts_bleached",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_amber",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_aquamarine",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_bubblegum",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_cherenkov",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_conifer",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_fluorescent",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_honey",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_icy_blue",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_lavender",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_maroon",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_mint",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_navy",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_peach",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_persimmon",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_rose",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_spring_green",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_ultramarine",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dyenamics_wine",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_amber",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_aqua",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_beige",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_coral",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_forest",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_ginger",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_indigo",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_maroon",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_mint",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_navy",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_olive",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_rose",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_slate",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_tan",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_teal",
+      "required": false
+    },
+    {
+      "id": "#forge:buckets/dye/dye_depot_verdant",
+      "required": false
+    }
+  ]
+}

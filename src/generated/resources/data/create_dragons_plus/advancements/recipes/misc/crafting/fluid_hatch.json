@@ -1,0 +1,47 @@
+{
+  "advancements": [
+    {
+      "advancement": {
+        "parent": "minecraft:recipes/root",
+        "criteria": {
+          "has_item_drain": {
+            "conditions": {
+              "items": [
+                {
+                  "items": [
+                    "create:item_drain"
+                  ]
+                }
+              ]
+            },
+            "trigger": "minecraft:inventory_changed"
+          },
+          "has_the_recipe": {
+            "conditions": {
+              "recipe": "create_dragons_plus:crafting/fluid_hatch"
+            },
+            "trigger": "minecraft:recipe_unlocked"
+          }
+        },
+        "requirements": [
+          [
+            "has_item_drain",
+            "has_the_recipe"
+          ]
+        ],
+        "rewards": {
+          "recipes": [
+            "create_dragons_plus:crafting/fluid_hatch"
+          ]
+        },
+        "sends_telemetry_event": false
+      },
+      "conditions": [
+        {
+          "type": "create_dragons_plus:config_feature",
+          "feature": "create_dragons_plus:block/fluid_hatch"
+        }
+      ]
+    }
+  ]
+}

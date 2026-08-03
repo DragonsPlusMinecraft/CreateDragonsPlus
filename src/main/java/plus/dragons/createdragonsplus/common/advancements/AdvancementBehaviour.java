@@ -30,7 +30,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -145,7 +144,8 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
     }
 
     @Override
-    public void read(CompoundTag nbt, Provider registries, boolean clientPacket) {
+    public void read(CompoundTag nbt, boolean clientPacket) {
+        super.read(nbt, clientPacket);
         if (clientPacket)
             return;
 
@@ -165,7 +165,8 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
     }
 
     @Override
-    public void write(CompoundTag nbt, Provider registries, boolean clientPacket) {
+    public void write(CompoundTag nbt, boolean clientPacket) {
+        super.write(nbt, clientPacket);
         if (clientPacket)
             return;
 

@@ -27,9 +27,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.processing.freeze.BlockFreezer;
 import plus.dragons.createdragonsplus.common.processing.freeze.FreezeCondition;
@@ -38,6 +39,8 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 
 public class FreezingFanProcessingType implements FanProcessingType {
+    private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
+
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         if (!CDPConfig.recipes().enableBulkFreezing.get())
@@ -58,8 +61,8 @@ public class FreezingFanProcessingType implements FanProcessingType {
     public boolean canProcess(ItemStack stack, Level level) {
         if (!CDPConfig.recipes().enableBulkFreezing.get())
             return false;
-        var recipe = level.getRecipeManager()
-                .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level);
+        RECIPE_WRAPPER.setItem(0, stack);
+        var recipe = level.getRecipeManager().getRecipeFor(CDPRecipes.FREEZING.getType(), RECIPE_WRAPPER, level);
         if (recipe.isPresent())
             return true;
         return CDPIntegrationContributions.canFreezeByCompat(stack, level);
@@ -67,9 +70,10 @@ public class FreezingFanProcessingType implements FanProcessingType {
 
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
+        RECIPE_WRAPPER.setItem(0, stack);
         return level.getRecipeManager()
-                .getRecipeFor(CDPRecipes.FREEZING.getType(), new SingleRecipeInput(stack), level)
-                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe.value(), false))
+                .getRecipeFor(CDPRecipes.FREEZING.getType(), RECIPE_WRAPPER, level)
+                .map(recipe -> RecipeApplier.applyRecipeOn(level, stack, recipe, false))
                 .or(() -> CDPIntegrationContributions.processFreezingByCompat(stack, level))
                 .orElse(null);
     }

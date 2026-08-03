@@ -18,12 +18,12 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import org.jetbrains.annotations.Nullable;
-import plus.dragons.createdragonsplus.common.CDPCommon;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import plus.dragons.createdragonsplus.common.behaviours.BehaviourProvider;
 
 public class CDPCapabilities {
-    public static final BlockCapability<BehaviourProvider, @Nullable Void> BEHAVIOUR_PROVIDER = BlockCapability
-            .createVoid(CDPCommon.asResource("behaviour_provider"), BehaviourProvider.class);
+    public static final Capability<BehaviourProvider> BEHAVIOUR_PROVIDER = CapabilityManager
+            .get(new CapabilityToken<>() {});
 }

@@ -23,7 +23,7 @@ import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ILaunchHandlerService;
 import java.util.Optional;
 import me.fallenbreath.conditionalmixin.api.mixin.ConditionTester;
-import net.neoforged.fml.loading.targets.CommonLaunchHandler;
+import net.minecraftforge.fml.loading.targets.CommonLaunchHandler;
 
 /**
  * {@link ConditionTester} for testing if the current environment is running datagen.

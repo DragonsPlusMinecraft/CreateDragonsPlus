@@ -1,0 +1,14 @@
+{
+  "values": [
+    "create_dragons_plus:flowing_lime_dye",
+    "create_dragons_plus:lime_dye",
+    {
+      "id": "garnished:lime_mastic_resin",
+      "required": false
+    },
+    {
+      "id": "garnished:flowing_lime_mastic_resin",
+      "required": false
+    }
+  ]
+}

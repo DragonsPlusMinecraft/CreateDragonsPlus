@@ -18,29 +18,32 @@
 
 package plus.dragons.createdragonsplus.common;
 
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.foundation.item.ItemDescription;
-import java.util.concurrent.CompletableFuture;
 import net.createmod.catnip.lang.FontHelper;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack.Position;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeColors;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.fluids.dye.RegisterDyeVariantsEvent;
+import plus.dragons.createdragonsplus.common.recipe.RecipeConverter;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockEntities;
 import plus.dragons.createdragonsplus.common.registry.CDPBlockFreezers;
 import plus.dragons.createdragonsplus.common.registry.CDPBlocks;
@@ -48,7 +51,6 @@ import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.common.registry.CDPConditions;
 import plus.dragons.createdragonsplus.common.registry.CDPCreativeModeTabs;
 import plus.dragons.createdragonsplus.common.registry.CDPCriterions;
-import plus.dragons.createdragonsplus.common.registry.CDPDataMaps;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.common.registry.CDPItemAttributes;
@@ -76,15 +78,16 @@ public class CDPCommon {
     private static final ResourceManagerReloadListener RELOAD_LISTENER = resourceManager -> {
         CDPFanProcessingTypes.COLORING.values().forEach(t -> t.get().recreateCache());
         CDPItemAttributes.recreateCache();
+        RecipeConverter.invalidateCaches();
     };
 
-    public CDPCommon(IEventBus modBus, ModContainer modContainer) {
-        this.modContainer = modContainer;
-        this.modBus = modBus;
+    public CDPCommon() {
+        this.modContainer = ModLoadingContext.get().getActiveContainer();
+        this.modBus = FMLJavaModLoadingContext.get().getModEventBus();
         REGISTRATE.registerEventListeners(modBus);
         modBus.register(this);
-        modBus.register(new CDPConfig(modContainer));
-        NeoForge.EVENT_BUS.addListener(CDPCommon::addReloadListeners);
+        modBus.register(new CDPConfig());
+        MinecraftForge.EVENT_BUS.addListener(CDPCommon::addReloadListeners);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -99,9 +102,7 @@ public class CDPCommon {
         CDPCriterions.register(modBus);
         CDPRecipes.register(modBus);
         CDPConditions.register(modBus);
-        CDPFanProcessingTypes.register(modBus);
-        CDPItemAttributes.register(modBus);
-        CDPDataMaps.register(modBus);
+        registerCreateOwnedTypes();
     }
 
     private void bootstrapDyeVariants() {
@@ -111,6 +112,26 @@ public class CDPCommon {
         DyeColors.registerVanilla(builder);
         CDPIntegrationContributions.gatherDyeVariants(new RegisterDyeVariantsEvent(builder));
         DyeVariantRegistry.freeze(builder.build());
+    }
+
+    private void registerCreateOwnedTypes() {
+        populateFrozenRegistry(CreateBuiltInRegistries.FAN_PROCESSING_TYPE,
+                () -> CDPFanProcessingTypes.register(modBus));
+        populateFrozenRegistry(CreateBuiltInRegistries.ITEM_ATTRIBUTE_TYPE,
+                () -> CDPItemAttributes.register(modBus));
+    }
+
+    @SuppressWarnings({ "deprecation", "unchecked" })
+    private static <T> void populateFrozenRegistry(Registry<T> registry, Runnable registration) {
+        if (!(registry instanceof MappedRegistry<?>))
+            throw new IllegalStateException("Expected a mapped Create registry: " + registry.key());
+        var mapped = (MappedRegistry<T>) registry;
+        mapped.unfreeze();
+        try {
+            registration.run();
+        } finally {
+            mapped.freeze();
+        }
     }
 
     @SubscribeEvent
@@ -127,14 +148,13 @@ public class CDPCommon {
     public void addPackFinders(final AddPackFindersEvent event) {
         var type = event.getPackType();
         if (type == PackType.SERVER_DATA) {
-            var pack = new RuntimePackResources("runtime", modContainer, type, Position.TOP, runtimePackTitle, runtimePackDescription);
-            var registries = CompletableFuture.<HolderLookup.Provider>completedFuture(RegistryLayer.createRegistryAccess().compositeAccess());
-            pack.addDataProvider(new CDPRuntimeRecipeProvider(pack.getPackOutput(), registries));
+            var pack = new RuntimePackResources("runtime", modContainer, type, Position.TOP);
+            pack.addDataProvider(new CDPRuntimeRecipeProvider(pack.getPackOutput()));
             event.addRepositorySource(pack);
         }
     }
 
     public static ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+        return new ResourceLocation(ID, path);
     }
 }

@@ -70,13 +70,13 @@ public class DyeColors {
     public static void registerVanilla(DyeVariantRegistry.Builder builder) {
         for (var color : VANILLA_CREATIVE_MODE_TAB) {
             builder.add(new DyeVariant(
-                    ResourceLocation.withDefaultNamespace(color.getSerializedName()),
+                    new ResourceLocation(color.getSerializedName()),
                     color.getSerializedName(),
                     LOCALIZATION.get(color),
-                    color.getTextureDiffuseColor(),
+                    textureDiffuseColor(color),
                     vanillaDyeItemTag(color),
                     getKey(DyeItem.byColor(color)),
-                    ResourceLocation.withDefaultNamespace(color.getSerializedName() + "_concrete"),
+                    new ResourceLocation(color.getSerializedName() + "_concrete"),
                     color,
                     null));
         }
@@ -92,5 +92,12 @@ public class DyeColors {
 
     private static ResourceLocation getKey(Item item) {
         return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
+    }
+
+    private static int textureDiffuseColor(DyeColor color) {
+        float[] components = color.getTextureDiffuseColors();
+        return (int) (components[0] * 255) << 16
+                | (int) (components[1] * 255) << 8
+                | (int) (components[2] * 255);
     }
 }

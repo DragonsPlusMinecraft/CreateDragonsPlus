@@ -18,20 +18,15 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraftforge.eventbus.api.IEventBus;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger;
 
 public class CDPCriterions {
-    private static final DeferredRegister<CriterionTrigger<?>> TRIGGER_TYPES = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, CDPCommon.ID);
-    public static final DeferredHolder<CriterionTrigger<?>, StatTrigger> STAT = TRIGGER_TYPES
-            .register("stat", StatTrigger::new);
+    public static final StatTrigger STAT = new StatTrigger(CDPCommon.asResource("stat"));
 
     public static void register(IEventBus modBus) {
-        TRIGGER_TYPES.register(modBus);
+        CriteriaTriggers.register(STAT);
     }
 }

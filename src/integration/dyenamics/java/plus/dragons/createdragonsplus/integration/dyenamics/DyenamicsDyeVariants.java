@@ -48,13 +48,13 @@ public class DyenamicsDyeVariants {
 
     private static void register(RegisterDyeVariantsEvent event, String name, String displayName, int color) {
         event.register(new DyeVariant(
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYENAMICS, name),
+                new ResourceLocation(ModIntegration.Constants.DYENAMICS, name),
                 ModIntegration.Constants.DYENAMICS + "_" + name,
                 displayName,
                 color,
                 DyeColors.modDyeItemTag(ModIntegration.Constants.DYENAMICS, name),
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYENAMICS, name + "_dye"),
-                ResourceLocation.fromNamespaceAndPath(ModIntegration.Constants.DYENAMICS, name + "_concrete"),
+                new ResourceLocation(ModIntegration.Constants.DYENAMICS, name + "_dye"),
+                new ResourceLocation(ModIntegration.Constants.DYENAMICS, name + "_concrete"),
                 null,
                 ModIntegration.Constants.DYENAMICS));
     }

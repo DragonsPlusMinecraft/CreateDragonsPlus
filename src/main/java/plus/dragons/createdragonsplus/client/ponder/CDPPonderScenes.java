@@ -22,7 +22,7 @@ import com.simibubi.create.AllBlocks;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import java.util.List;
-import net.createmod.catnip.registry.RegisteredObjectsHelper;
+import net.createmod.catnip.platform.CatnipServices;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -37,7 +37,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
 public class CDPPonderScenes {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        var registration = helper.<ItemProviderEntry<?, ?>>withKeyFunction(RegistryEntry::getId);
+        var registration = helper.<ItemProviderEntry<?>>withKeyFunction(RegistryEntry::getId);
         registration.forComponents(AllBlocks.ENCASED_FAN)
                 .addStoryBoard("bulk_coloring", CDPFanScenes::bulkColoring)
                 .addStoryBoard("bulk_freezing", CDPFanScenes::bulkFreezing)
@@ -48,7 +48,7 @@ public class CDPPonderScenes {
                     .addStoryBoard("bulk_sanding", SandingScenes::bulkSanding);
         }
 
-        var itemRegistration = helper.<ItemLike>withKeyFunction(RegisteredObjectsHelper::getKeyOrThrow);
+        var itemRegistration = helper.<ItemLike>withKeyFunction(CatnipServices.REGISTRIES::getKeyOrThrow);
         List<ItemLike> dyeBuckets = DyeVariantRegistry.all().stream()
                 .filter(variant -> variant.isAvailable())
                 .flatMap(variant -> CDPFluids.DYES_BY_VARIANT.get(variant.id()).getBucket().stream())

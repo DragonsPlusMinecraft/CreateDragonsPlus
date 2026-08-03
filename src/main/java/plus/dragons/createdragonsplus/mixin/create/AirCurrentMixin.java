@@ -47,7 +47,7 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.AirCurrentSegmentAcces
 import plus.dragons.createdragonsplus.common.kinetics.fan.DynamicParticleFanProcessingType;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
 
-@Mixin(AirCurrent.class)
+@Mixin(value = AirCurrent.class, remap = false)
 public class AirCurrentMixin implements AirCurrentAccess {
     @Shadow
     public float maxDistance;
@@ -114,7 +114,7 @@ public class AirCurrentMixin implements AirCurrentAccess {
         return null;
     }
 
-    @Mixin(targets = "com.simibubi.create.content.kinetics.fan.AirCurrent$AirCurrentSegment")
+    @Mixin(targets = "com.simibubi.create.content.kinetics.fan.AirCurrent$AirCurrentSegment", remap = false)
     public static abstract class AirCurrentSegmentMixin implements AirCurrentSegmentAccess {
         @Shadow
         private @Nullable FanProcessingType type;

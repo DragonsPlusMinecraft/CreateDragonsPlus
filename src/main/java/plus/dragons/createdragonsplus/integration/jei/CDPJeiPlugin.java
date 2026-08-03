@@ -32,11 +32,10 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.DyeFluidMixingRecipes;
@@ -50,8 +49,8 @@ import plus.dragons.createdragonsplus.util.ErrorMessages;
 @JeiPlugin
 public class CDPJeiPlugin implements IModPlugin {
     public static final ResourceLocation ID = CDPCommon.asResource("jei_plugin");
-    private static final mezz.jei.api.recipe.RecipeType<RecipeHolder<BasinRecipe>> CREATE_MIXING = mezz.jei.api.recipe.RecipeType
-            .createRecipeHolderType(Create.asResource("mixing"));
+    private static final mezz.jei.api.recipe.RecipeType<BasinRecipe> CREATE_MIXING = new mezz.jei.api.recipe.RecipeType<>(
+            Create.asResource("mixing"), BasinRecipe.class);
     private final List<CreateRecipeCategory<?>> categories = new ArrayList<>();
 
     @Override

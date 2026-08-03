@@ -48,7 +48,8 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
@@ -57,7 +58,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.foundation.PonderIndex;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -73,18 +73,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,38 +94,43 @@ import plus.dragons.createdragonsplus.data.lang.ForeignLanguageProvider;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.TagRegistry;
-import plus.dragons.createdragonsplus.mixin.neoforge.ExistingFileHelperAccessor;
+import plus.dragons.createdragonsplus.mixin.forge.ExistingFileHelperAccessor;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
 @CodeReference(value = CreateRegistrate.class, source = "create", license = "mit")
 public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     protected final Logger logger;
-    protected final Map<Holder<?>, Holder<CreativeModeTab>> creativeModeTabLookup = new HashMap<>();
-    protected @Nullable Holder<CreativeModeTab> creativeModeTab;
+    protected final Map<RegistryEntry<?>, RegistryObject<CreativeModeTab>> creativeModeTabLookup = Collections
+            .synchronizedMap(new IdentityHashMap<>());
+    protected @Nullable RegistryObject<CreativeModeTab> creativeModeTab;
     protected @Nullable Function<Item, TooltipModifier> tooltipModifier;
     protected @Nullable ExistingFileHelper existingFileHelper;
     protected @Nullable String templateLocale;
 
     public CDPRegistrate(String modid) {
         super(modid);
-        this.defaultCreativeTab((ResourceKey<CreativeModeTab>) null);
         this.logger = LoggerFactory.getLogger(this.getClass().getSimpleName() + "[" + modid + "]");
     }
 
-    public final ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(getModid(), path);
+    @Override
+    public CDPRegistrate registerEventListeners(IEventBus bus) {
+        return super.registerEventListeners(bus);
     }
 
-    public boolean isInCreativeModeTab(Holder<?> holder) {
-        return this.creativeModeTabLookup.containsKey(holder);
+    public final ResourceLocation asResource(String path) {
+        return new ResourceLocation(getModid(), path);
+    }
+
+    public boolean isInCreativeModeTab(RegistryEntry<?> entry) {
+        return this.creativeModeTabLookup.containsKey(entry);
     }
 
     @Nullable
-    public Holder<CreativeModeTab> getCreativeModeTab(Holder<?> holder) {
-        return this.creativeModeTabLookup.get(holder);
+    public RegistryObject<CreativeModeTab> getCreativeModeTab(RegistryEntry<?> entry) {
+        return this.creativeModeTabLookup.get(entry);
     }
 
-    public CDPRegistrate setCreativeModeTab(@Nullable Holder<CreativeModeTab> creativeModeTab) {
+    public CDPRegistrate setCreativeModeTab(@Nullable RegistryObject<CreativeModeTab> creativeModeTab) {
         this.creativeModeTab = creativeModeTab;
         return this;
     }
@@ -136,8 +141,10 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     }
 
     @Override
-    protected <R, T extends R> RegistryEntry<R, T> accept(String name, ResourceKey<? extends Registry<R>> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator, NonNullFunction<DeferredHolder<R, T>, ? extends RegistryEntry<R, T>> entryFactory) {
-        RegistryEntry<R, T> entry = super.accept(name, type, builder, creator, entryFactory);
+    protected <R, T extends R> RegistryEntry<T> accept(String name, ResourceKey<? extends Registry<R>> type,
+            Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
+            NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
+        RegistryEntry<T> entry = super.accept(name, type, builder, creator, entryFactory);
         if (type.equals(Registries.ITEM) && this.tooltipModifier != null) {
             Function<Item, TooltipModifier> tooltipModifier = this.tooltipModifier;
             this.addRegisterCallback(name, Registries.ITEM, item -> {
@@ -155,11 +162,6 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     public <T, P extends RegistrateTagsProvider<T>> CDPRegistrate registerTags(ProviderType<P> type, TagRegistry<T, P> registry) {
         this.addDataGenerator(type, registry::generate);
-        return this;
-    }
-
-    public CDPRegistrate registerEnchantmentTags(TagRegistry<Enchantment, RegistrateTagsProvider<Enchantment>> registry) {
-        this.addDataGenerator(ProviderType.ENCHANTMENT_TAGS, registry::generate);
         return this;
     }
 
@@ -305,24 +307,24 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
         };
     }
 
-    public <T extends BaseFlowingFluid> FluidBuilder<T, CDPRegistrate> virtualFluid(
+    public <T extends ForgeFlowingFluid> FluidBuilder<T, CDPRegistrate> virtualFluid(
             String name,
             FluidBuilder.FluidTypeFactory type,
-            NonNullFunction<BaseFlowingFluid.Properties, T> source,
-            NonNullFunction<BaseFlowingFluid.Properties, T> flowingFactory) {
+            NonNullFunction<ForgeFlowingFluid.Properties, T> source,
+            NonNullFunction<ForgeFlowingFluid.Properties, T> flowingFactory) {
         return entry(name, callback -> new VirtualFluidBuilder<>(self(), self(), name, callback,
                 asResource("fluid/" + name + "_still"),
                 asResource("fluid/" + name + "_flow"),
                 type, source, flowingFactory));
     }
 
-    public <T extends BaseFlowingFluid> FluidBuilder<T, CDPRegistrate> virtualFluid(
+    public <T extends ForgeFlowingFluid> FluidBuilder<T, CDPRegistrate> virtualFluid(
             String name,
             ResourceLocation stillTexture,
             ResourceLocation flowTexture,
             FluidBuilder.FluidTypeFactory typeFactory,
-            NonNullFunction<BaseFlowingFluid.Properties, T> sourceFactory,
-            NonNullFunction<BaseFlowingFluid.Properties, T> flowingFactory) {
+            NonNullFunction<ForgeFlowingFluid.Properties, T> sourceFactory,
+            NonNullFunction<ForgeFlowingFluid.Properties, T> flowingFactory) {
         return entry(name, callback -> new VirtualFluidBuilder<>(self(), self(), name, callback,
                 stillTexture, flowTexture, typeFactory, sourceFactory, flowingFactory));
     }
@@ -341,14 +343,14 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     }
 
     @Override
-    public FluidBuilder<BaseFlowingFluid.Flowing, CDPRegistrate> fluid(String name) {
+    public FluidBuilder<ForgeFlowingFluid.Flowing, CDPRegistrate> fluid(String name) {
         return fluid(name,
                 asResource("fluid/" + name + "_still"),
                 asResource("fluid/" + name + "_flow"));
     }
 
     @Override
-    public FluidBuilder<BaseFlowingFluid.Flowing, CDPRegistrate> fluid(String name, FluidBuilder.FluidTypeFactory typeFactory) {
+    public FluidBuilder<ForgeFlowingFluid.Flowing, CDPRegistrate> fluid(String name, FluidBuilder.FluidTypeFactory typeFactory) {
         return fluid(name,
                 asResource("fluid/" + name + "_still"),
                 asResource("fluid/" + name + "_flow"),

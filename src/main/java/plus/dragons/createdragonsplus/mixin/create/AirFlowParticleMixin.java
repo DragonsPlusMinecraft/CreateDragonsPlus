@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import plus.dragons.createdragonsplus.common.kinetics.fan.AirCurrentAccess;
 import plus.dragons.createdragonsplus.common.kinetics.fan.DynamicParticleFanProcessingType;
 
-@Mixin(AirFlowParticle.class)
+@Mixin(value = AirFlowParticle.class, remap = false)
 public class AirFlowParticleMixin {
     @Shadow
     @Final

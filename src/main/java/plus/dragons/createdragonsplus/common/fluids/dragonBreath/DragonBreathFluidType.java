@@ -22,13 +22,11 @@ import com.tterrag.registrate.builders.FluidBuilder.FluidTypeFactory;
 import java.util.function.Supplier;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -37,59 +35,33 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.SoundAction;
-import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType.DripstoneDripInfo;
+import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import plus.dragons.createdragonsplus.common.fluids.SolidRenderFluidType;
-import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 
 public final class DragonBreathFluidType extends SolidRenderFluidType {
-    private static final float DRIPSTONE_CAULDRON_FILL_CHANCE = 0.05859375F;
-    private static final ParticleOptions DRIPSTONE_DRIP_PARTICLE = ParticleTypes.DRAGON_BREATH;
-    private final Supplier<Block> cauldron;
-
-    private DragonBreathFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier, Supplier<Block> cauldron) {
+    private DragonBreathFluidType(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, int tintColor, Vector3f fogColor, Supplier<Float> fogDistanceModifier) {
         super(properties, stillTexture, flowingTexture, tintColor, fogColor, fogDistanceModifier);
-        this.cauldron = cauldron;
     }
 
     public static FluidTypeFactory create() {
-        int tintColor = FastColor.ARGB32.opaque(0xFFFFFF);
+        int tintColor = 0xFFFFFFFF;
         Vector3f fogColor = new Color(0xDE9DC5, false).asVectorF();
         return (properties, stillTexture, flowingTexture) -> new DragonBreathFluidType(properties,
                 stillTexture,
                 flowingTexture,
                 tintColor,
                 fogColor,
-                DragonBreathFluidType::getVisibility,
-                CDPCauldrons.DRAGON_BREATH_CAULDRON::get);
+                DragonBreathFluidType::getVisibility);
     }
 
     private static float getVisibility() {
         return CDPConfig.client().dragonBreathVisionMultiplier.getF() / 256;
-    }
-
-    @Override
-    public @Nullable DripstoneDripInfo getDripInfo() {
-        if (!CDPConfig.features().dragonBreathFluid.get())
-            return null;
-        if (!CDPConfig.features().dragonBreathFluidDripstoneDuplication.get())
-            return null;
-        return new DripstoneDripInfo(DRIPSTONE_CAULDRON_FILL_CHANCE, DRIPSTONE_DRIP_PARTICLE, cauldron.get());
-    }
-
-    @Override
-    public @Nullable SoundEvent getSound(SoundAction action) {
-        if (action == SoundActions.CAULDRON_DRIP)
-            return SoundEvents.POINTED_DRIPSTONE_DRIP_LAVA_INTO_CAULDRON;
-        return super.getSound(action);
     }
 
     @Override

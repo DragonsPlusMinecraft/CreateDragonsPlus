@@ -19,9 +19,7 @@
 package plus.dragons.createdragonsplus.integration;
 
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import com.tterrag.registrate.providers.RegistrateDataMapProvider;
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,11 +28,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
@@ -46,7 +43,6 @@ import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
 
 public class CDPIntegrationContributions {
     private static final List<Consumer<RegisterDyeVariantsEvent>> DYE_VARIANTS = new CopyOnWriteArrayList<>();
-    private static final List<NonNullConsumer<RegistrateDataMapProvider>> DATA_MAPS = new CopyOnWriteArrayList<>();
     private static final List<ColoringCompat> COLORING_COMPATS = new CopyOnWriteArrayList<>();
     private static final List<StandardFanProcessingCompat<FreezingRecipe>> FREEZING_COMPATS = new CopyOnWriteArrayList<>();
     private static final List<StandardFanProcessingCompat<SandingRecipe>> SANDING_COMPATS = new CopyOnWriteArrayList<>();
@@ -60,14 +56,6 @@ public class CDPIntegrationContributions {
 
     public static void gatherDyeVariants(RegisterDyeVariantsEvent event) {
         DYE_VARIANTS.forEach(consumer -> consumer.accept(event));
-    }
-
-    public static void registerDataMaps(NonNullConsumer<RegistrateDataMapProvider> consumer) {
-        DATA_MAPS.add(consumer);
-    }
-
-    public static void gatherDataMaps(RegistrateDataMapProvider provider) {
-        DATA_MAPS.forEach(consumer -> consumer.accept(provider));
     }
 
     public static void registerColoringCompat(ColoringCompat compat) {
@@ -100,7 +88,7 @@ public class CDPIntegrationContributions {
         return Optional.empty();
     }
 
-    public static void gatherColoringJeiRecipes(RecipeManager manager, List<RecipeHolder<ColoringRecipe>> recipes) {
+    public static void gatherColoringJeiRecipes(RecipeManager manager, List<ColoringRecipe> recipes) {
         COLORING_COMPATS.forEach(compat -> compat.gatherJeiRecipes(manager, recipes));
     }
 
@@ -120,7 +108,7 @@ public class CDPIntegrationContributions {
         return process(FREEZING_COMPATS, stack, level);
     }
 
-    public static void gatherFreezingJeiRecipes(RecipeManager manager, List<RecipeHolder<FreezingRecipe>> recipes) {
+    public static void gatherFreezingJeiRecipes(RecipeManager manager, List<FreezingRecipe> recipes) {
         FREEZING_COMPATS.forEach(compat -> compat.gatherJeiRecipes(manager, recipes));
     }
 
@@ -140,7 +128,7 @@ public class CDPIntegrationContributions {
         return process(SANDING_COMPATS, stack, level);
     }
 
-    public static void gatherSandingJeiRecipes(RecipeManager manager, List<RecipeHolder<SandingRecipe>> recipes) {
+    public static void gatherSandingJeiRecipes(RecipeManager manager, List<SandingRecipe> recipes) {
         SANDING_COMPATS.forEach(compat -> compat.gatherJeiRecipes(manager, recipes));
     }
 
@@ -172,7 +160,7 @@ public class CDPIntegrationContributions {
         ENDING_COMPATS.forEach(compat -> compat.affectEntity(entity, level));
     }
 
-    public static void gatherEndingJeiRecipes(RecipeManager manager, List<RecipeHolder<EndingRecipe>> recipes) {
+    public static void gatherEndingJeiRecipes(RecipeManager manager, List<EndingRecipe> recipes) {
         ENDING_COMPATS.forEach(compat -> compat.gatherJeiRecipes(manager, recipes));
     }
 
@@ -187,7 +175,7 @@ public class CDPIntegrationContributions {
         return List.copyOf(catalysts);
     }
 
-    private static <R extends StandardProcessingRecipe<SingleRecipeInput>> boolean isValidAt(
+    private static <R extends ProcessingRecipe<? extends Container>> boolean isValidAt(
             List<StandardFanProcessingCompat<R>> compats, Level level, BlockPos pos) {
         for (var compat : compats) {
             if (compat.isValidAt(level, pos))
@@ -196,7 +184,7 @@ public class CDPIntegrationContributions {
         return false;
     }
 
-    private static <R extends StandardProcessingRecipe<SingleRecipeInput>> boolean canProcess(
+    private static <R extends ProcessingRecipe<? extends Container>> boolean canProcess(
             List<StandardFanProcessingCompat<R>> compats, ItemStack stack, Level level) {
         for (var compat : compats) {
             if (compat.canProcess(stack, level))
@@ -205,7 +193,7 @@ public class CDPIntegrationContributions {
         return false;
     }
 
-    private static <R extends StandardProcessingRecipe<SingleRecipeInput>> Optional<List<ItemStack>> process(
+    private static <R extends ProcessingRecipe<? extends Container>> Optional<List<ItemStack>> process(
             List<StandardFanProcessingCompat<R>> compats, ItemStack stack, Level level) {
         for (var compat : compats) {
             var result = compat.process(stack, level);
@@ -228,17 +216,17 @@ public class CDPIntegrationContributions {
                             .toList());
         }
 
-        void gatherJeiRecipes(RecipeManager manager, List<RecipeHolder<ColoringRecipe>> recipes);
+        void gatherJeiRecipes(RecipeManager manager, List<ColoringRecipe> recipes);
     }
 
-    public interface StandardFanProcessingCompat<R extends StandardProcessingRecipe<SingleRecipeInput>> {
+    public interface StandardFanProcessingCompat<R extends ProcessingRecipe<? extends Container>> {
         boolean isValidAt(Level level, BlockPos pos);
 
         boolean canProcess(ItemStack stack, Level level);
 
         Optional<List<ItemStack>> process(ItemStack stack, Level level);
 
-        void gatherJeiRecipes(RecipeManager manager, List<RecipeHolder<R>> recipes);
+        void gatherJeiRecipes(RecipeManager manager, List<R> recipes);
 
         default void affectEntity(Entity entity, Level level) {}
     }

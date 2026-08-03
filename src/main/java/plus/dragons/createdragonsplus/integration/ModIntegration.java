@@ -18,30 +18,16 @@
 
 package plus.dragons.createdragonsplus.integration;
 
-import com.simibubi.create.api.registry.CreateRegistries;
-import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.fml.ModList;
 
 public enum ModIntegration {
-    //TODO: Keep an eye on Create Garnished 2. Wait it add back Fan Processing
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
-    CREATE_DND(Constants.CREATE_DND),
     IMMERSIVE_ENGINEERING(Constants.IMMERSIVE_ENGINEERING),
-    QUICKSAND(Constants.QUICKSAND),
     DYE_DEPOT(Constants.DYE_DEPOT),
     DYENAMICS(Constants.DYENAMICS),
-    ARTS_AND_CRAFTS(Constants.ARTS_AND_CRAFTS),
-    AETHER(Constants.AETHER),
-    SABLE(Constants.SABLE),
-    SIMULATED(Constants.SIMULATED),
-    AERONAUTICS(Constants.AERONAUTICS);
+    ARTS_AND_CRAFTS(Constants.ARTS_AND_CRAFTS);
 
     private final String id;
 
@@ -58,7 +44,7 @@ public enum ModIntegration {
     }
 
     public ResourceLocation asResource(String path) {
-        return ResourceLocation.fromNamespaceAndPath(id, path);
+        return new ResourceLocation(id, path);
     }
 
     public ModLoadedCondition condition() {
@@ -67,23 +53,9 @@ public enum ModIntegration {
 
     public static class Constants {
         public static final String CREATE_GARNISHED = "garnished";
-        public static final String CREATE_DND = "dndesires";
         public static final String IMMERSIVE_ENGINEERING = "immersiveengineering";
-        public static final String QUICKSAND = "quicksand";
         public static final String DYE_DEPOT = "dye_depot";
         public static final String DYENAMICS = "dyenamics";
         public static final String ARTS_AND_CRAFTS = "arts_and_crafts";
-        public static final String AETHER = "aether";
-        public static final String SABLE = "sable";
-        public static final String SIMULATED = "simulated";
-        public static final String AERONAUTICS = "aeronautics";
-    }
-
-    public DeferredHolder<FanProcessingType, FanProcessingType> fanType(String path) {
-        return DeferredHolder.create(CreateRegistries.FAN_PROCESSING_TYPE, asResource(path));
-    }
-
-    public DeferredHolder<RecipeType<?>, RecipeType<StandardProcessingRecipe<SingleRecipeInput>>> recipeType(String path) {
-        return DeferredHolder.create(Registries.RECIPE_TYPE, asResource(path));
     }
 }

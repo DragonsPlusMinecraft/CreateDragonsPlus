@@ -19,7 +19,6 @@
 package plus.dragons.createdragonsplus.util;
 
 import com.google.common.base.MoreObjects;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.Level;
@@ -41,7 +40,7 @@ public class ErrorMessages {
 
     public static String blockEntity(BlockEntity blockEntity) {
         return MoreObjects.toStringHelper(blockEntity)
-                .add("type", Util.getRegisteredName(BuiltInRegistries.BLOCK_ENTITY_TYPE, blockEntity.getType()))
+                .add("type", BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(blockEntity.getType()))
                 .add("level", level(blockEntity.getLevel()))
                 .add("pos", pos(blockEntity.getBlockPos()))
                 .omitNullValues()

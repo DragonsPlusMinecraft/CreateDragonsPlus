@@ -1,0 +1,29 @@
+{
+  "type": "create:mixing",
+  "conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid/dye"
+    },
+    {
+      "type": "forge:mod_loaded",
+      "modid": "dyenamics"
+    }
+  ],
+  "ingredients": [
+    {
+      "tag": "create_dragons_plus:dyes/dyenamics/amber"
+    },
+    {
+      "amount": 250,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "amount": 250,
+      "fluid": "create_dragons_plus:dyenamics_amber_dye"
+    }
+  ]
+}

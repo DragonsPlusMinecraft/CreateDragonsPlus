@@ -19,11 +19,8 @@
 package plus.dragons.createdragonsplus.common.processing.freeze;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
-import net.createmod.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import net.createmod.catnip.lang.Lang;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
 
@@ -33,7 +30,6 @@ public enum FreezeCondition implements StringRepresentable {
     SUPERFROZEN(0x5C93E8);
 
     public static final Codec<FreezeCondition> CODEC = StringRepresentable.fromEnum(FreezeCondition::values);
-    public static final StreamCodec<ByteBuf, FreezeCondition> STREAM_CODEC = CatnipStreamCodecBuilders.ofEnum(FreezeCondition.class);
     private final int color;
 
     FreezeCondition(int color) {

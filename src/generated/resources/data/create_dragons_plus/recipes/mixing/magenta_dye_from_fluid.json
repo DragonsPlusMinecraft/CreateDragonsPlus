@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "conditions": [
+    {
+      "type": "create_dragons_plus:config_feature",
+      "feature": "create_dragons_plus:fluid/dye"
+    }
+  ],
+  "heatRequirement": "heated",
+  "ingredients": [
+    {
+      "amount": 250,
+      "fluid": "create_dragons_plus:magenta_dye",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:magenta_dye"
+    }
+  ]
+}

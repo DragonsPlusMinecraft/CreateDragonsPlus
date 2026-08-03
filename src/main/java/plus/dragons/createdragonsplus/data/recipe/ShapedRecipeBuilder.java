@@ -24,22 +24,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.data.recipes.RecipeBuilder;
+import java.util.concurrent.atomic.AtomicReference;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.common.recipe.BaseRecipeBuilder;
@@ -47,10 +42,10 @@ import plus.dragons.createdragonsplus.data.recipe.integration.IntegrationResultR
 
 public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedRecipeBuilder> {
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
-    private int width = 0;
+    private int width;
     private final List<String> pattern = new ArrayList<>();
     private ItemStack result = ItemStack.EMPTY;
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
     private RecipeCategory category = RecipeCategory.MISC;
     private String group = "";
     private boolean showNotification = true;
@@ -68,39 +63,34 @@ public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedR
     }
 
     public ShapedRecipeBuilder define(Character symbol, Ingredient ingredient) {
-        if (key.containsKey(symbol)) {
+        if (key.containsKey(symbol))
             throw new IllegalArgumentException("Symbol '" + symbol + "' is already defined!");
-        } else if (symbol == ' ') {
+        if (symbol == ' ')
             throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined");
-        } else {
-            key.put(symbol, ingredient);
-            return this;
-        }
+        key.put(symbol, ingredient);
+        return this;
     }
 
     public ShapedRecipeBuilder pattern(String line) {
         Preconditions.checkArgument(!line.isEmpty(), "Pattern line must not be empty");
-        if (width == 0) {
+        if (width == 0)
             width = line.length();
-        } else if (width != line.length()) {
+        else if (width != line.length())
             throw new IllegalArgumentException("Pattern must be the same width on every line!");
-        }
         pattern.add(line);
         return this;
     }
 
     public ShapedRecipeBuilder output(ItemLike item) {
-        this.result = new ItemStack(item);
-        return this;
+        return output(new ItemStack(item));
     }
 
     public ShapedRecipeBuilder output(ItemLike item, int count) {
-        this.result = new ItemStack(item, count);
-        return this;
+        return output(new ItemStack(item, count));
     }
 
     public ShapedRecipeBuilder output(ItemStack stack) {
-        this.result = stack;
+        result = stack;
         return this;
     }
 
@@ -108,7 +98,7 @@ public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedR
         return new IntegrationResultRecipe.Builder(this, this.result, result);
     }
 
-    public ShapedRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public ShapedRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         criteria.put(name, criterion);
         return this;
     }
@@ -134,27 +124,17 @@ public class ShapedRecipeBuilder extends BaseRecipeBuilder<ShapedRecipe, ShapedR
     }
 
     @Override
-    public RecipeHolder<ShapedRecipe> build() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var pattern = ShapedRecipePattern.of(this.key, this.pattern);
-        var recipe = new ShapedRecipe(group, RecipeBuilder.determineBookCategory(category), pattern, result, showNotification);
-        return new RecipeHolder<>(id, recipe);
-    }
-
-    @Override
-    public @Nullable AdvancementHolder buildAdvancement() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var builder = Advancement.Builder.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
-        if (!this.criteria.isEmpty()) {
-            this.criteria.forEach(builder::addCriterion);
-        }
-        return builder.build(this.id.withPrefix("recipes/"));
+    public FinishedRecipe build() {
+        if (id == null)
+            id = BuiltInRegistries.ITEM.getKey(result.getItem());
+        net.minecraft.data.recipes.ShapedRecipeBuilder vanilla = net.minecraft.data.recipes.ShapedRecipeBuilder
+                .shaped(category, result.getItem(), result.getCount());
+        key.forEach(vanilla::define);
+        pattern.forEach(vanilla::pattern);
+        criteria.forEach(vanilla::unlockedBy);
+        vanilla.group(group).showNotification(showNotification);
+        AtomicReference<FinishedRecipe> built = new AtomicReference<>();
+        vanilla.save(built::set, outputId());
+        return built.get();
     }
 }

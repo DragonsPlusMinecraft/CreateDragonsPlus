@@ -29,12 +29,11 @@ import java.util.List;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.ending.EndingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -45,7 +44,8 @@ import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
 public class FanEndingCategory extends ProcessingViaFanCategory.MultiOutput<EndingRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<EndingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.ENDING.getId());
+    public static final mezz.jei.api.recipe.RecipeType<EndingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(
+            CDPRecipes.ENDING.getId(), EndingRecipe.class);
 
     private FanEndingCategory(Info<EndingRecipe> info) {
         super(info);
@@ -57,7 +57,8 @@ public class FanEndingCategory extends ProcessingViaFanCategory.MultiOutput<Endi
         var background = new EmptyBackground(178, 72);
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, () -> new ItemStack(Items.DRAGON_BREATH));
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component()
+                .withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanEndingCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanEndingCategory(info);
     }
@@ -72,9 +73,9 @@ public class FanEndingCategory extends ProcessingViaFanCategory.MultiOutput<Endi
                 .render(graphics);
     }
 
-    private static List<RecipeHolder<EndingRecipe>> getAllRecipes() {
+    private static List<EndingRecipe> getAllRecipes() {
         var manager = CDPJeiPlugin.getRecipeManager();
-        var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.ENDING.getType()));
+        var recipes = new ArrayList<>(manager.<RecipeWrapper, EndingRecipe>getAllRecipesFor(CDPRecipes.ENDING.getType()));
         CDPIntegrationContributions.gatherEndingJeiRecipes(manager, recipes);
         return recipes;
     }

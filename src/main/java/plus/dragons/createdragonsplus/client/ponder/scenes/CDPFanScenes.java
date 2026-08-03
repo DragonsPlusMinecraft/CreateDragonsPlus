@@ -40,9 +40,9 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.Vec3;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
@@ -64,7 +64,7 @@ public class CDPFanScenes {
         scene.idle(10);
         var blockInFront = scene.world().makeSectionIndependent(util.select().position(3, 1, 2));
         scene.world().moveSection(blockInFront, util.vector().of(1, 1, 0), 0);
-        var dye = CDPFluids.DYES_BY_VARIANT.get(ResourceLocation.withDefaultNamespace("lime")).getSource().defaultFluidState().createLegacyBlock();
+        var dye = CDPFluids.DYES_BY_VARIANT.get(new ResourceLocation("lime")).getSource().defaultFluidState().createLegacyBlock();
         scene.world().setBlock(util.grid().at(4, 2, 2), dye, false);
         scene.idle(10);
         var airCurrent = util.select().fromTo(4, 2, 2, 1, 2, 2);
@@ -114,7 +114,7 @@ public class CDPFanScenes {
         var sheep = scene.world().createEntity(level -> {
             Sheep s = new Sheep(EntityType.SHEEP, level);
             s.setColor(DyeColor.WHITE);
-            Vec3 p = pos.getBottomCenter();
+            Vec3 p = Vec3.atBottomCenterOf(pos);
             s.setPos(p.x, p.y, p.z);
             s.xo = p.x;
             s.yo = p.y;
@@ -144,7 +144,7 @@ public class CDPFanScenes {
             as.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.LEATHER_LEGGINGS));
             as.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.LEATHER_CHESTPLATE));
             as.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
-            as.setPos(pos.getBottomCenter());
+            as.setPos(Vec3.atBottomCenterOf(pos));
             as.lookAt(Anchor.EYES, as.getEyePosition().add(0, 0, -1));
             return as;
         });
@@ -164,7 +164,7 @@ public class CDPFanScenes {
             };
             for (var slot : slots) {
                 var armor = as.getItemBySlot(slot);
-                var dyedArmor = DyedItemColor.applyDyes(armor, List.of(DyeItem.byColor(DyeColor.LIME)));
+                var dyedArmor = DyeableLeatherItem.dyeArmor(armor, List.of(DyeItem.byColor(DyeColor.LIME)));
                 as.setItemSlot(slot, dyedArmor);
             }
         });
@@ -209,7 +209,7 @@ public class CDPFanScenes {
         scene.world().showSection(belt, Direction.DOWN);
         var transported = scene.world().createItemOnBelt(util.grid().at(1, 1, 2), Direction.DOWN, Items.BLAZE_ROD.getDefaultInstance());
         scene.idle(160);
-        scene.world().changeBeltItemTo(transported, Items.BREEZE_ROD.getDefaultInstance());
+        scene.world().changeBeltItemTo(transported, Items.SLIME_BALL.getDefaultInstance());
         scene.idle(30);
     }
 

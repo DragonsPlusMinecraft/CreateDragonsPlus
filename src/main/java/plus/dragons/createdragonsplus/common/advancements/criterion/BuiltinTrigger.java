@@ -19,17 +19,23 @@
 package plus.dragons.createdragonsplus.common.advancements.criterion;
 
 import com.google.common.collect.Sets;
-import com.mojang.serialization.Codec;
+import com.google.gson.JsonObject;
 import java.util.*;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 
 public class BuiltinTrigger implements CriterionTrigger<BuiltinTrigger>, CriterionTriggerInstance {
     private final Map<PlayerAdvancements, Set<Listener<BuiltinTrigger>>> listeners = new IdentityHashMap<>();
-    private final Codec<BuiltinTrigger> codec = Codec.unit(this);
+    private final ResourceLocation id;
+
+    public BuiltinTrigger(ResourceLocation id) {
+        this.id = id;
+    }
 
     public void trigger(ServerPlayer player) {
         var advancements = player.getAdvancements();
@@ -60,10 +66,22 @@ public class BuiltinTrigger implements CriterionTrigger<BuiltinTrigger>, Criteri
     }
 
     @Override
-    public Codec<BuiltinTrigger> codec() {
-        return this.codec;
+    public ResourceLocation getId() {
+        return id;
     }
 
     @Override
-    public void validate(CriterionValidator validator) {}
+    public BuiltinTrigger createInstance(JsonObject json, DeserializationContext context) {
+        return this;
+    }
+
+    @Override
+    public ResourceLocation getCriterion() {
+        return id;
+    }
+
+    @Override
+    public JsonObject serializeToJson(SerializationContext context) {
+        return new JsonObject();
+    }
 }

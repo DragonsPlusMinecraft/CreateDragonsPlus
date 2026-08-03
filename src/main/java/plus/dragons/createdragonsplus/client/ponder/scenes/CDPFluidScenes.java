@@ -35,7 +35,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
 public class CDPFluidScenes {
@@ -70,7 +70,8 @@ public class CDPFluidScenes {
         scene.world().modifyBlockEntity(mixer, MechanicalMixerBlockEntity.class, MechanicalMixerBlockEntity::startProcessingBasin);
         scene.idle(40);
         scene.world().modifyBlockEntity(basin, BasinBlockEntity.class, be -> {
-            be.getTanks().getFirst().getPrimaryHandler().setFluid(new FluidStack(CDPFluids.DYES_BY_VARIANT.get(ResourceLocation.withDefaultNamespace("lime")), 4000));
+            be.getTanks().getFirst().getPrimaryHandler()
+                    .setFluid(new FluidStack(CDPFluids.DYES_BY_VARIANT.get(new ResourceLocation("lime")).getSource(), 4000));
         });
         scene.idle(45);
 

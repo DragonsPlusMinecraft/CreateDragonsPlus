@@ -22,23 +22,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.ItemExistsCondition;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.common.conditions.NotCondition;
-import net.neoforged.neoforge.common.conditions.OrCondition;
-import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ItemExistsCondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.crafting.conditions.OrCondition;
+import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecipeBuilder<R, ?>> implements Consumer<RecipeOutput> {
+public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecipeBuilder<R, ?>> implements Consumer<Consumer<FinishedRecipe>> {
     protected final @Nullable String directory;
     protected final List<ICondition> conditions = new ArrayList<>();
     protected @Nullable ResourceLocation id;
@@ -49,11 +48,7 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
 
     protected abstract B builder();
 
-    public abstract RecipeHolder<R> build();
-
-    public @Nullable AdvancementHolder buildAdvancement() {
-        return null;
-    }
+    public abstract FinishedRecipe build();
 
     public @Nullable String getDirectory() {
         return directory;
@@ -63,14 +58,30 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
         return id;
     }
 
+    public List<ICondition> getConditions() {
+        return List.copyOf(conditions);
+    }
+
+    protected final ResourceLocation outputId() {
+        if (id == null)
+            throw new IllegalStateException("Recipe id has not been set");
+        return directory == null ? id : new ResourceLocation(id.getNamespace(), directory + "/" + id.getPath());
+    }
+
     @Override
-    public final void accept(RecipeOutput output) {
-        var holder = this.build();
-        var id = this.directory == null
-                ? holder.id()
-                : holder.id().withPrefix(this.directory + "/");
-        var conditions = this.conditions.toArray(ICondition[]::new);
-        output.accept(id, holder.value(), this.buildAdvancement(), conditions);
+    public final void accept(Consumer<FinishedRecipe> output) {
+        FinishedRecipe recipe = build();
+        if (conditions.isEmpty()) {
+            output.accept(recipe);
+            return;
+        }
+
+        ConditionalRecipe.Builder conditional = ConditionalRecipe.builder();
+        conditions.forEach(conditional::addCondition);
+        conditional.addRecipe(recipe);
+        if (recipe.serializeAdvancement() != null)
+            conditional.generateAdvancement(recipe.getAdvancementId());
+        conditional.build(output, recipe.getId());
     }
 
     public B withId(ResourceLocation id) {
@@ -79,12 +90,12 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
     }
 
     public B withCondition(ICondition condition) {
-        this.conditions.add(condition);
+        conditions.add(condition);
         return builder();
     }
 
     public final B withoutCondition(ICondition condition) {
-        this.conditions.add(new NotCondition(condition));
+        conditions.add(new NotCondition(condition));
         return builder();
     }
 
@@ -94,57 +105,47 @@ public abstract class BaseRecipeBuilder<R extends Recipe<?>, B extends BaseRecip
     }
 
     public final B withAnyCondition(ICondition... conditions) {
-        this.conditions.add(new OrCondition(List.of(conditions)));
+        this.conditions.add(new OrCondition(conditions));
         return builder();
     }
 
     public final B withMod(String mod) {
-        this.withCondition(new ModLoadedCondition(mod));
-        return builder();
+        return withCondition(new ModLoadedCondition(mod));
     }
 
     public final B withoutMod(String mod) {
-        this.withoutCondition(new ModLoadedCondition(mod));
-        return builder();
+        return withoutCondition(new ModLoadedCondition(mod));
     }
 
     public final B withItem(ResourceLocation location) {
-        this.withCondition(new ItemExistsCondition(location));
-        return builder();
+        return withCondition(new ItemExistsCondition(location));
     }
 
-    public final B withItem(DeferredHolder<Item, ?> item) {
-        this.withCondition(new ItemExistsCondition(item.getId()));
-        return builder();
+    public final B withItem(RegistryObject<? extends Item> item) {
+        return withItem(item.getId());
     }
 
     public final B withoutItem(ResourceLocation location) {
-        this.withoutCondition(new ItemExistsCondition(location));
-        return builder();
+        return withoutCondition(new ItemExistsCondition(location));
     }
 
-    public final B withoutItem(DeferredHolder<Item, ?> item) {
-        this.withoutCondition(new ItemExistsCondition(item.getId()));
-        return builder();
+    public final B withoutItem(RegistryObject<? extends Item> item) {
+        return withoutItem(item.getId());
     }
 
     public final B withTag(ResourceLocation location) {
-        this.withoutCondition(new TagEmptyCondition(location));
-        return builder();
+        return withoutCondition(new TagEmptyCondition(location));
     }
 
     public final B withTag(TagKey<Item> tag) {
-        this.withoutCondition(new TagEmptyCondition(tag));
-        return builder();
+        return withTag(tag.location());
     }
 
     public final B withoutTag(ResourceLocation location) {
-        this.withCondition(new TagEmptyCondition(location));
-        return builder();
+        return withCondition(new TagEmptyCondition(location));
     }
 
     public final B withoutTag(TagKey<Item> tag) {
-        this.withCondition(new TagEmptyCondition(tag));
-        return builder();
+        return withoutTag(tag.location());
     }
 }

@@ -21,11 +21,12 @@ package plus.dragons.createdragonsplus.common.fluids.hatch;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidHatchItemFluidTransfer {
     public static TransferResult tryDrainItemToTank(ItemStack stack, IFluidHandler tankCapability, FilteringBehaviour filter) {
@@ -42,16 +43,10 @@ public class FluidHatchItemFluidTransfer {
             if (fluidToMove.isEmpty())
                 continue;
 
-            FluidStack drainedFluid = itemCapability.drain(fluidToMove, FluidAction.EXECUTE);
-            if (drainedFluid.isEmpty())
+            FluidStack movedFluid = FluidUtil.tryFluidTransfer(tankCapability, itemCapability, fluidToMove, true);
+            if (movedFluid.isEmpty())
                 continue;
 
-            int filled = tankCapability.fill(drainedFluid.copy(), FluidAction.EXECUTE);
-            if (filled <= 0)
-                continue;
-
-            FluidStack movedFluid = drainedFluid.copy();
-            movedFluid.setAmount(filled);
             stack.shrink(1);
             return new TransferResult(movedFluid, itemCapability.getContainer().copy());
         }
@@ -72,17 +67,10 @@ public class FluidHatchItemFluidTransfer {
             if (fluidToMove.isEmpty())
                 continue;
 
-            int filled = itemCapability.fill(fluidToMove.copy(), FluidAction.EXECUTE);
-            if (filled <= 0)
+            FluidStack movedFluid = FluidUtil.tryFluidTransfer(itemCapability, tankCapability, fluidToMove, true);
+            if (movedFluid.isEmpty())
                 continue;
 
-            FluidStack movedFluid = fluidToMove.copy();
-            movedFluid.setAmount(filled);
-            FluidStack drainedFluid = tankCapability.drain(movedFluid.copy(), FluidAction.EXECUTE);
-            if (drainedFluid.isEmpty())
-                continue;
-
-            movedFluid.setAmount(drainedFluid.getAmount());
             stack.shrink(1);
             return new TransferResult(movedFluid, itemCapability.getContainer().copy());
         }
@@ -156,7 +144,7 @@ public class FluidHatchItemFluidTransfer {
     private static IFluidHandlerItem getItemFluidHandler(ItemStack stack, boolean forFilling) {
         ItemStack split = stack.copy();
         split.setCount(1);
-        IFluidHandlerItem itemCapability = split.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem itemCapability = split.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElse(null);
         if (itemCapability == null)
             return null;
         if (forFilling && !GenericItemFilling.isFluidHandlerValid(split, itemCapability))

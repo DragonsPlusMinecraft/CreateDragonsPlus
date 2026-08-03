@@ -20,38 +20,36 @@ package plus.dragons.createdragonsplus.data;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
-import com.tterrag.registrate.providers.ProviderType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.data.loading.DatagenModLoader;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.data.loading.DatagenModLoader;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import plus.dragons.createdragonsplus.client.ponder.CDPPonderPlugin;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.data.internal.CDPRecipeProvider;
-import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataMaps;
 
-@Mod(CDPCommon.ID)
+@Mod.EventBusSubscriber(modid = CDPCommon.ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CDPData {
-    public CDPData(IEventBus modBus) {
-        if (!DatagenModLoader.isRunningDataGen())
-            return;
-        REGISTRATE.registerBuiltinLocalization("interface");
-        REGISTRATE.registerBuiltinLocalization("tooltips");
-        REGISTRATE.registerPonderLocalization(CDPPonderPlugin::new);
-        REGISTRATE.registerForeignLocalization();
-        REGISTRATE.addDataGenerator(ProviderType.DATA_MAP, new CDPRegistrateDataMaps());
-        modBus.register(this);
+    static {
+        if (DatagenModLoader.isRunningDataGen())
+            bootstrap();
+    }
+
+    private static void bootstrap() {
+        REGISTRATE.registerBuiltinLocalization("interface")
+                .registerBuiltinLocalization("tooltips")
+                .registerPonderLocalization(CDPPonderPlugin::new)
+                .registerForeignLocalization();
     }
 
     @SubscribeEvent
-    public void generate(final GatherDataEvent event) {
+    public static void generate(final GatherDataEvent event) {
         var client = event.includeClient();
         var server = event.includeServer();
         var generator = event.getGenerator();
         var output = generator.getPackOutput();
         var existingFileHelper = event.getExistingFileHelper();
         var registries = event.getLookupProvider();
-        generator.addProvider(server, new CDPRecipeProvider(output, registries));
+        generator.addProvider(server, new CDPRecipeProvider(output));
     }
 }

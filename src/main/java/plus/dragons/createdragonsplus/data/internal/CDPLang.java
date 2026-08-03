@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 
@@ -57,16 +57,14 @@ public class CDPLang {
     }
 
     public static LangBuilder description(Holder<?> holder, Object... args) {
-        var key = holder.getKey();
-        if (key == null)
-            throw new IllegalArgumentException("Can not build description for unregistered object: " + holder);
+        var key = holder.unwrapKey()
+                .orElseThrow(() -> new IllegalArgumentException("Can not build description for unregistered object: " + holder));
         return description(key.registry().getPath(), key.location(), args);
     }
 
     public static LangBuilder description(Holder<?> holder, String suffix, Object... args) {
-        var key = holder.getKey();
-        if (key == null)
-            throw new IllegalArgumentException("Can not build description for unregistered object: " + holder);
+        var key = holder.unwrapKey()
+                .orElseThrow(() -> new IllegalArgumentException("Can not build description for unregistered object: " + holder));
         return description(key.registry().getPath(), key.location(), suffix, args);
     }
 
@@ -75,10 +73,10 @@ public class CDPLang {
     }
 
     public static LangBuilder item(ItemStack stack) {
-        return builder().add(stack.getHoverName().copy());
+        return builder().add(stack.getDisplayName().copy());
     }
 
     public static LangBuilder fluid(FluidStack stack) {
-        return builder().add(stack.getHoverName().copy());
+        return builder().add(stack.getDisplayName().copy());
     }
 }

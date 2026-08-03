@@ -18,14 +18,15 @@
 
 package plus.dragons.createdragonsplus.common.kinetics.fan.freezing;
 
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class FreezingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
+public class FreezingRecipe extends ProcessingRecipe<RecipeWrapper> {
     public FreezingRecipe(ProcessingRecipeParams params) {
         super(CDPRecipes.FREEZING, params);
     }
@@ -41,11 +42,11 @@ public class FreezingRecipe extends StandardProcessingRecipe<SingleRecipeInput> 
     }
 
     @Override
-    public boolean matches(SingleRecipeInput input, Level level) {
-        return getIngredients().getFirst().test(input.item());
+    public boolean matches(RecipeWrapper input, Level level) {
+        return !input.isEmpty() && getIngredients().get(0).test(input.getItem(0));
     }
 
-    public static StandardProcessingRecipe.Builder<FreezingRecipe> builder(ResourceLocation id) {
-        return new StandardProcessingRecipe.Builder<>(FreezingRecipe::new, id);
+    public static ProcessingRecipeBuilder<FreezingRecipe> builder(ResourceLocation id) {
+        return new ProcessingRecipeBuilder<>(FreezingRecipe::new, id);
     }
 }

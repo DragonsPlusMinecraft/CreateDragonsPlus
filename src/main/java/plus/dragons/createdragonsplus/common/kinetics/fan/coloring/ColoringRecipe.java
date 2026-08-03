@@ -18,18 +18,25 @@
 
 package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 
-import com.mojang.serialization.MapCodec;
+import com.google.gson.JsonObject;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, ColoringRecipeParams> {
-    public ColoringRecipe(ColoringRecipeParams params) {
+public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeWrapper> {
+    private ResourceLocation color;
+    private int dyeFluidAmount = ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT;
+
+    public ColoringRecipe(ProcessingRecipeParams params) {
         super(CDPRecipes.COLORING, params);
     }
 
@@ -38,16 +45,16 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
     }
 
     public ResourceLocation getColor() {
-        return params.color;
+        return color;
     }
 
     public int getDyeFluidAmount() {
-        return params.dyeFluidAmount;
+        return dyeFluidAmount;
     }
 
     @Override
-    public boolean matches(ColoringRecipeInput input, Level level) {
-        return params.color.equals(input.color()) && this.ingredients.getFirst().test(input.item());
+    public boolean matches(ColoringRecipeWrapper input, Level level) {
+        return !input.isEmpty() && color.equals(input.color()) && ingredients.get(0).test(input.getItem(0));
     }
 
     @Override
@@ -60,48 +67,91 @@ public class ColoringRecipe extends ProcessingRecipe<ColoringRecipeInput, Colori
         return 12;
     }
 
-    public static class Builder extends ProcessingRecipeBuilder<ColoringRecipeParams, ColoringRecipe, Builder> {
+    @Override
+    public void readAdditional(JsonObject json) {
+        color = new ResourceLocation(GsonHelper.getAsString(json, "color"));
+        dyeFluidAmount = GsonHelper.getAsInt(json, "dye_fluid_amount",
+                ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT);
+        validateDyeFluidAmount(dyeFluidAmount);
+    }
+
+    @Override
+    public void readAdditional(FriendlyByteBuf buffer) {
+        color = buffer.readResourceLocation();
+        dyeFluidAmount = buffer.readVarInt();
+        validateDyeFluidAmount(dyeFluidAmount);
+    }
+
+    @Override
+    public void writeAdditional(JsonObject json) {
+        json.addProperty("color", color.toString());
+        if (dyeFluidAmount != ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT)
+            json.addProperty("dye_fluid_amount", dyeFluidAmount);
+    }
+
+    @Override
+    public void writeAdditional(FriendlyByteBuf buffer) {
+        buffer.writeResourceLocation(color);
+        buffer.writeVarInt(dyeFluidAmount);
+    }
+
+    private static void validateDyeFluidAmount(int amount) {
+        if (amount <= 0 || amount > ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT)
+            throw new IllegalArgumentException("Dye Fluid amount must be between 1 and "
+                    + ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT);
+    }
+
+    public static class Builder extends ProcessingRecipeBuilder<ColoringRecipe> {
+        private final ResourceLocation color;
+        private int dyeFluidAmount = ColoringRecipeParams.DEFAULT_DYE_FLUID_AMOUNT;
+
         protected Builder(ResourceLocation recipeId, ResourceLocation color) {
             super(ColoringRecipe::new, recipeId);
-            this.params.color = color;
-        }
-
-        @Override
-        protected ColoringRecipeParams createParams() {
-            return new ColoringRecipeParams();
+            this.color = color;
         }
 
         public Builder dyeFluidAmount(int amount) {
-            if (amount <= 0 || amount > ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT)
-                throw new IllegalArgumentException("Dye Fluid amount must be between 1 and "
-                        + ColoringRecipeParams.MAX_DYE_FLUID_AMOUNT);
-            this.params.dyeFluidAmount = amount;
+            validateDyeFluidAmount(amount);
+            dyeFluidAmount = amount;
             return this;
         }
 
         @Override
-        public Builder self() {
+        public Builder require(Ingredient ingredient) {
+            super.require(ingredient);
             return this;
         }
-    }
 
-    public static class Serializer<R extends ColoringRecipe> implements RecipeSerializer<R> {
-        private final MapCodec<R> codec;
-        private final StreamCodec<RegistryFriendlyByteBuf, R> streamCodec;
-
-        public Serializer(ProcessingRecipe.Factory<ColoringRecipeParams, R> factory) {
-            this.codec = ProcessingRecipe.codec(factory, ColoringRecipeParams.CODEC);
-            this.streamCodec = ProcessingRecipe.streamCodec(factory, ColoringRecipeParams.STREAM_CODEC);
+        @Override
+        public Builder output(ItemStack output) {
+            super.output(output);
+            return this;
         }
 
         @Override
-        public MapCodec<R> codec() {
-            return codec;
+        public Builder output(ProcessingOutput output) {
+            super.output(output);
+            return this;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
-            return streamCodec;
+        public Builder withItemIngredients(NonNullList<Ingredient> ingredients) {
+            super.withItemIngredients(ingredients);
+            return this;
+        }
+
+        @Override
+        public Builder withItemOutputs(ProcessingOutput... outputs) {
+            super.withItemOutputs(outputs);
+            return this;
+        }
+
+        @Override
+        public ColoringRecipe build() {
+            ColoringRecipe recipe = super.build();
+            recipe.color = color;
+            recipe.dyeFluidAmount = dyeFluidAmount;
+            return recipe;
         }
     }
 }

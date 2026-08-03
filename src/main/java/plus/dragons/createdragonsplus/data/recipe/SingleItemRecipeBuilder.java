@@ -21,26 +21,30 @@ package plus.dragons.createdragonsplus.data.recipe;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SingleItemRecipe;
 import org.jetbrains.annotations.Nullable;
 
 public class SingleItemRecipeBuilder extends BaseSingleItemRecipeBuilder<SingleItemRecipe, SingleItemRecipeBuilder> {
-    private final SingleItemRecipe.Factory<?> factory;
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    private final Factory factory;
+    private final Map<String, CriterionTriggerInstance> criteria = new LinkedHashMap<>();
     private String group = "";
 
-    public SingleItemRecipeBuilder(@Nullable String directory, SingleItemRecipe.Factory<?> factory) {
+    public SingleItemRecipeBuilder(@Nullable String directory, Factory factory) {
         super(directory);
         this.factory = factory;
     }
 
-    public SingleItemRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public SingleItemRecipeBuilder unlockedBy(String name, CriterionTriggerInstance criterion) {
         criteria.put(name, criterion);
         return this;
     }
@@ -56,26 +60,23 @@ public class SingleItemRecipeBuilder extends BaseSingleItemRecipeBuilder<SingleI
     }
 
     @Override
-    public RecipeHolder<SingleItemRecipe> build() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var recipe = this.factory.create(group, ingredient, result);
-        return new RecipeHolder<>(id, recipe);
+    public FinishedRecipe build() {
+        if (id == null)
+            id = BuiltInRegistries.ITEM.getKey(result.getItem());
+        SingleItemRecipe recipe = factory.create(outputId(), group, ingredient, result);
+        Advancement.Builder advancement = Advancement.Builder.recipeAdvancement()
+                .parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT)
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(outputId()))
+                .rewards(AdvancementRewards.Builder.recipe(outputId()))
+                .requirements(RequirementsStrategy.OR);
+        criteria.forEach(advancement::addCriterion);
+        return new net.minecraft.data.recipes.SingleItemRecipeBuilder.Result(outputId(), recipe.getSerializer(), group,
+                ingredient, result.getItem(), result.getCount(), advancement,
+                new net.minecraft.resources.ResourceLocation(outputId().getNamespace(), "recipes/" + outputId().getPath()));
     }
 
-    @Override
-    public @Nullable AdvancementHolder buildAdvancement() {
-        if (id == null) {
-            id = result.getItemHolder().unwrapKey().orElseThrow().location();
-        }
-        var builder = Advancement.Builder.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(AdvancementRequirements.Strategy.OR);
-        if (!this.criteria.isEmpty()) {
-            this.criteria.forEach(builder::addCriterion);
-        }
-        return builder.build(this.id.withPrefix("recipes/"));
+    @FunctionalInterface
+    public interface Factory {
+        SingleItemRecipe create(ResourceLocation id, String group, Ingredient ingredient, ItemStack result);
     }
 }

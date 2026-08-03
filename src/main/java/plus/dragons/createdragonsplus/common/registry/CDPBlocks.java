@@ -27,13 +27,13 @@ import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.common.fluids.hatch.FluidHatchBlock;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 
@@ -73,12 +73,12 @@ public class CDPBlocks {
                     Blocks.PACKED_ICE,
                     Blocks.BLUE_ICE);
             provider.addTag(fanSandingCatalysts)
-                    .addOptionalTag(ResourceLocation.fromNamespaceAndPath("c", "quicksands"));
+                    .add(Blocks.SAND);
             provider.addTag(fanEndingCatalysts);
+            DyeVariantRegistry.all().forEach(variant -> provider.addTag(variant.coloringCatalystBlockTag()));
             provider.addTag(AllBlockTags.FAN_TRANSPARENT.tag)
                     .add(Blocks.DRAGON_HEAD)
-                    .add(Blocks.DRAGON_WALL_HEAD)
-                    .addOptional(ResourceLocation.fromNamespaceAndPath("aether", "aercloud"));
+                    .add(Blocks.DRAGON_WALL_HEAD);
             provider.addTag(notApplicablePolishing);
         }
     }

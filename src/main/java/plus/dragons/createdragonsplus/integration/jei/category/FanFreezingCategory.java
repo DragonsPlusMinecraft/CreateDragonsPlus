@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.freezing.FreezingRecipe;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
@@ -40,7 +39,8 @@ import plus.dragons.createdragonsplus.integration.CDPIntegrationContributions;
 import plus.dragons.createdragonsplus.integration.jei.CDPJeiPlugin;
 
 public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<FreezingRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<FreezingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.FREEZING.getId());
+    public static final mezz.jei.api.recipe.RecipeType<FreezingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(
+            CDPRecipes.FREEZING.getId(), FreezingRecipe.class);
 
     private FanFreezingCategory(Info<FreezingRecipe> info) {
         super(info);
@@ -52,7 +52,8 @@ public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<Fr
         var background = new EmptyBackground(178, 72);
         var icon = new DoubleItemIcon(AllItems.PROPELLER::asStack, Items.POWDER_SNOW_BUCKET::getDefaultInstance);
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component()
+                .withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanFreezingCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanFreezingCategory(info);
     }
@@ -66,9 +67,9 @@ public class FanFreezingCategory extends ProcessingViaFanCategory.MultiOutput<Fr
                 .render(graphics);
     }
 
-    private static List<RecipeHolder<FreezingRecipe>> getAllRecipes() {
+    private static List<FreezingRecipe> getAllRecipes() {
         var manager = CDPJeiPlugin.getRecipeManager();
-        var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.FREEZING.getType()));
+        var recipes = new ArrayList<>(manager.<RecipeWrapper, FreezingRecipe>getAllRecipesFor(CDPRecipes.FREEZING.getType()));
         CDPIntegrationContributions.gatherFreezingJeiRecipes(manager, recipes);
         return recipes;
     }

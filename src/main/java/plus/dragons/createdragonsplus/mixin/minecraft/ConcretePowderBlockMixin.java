@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -51,7 +50,7 @@ public abstract class ConcretePowderBlockMixin extends FallingBlock {
 
     @Shadow
     @Final
-    private Block concrete;
+    private BlockState concrete;
 
     @Inject(method = "updateShape", at = @At("HEAD"), cancellable = true)
     private void updateShape$handleDyeLiquidInteraction(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos, CallbackInfoReturnable<BlockState> cir) {
@@ -80,16 +79,23 @@ public abstract class ConcretePowderBlockMixin extends FallingBlock {
 
     @Unique
     @Nullable
-    private static BlockState createDragonsPlus$getProperSolidified(LevelAccessor level, BlockPos pos, Block concrete) {
+    private static BlockState createDragonsPlus$getProperSolidified(LevelAccessor level, BlockPos pos, BlockState concrete) {
         BlockPos.MutableBlockPos mutableBlockPos = pos.mutable();
         for (Direction direction : Direction.values()) {
             if (direction == Direction.DOWN) continue;
             mutableBlockPos.setWithOffset(pos, direction);
             var fluid = level.getBlockState(mutableBlockPos).getFluidState();
             if (fluid.is(CDPFluids.COMMON_TAGS.dyes)) {
-                var coloredConcrete = BuiltInRegistries.BLOCK.getOptional(
-                        ResourceLocation.withDefaultNamespace(BuiltInRegistries.FLUID.getKey(fluid.getType()).getPath().replace("_dye", "_concrete").replace("flowing_", "")));
-                return coloredConcrete.orElse(concrete).defaultBlockState();
+                for (var entry : CDPFluids.DYES_BY_VARIANT.entrySet()) {
+                    var dye = entry.getValue();
+                    if (fluid.getType() != dye.getSource() && fluid.getType() != dye.get())
+                        continue;
+                    return plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry.get(entry.getKey())
+                            .flatMap(variant -> BuiltInRegistries.BLOCK.getOptional(variant.concreteBlockId()))
+                            .map(Block::defaultBlockState)
+                            .orElse(concrete);
+                }
+                return concrete;
             }
         }
         return null;

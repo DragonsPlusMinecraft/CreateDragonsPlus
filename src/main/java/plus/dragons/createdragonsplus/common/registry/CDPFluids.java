@@ -36,25 +36,24 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
-import net.neoforged.neoforge.fluids.FluidInteractionRegistry.InteractionInformation;
-import net.neoforged.neoforge.fluids.FluidType;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.SoundActions;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidInteractionRegistry;
+import net.minecraftforge.fluids.FluidInteractionRegistry.InteractionInformation;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import plus.dragons.createdragonsplus.client.color.SimpleItemColors;
 import plus.dragons.createdragonsplus.common.CDPCommon;
@@ -70,17 +69,18 @@ import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.data.recipe.CreateRecipeBuilders;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
+import plus.dragons.createdragonsplus.integration.ModIntegration;
 
 public class CDPFluids {
     public static final ModTags MOD_TAGS = new ModTags();
     public static final CommonTags COMMON_TAGS = new CommonTags();
-    public static final Map<ResourceLocation, FluidEntry<BaseFlowingFluid.Flowing>> DYES_BY_VARIANT = new LinkedHashMap<>();
+    public static final Map<ResourceLocation, FluidEntry<ForgeFlowingFluid.Flowing>> DYES_BY_VARIANT = new LinkedHashMap<>();
     static {
         for (var variant : DyeVariantRegistry.all()) {
             DYES_BY_VARIANT.put(variant.id(), dye(variant));
         }
     }
-    public static final FluidEntry<BaseFlowingFluid.Flowing> DRAGON_BREATH = REGISTRATE
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> DRAGON_BREATH = REGISTRATE
             .fluid("dragon_breath",
                     REGISTRATE.asResource("fluid/dragon_breath_still"),
                     REGISTRATE.asResource("fluid/dragon_breath_flow"),
@@ -94,7 +94,7 @@ public class CDPFluids {
                     .motionScale(0.07)
                     .canSwim(false)
                     .canDrown(false)
-                    .pathType(PathType.DAMAGE_OTHER)
+                    .pathType(BlockPathTypes.DAMAGE_OTHER)
                     .adjacentPathType(null)
                     .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.DRAGON_FIREBALL_EXPLODE)
                     .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_LAVA)
@@ -104,15 +104,7 @@ public class CDPFluids {
                     .levelDecreasePerBlock(2)
                     .slopeFindDistance(2)
                     .tickRate(30))
-            .source(BaseFlowingFluid.Source::new)
-            .onRegister(flowing -> {
-                BuiltInRegistries.FLUID.addAlias(
-                        REGISTRATE.asResource("dragons_breath"),
-                        REGISTRATE.asResource("dragon_breath"));
-                BuiltInRegistries.FLUID.addAlias(
-                        REGISTRATE.asResource("flowing_dragons_breath"),
-                        REGISTRATE.asResource("flowing_dragon_breath"));
-            })
+            .source(ForgeFlowingFluid.Source::new)
             .tag(COMMON_TAGS.dragonBreath, MOD_TAGS.fanEndingCatalysts)
             .block(DragondBreathLiquidBlock::new)
             .lang("Dragon's Breath")
@@ -156,10 +148,10 @@ public class CDPFluids {
         event.enqueueWork(CDPFluids::registerDispenserBehavior);
     }
 
-    private static FluidEntry<BaseFlowingFluid.Flowing> dye(DyeVariant variant) {
+    private static FluidEntry<ForgeFlowingFluid.Flowing> dye(DyeVariant variant) {
         var stillTexture = REGISTRATE.asResource("fluid/dye_still");
         var flowingTexture = REGISTRATE.asResource("fluid/dye_flow");
-        var tintColor = FastColor.ARGB32.opaque(variant.color());
+        var tintColor = 0xFF000000 | variant.color();
         var name = variant.fluidName();
         var tag = COMMON_TAGS.dyesByVariant.get(variant.id());
         return REGISTRATE.fluid(name, stillTexture, flowingTexture, DyeFluidType.create(variant))
@@ -173,10 +165,9 @@ public class CDPFluids {
                 .fluidProperties(properties -> properties.explosionResistance(100))
                 .block((fluid, prop) -> new DyeLiquidBlock(variant, fluid, prop))
                 .build()
-                .source(BaseFlowingFluid.Source::new)
+                .source(ForgeFlowingFluid.Source::new)
                 .bucket()
                 .transform(builder -> tagDyeBucket(builder, variant))
-                .tag(CDPItems.COMMON_TAGS.dyeBucketsByVariant.get(variant.id()))
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("dye_bucket")))
                 .color(() -> SimpleItemColors.singleLayer(tintColor))
                 .build()
@@ -200,23 +191,26 @@ public class CDPFluids {
                     fromItem.build(prov);
                     fromFluid.build(prov);
                 })
-                .setData(ProviderType.DATA_MAP, (ctx, prov) -> prov
-                        .builder(CDPDataMaps.FLUID_FAN_COLORING_CATALYSTS)
-                        .add(tag, variant.id(), false))
                 .register();
     }
 
     private static <I extends BucketItem, P> ItemBuilder<I, P> tagDyeBucket(ItemBuilder<I, P> builder, DyeVariant variant) {
-        if (variant.requiredModId() != null)
-            builder.asOptional();
+        var tag = CDPItems.COMMON_TAGS.dyeBucketsByVariant.get(variant.id());
+        if (variant.requiredModId() == null)
+            return builder.tag(tag);
+        CDPItems.COMMON_TAGS.addOptional(tag, CDPCommon.asResource(variant.fluidName() + "_bucket"));
         return builder;
     }
 
-    private static <T extends BaseFlowingFluid, P> FluidBuilder<T, P> tagDyeFluid(FluidBuilder<T, P> builder, DyeVariant variant, TagKey<Fluid> tag) {
+    private static <T extends ForgeFlowingFluid, P> FluidBuilder<T, P> tagDyeFluid(FluidBuilder<T, P> builder,
+            DyeVariant variant, TagKey<Fluid> tag) {
         if (variant.requiredModId() == null)
-            return builder.tag(tag);
+            return builder.tag(tag, variant.coloringCatalystFluidTag());
         COMMON_TAGS.addOptional(tag, CDPCommon.asResource(variant.fluidName()));
         COMMON_TAGS.addOptional(tag, CDPCommon.asResource("flowing_" + variant.fluidName()));
+        MOD_TAGS.addOptional(variant.coloringCatalystFluidTag(), CDPCommon.asResource(variant.fluidName()));
+        MOD_TAGS.addOptional(variant.coloringCatalystFluidTag(),
+                CDPCommon.asResource("flowing_" + variant.fluidName()));
         return builder;
     }
 
@@ -225,6 +219,20 @@ public class CDPFluids {
 
         public ModTags() {
             super(CDPCommon.ID, Registries.FLUID);
+        }
+
+        @Override
+        public void generate(IntrinsicImpl<Fluid> provider) {
+            provider.addTag(fanEndingCatalysts);
+            for (var variant : DyeVariantRegistry.all()) {
+                var tag = variant.coloringCatalystFluidTag();
+                var appender = provider.addTag(tag);
+                if (variant.isVanilla()) {
+                    var path = variant.id().getPath() + "_mastic_resin";
+                    appender.addOptional(ModIntegration.CREATE_GARNISHED.asResource(path));
+                    appender.addOptional(ModIntegration.CREATE_GARNISHED.asResource("flowing_" + path));
+                }
+            }
         }
     }
 
@@ -244,11 +252,11 @@ public class CDPFluids {
         public final TagKey<Fluid> dragonBreath = tag("dragon_breath", "Dragon's Breath");
 
         protected CommonTags() {
-            super("c", Registries.FLUID);
+            super("forge", Registries.FLUID);
         }
     }
 
-    @EventBusSubscriber
+    @Mod.EventBusSubscriber
     public static class Reactions {
         private static final Map<FluidType, BlockState> LAVA_INTERACTIONS = new HashMap<>();
         private static final Map<FluidType, BlockState> DYE_LAVA_INTERACTIONS = new HashMap<>();
@@ -257,9 +265,9 @@ public class CDPFluids {
         public static void onPipeCollisionFlow(final PipeCollisionEvent.Flow event) {
             FluidType first = event.getFirstFluid().getFluidType();
             FluidType second = event.getSecondFluid().getFluidType();
-            if (first == NeoForgeMod.LAVA_TYPE.value() && LAVA_INTERACTIONS.containsKey(second)) {
+            if (first == ForgeMod.LAVA_TYPE.get() && LAVA_INTERACTIONS.containsKey(second)) {
                 event.setState(LAVA_INTERACTIONS.get(second));
-            } else if (second == NeoForgeMod.LAVA_TYPE.value() && LAVA_INTERACTIONS.containsKey(first)) {
+            } else if (second == ForgeMod.LAVA_TYPE.get() && LAVA_INTERACTIONS.containsKey(first)) {
                 event.setState(LAVA_INTERACTIONS.get(first));
             }
         }
@@ -270,7 +278,7 @@ public class CDPFluids {
             Fluid pipe = event.getPipeFluid();
             FluidType worldType = world.getFluidType();
             FluidType pipeType = pipe.getFluidType();
-            if (worldType == NeoForgeMod.LAVA_TYPE.value()) {
+            if (worldType == ForgeMod.LAVA_TYPE.get()) {
                 if (DYE_LAVA_INTERACTIONS.containsKey(pipeType)) {
                     event.setState(DYE_LAVA_INTERACTIONS.get(pipeType));
                 } else if (LAVA_INTERACTIONS.containsKey(pipeType)) {
@@ -278,7 +286,7 @@ public class CDPFluids {
                             ? Blocks.OBSIDIAN.defaultBlockState()
                             : LAVA_INTERACTIONS.get(pipeType));
                 }
-            } else if (pipeType == NeoForgeMod.LAVA_TYPE.value()) {
+            } else if (pipeType == ForgeMod.LAVA_TYPE.get()) {
                 if (DYE_LAVA_INTERACTIONS.containsKey(worldType)) {
                     event.setState(DYE_LAVA_INTERACTIONS.get(worldType));
                 } else if (LAVA_INTERACTIONS.containsKey(worldType)) {
@@ -302,12 +310,12 @@ public class CDPFluids {
                 var result = genConcrete && block != Blocks.AIR ? block.defaultBlockState() : Blocks.COBBLESTONE.defaultBlockState();
                 LAVA_INTERACTIONS.put(type, result);
                 DYE_LAVA_INTERACTIONS.put(type, result);
-                FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
+                FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
                         type,
                         result));
             });
             LAVA_INTERACTIONS.put(DRAGON_BREATH.getType(), Blocks.END_STONE.defaultBlockState());
-            FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new InteractionInformation(
+            FluidInteractionRegistry.addInteraction(ForgeMod.LAVA_TYPE.get(), new InteractionInformation(
                     DRAGON_BREATH.getType(),
                     fluidState -> fluidState.isSource()
                             ? Blocks.OBSIDIAN.defaultBlockState()

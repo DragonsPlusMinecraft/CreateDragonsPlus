@@ -23,7 +23,6 @@ import net.createmod.catnip.lang.Lang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,13 +35,12 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
 
 public interface WaterAndLavaLoggedBlock extends BucketPickup, LiquidBlockContainer {
     EnumProperty<ContainedFluid> FLUID = EnumProperty.create("fluid", ContainedFluid.class);
 
     @Override
-    default boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    default boolean canPlaceLiquid(BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return fluid == Fluids.WATER || fluid == Fluids.LAVA;
     }
 
@@ -70,7 +68,7 @@ public interface WaterAndLavaLoggedBlock extends BucketPickup, LiquidBlockContai
     }
 
     @Override
-    default ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state) {
+    default ItemStack pickupBlock(LevelAccessor level, BlockPos pos, BlockState state) {
         var containedFluid = state.getValue(FLUID);
         if (containedFluid == ContainedFluid.EMPTY)
             return ItemStack.EMPTY;

@@ -21,14 +21,13 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import java.util.Optional;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
@@ -52,27 +51,25 @@ public final class DyeFluidMixingRecipes {
         return processingType.get()
                 .processForDyeFluidMixing(input, level)
                 .filter(result -> result.outputs().size() <= MAX_ITEM_OUTPUTS)
-                .map(result -> new StandardProcessingRecipe.Builder<>(MixingRecipe::new, runtimeRecipeId(variant))
-                        .withItemIngredients(DataComponentIngredient.of(true, input.copyWithCount(1)))
-                        .withFluidIngredients(SizedFluidIngredient.of(fluidTag, result.dyeFluidAmount()))
+                .map(result -> new ProcessingRecipeBuilder<>(MixingRecipe::new, runtimeRecipeId(variant))
+                        .withItemIngredients(StrictNBTIngredient.of(copyWithCount(input, 1)))
+                        .withFluidIngredients(FluidIngredient.fromTag(fluidTag, result.dyeFluidAmount()))
                         .withItemOutputs(result.outputs().toArray(ProcessingOutput[]::new))
                         .build());
     }
 
-    public static Optional<RecipeHolder<BasinRecipe>> createJeiRecipe(RecipeHolder<ColoringRecipe> holder) {
-        var coloringRecipe = holder.value();
+    public static Optional<BasinRecipe> createJeiRecipe(ColoringRecipe coloringRecipe) {
         var fluidTag = CDPFluids.COMMON_TAGS.dyesByVariant.get(coloringRecipe.getColor());
         if (fluidTag == null || coloringRecipe.getRollableResults().size() > MAX_ITEM_OUTPUTS)
             return Optional.empty();
 
-        var recipeId = jeiRecipeId(holder.id(), coloringRecipe.getColor());
-        var builder = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
+        var recipeId = jeiRecipeId(coloringRecipe.getId(), coloringRecipe.getColor());
+        var builder = new ProcessingRecipeBuilder<>(MixingRecipe::new, recipeId)
                 .withItemIngredients(coloringRecipe.getIngredients())
-                .withFluidIngredients(SizedFluidIngredient.of(fluidTag, coloringRecipe.getDyeFluidAmount()))
+                .withFluidIngredients(FluidIngredient.fromTag(fluidTag, coloringRecipe.getDyeFluidAmount()))
                 .withItemOutputs(coloringRecipe.getRollableResults()
                         .toArray(ProcessingOutput[]::new));
-        BasinRecipe recipe = builder.build();
-        return Optional.of(new RecipeHolder<>(recipeId, recipe));
+        return Optional.of(builder.build());
     }
 
     private static ResourceLocation runtimeRecipeId(DyeVariant variant) {
@@ -88,5 +85,11 @@ public final class DyeFluidMixingRecipes {
                 + coloringRecipeId.getNamespace()
                 + "/"
                 + coloringRecipeId.getPath());
+    }
+
+    private static ItemStack copyWithCount(ItemStack stack, int count) {
+        ItemStack copy = stack.copy();
+        copy.setCount(count);
+        return copy;
     }
 }

@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities.FluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,7 +39,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.config.CDPConfig;
 import plus.dragons.createdragonsplus.util.ItemStackKey;
 
-@Mixin(MechanicalMixerBlockEntity.class)
+@Mixin(value = MechanicalMixerBlockEntity.class, remap = false)
 public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBlockEntity {
     public MechanicalMixerBlockEntityMixin(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -52,13 +52,13 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
             var basin = getBasin();
             if (basin.isEmpty())
                 return;
-            var tanks = level.getCapability(FluidHandler.BLOCK, basin.get().getBlockPos(), null);
+            var tanks = basin.get().getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
             if (tanks == null)
                 return;
             for (int i = 0; i < tanks.getTanks(); i++) {
                 var fluid = tanks.getFluidInTank(i);
-                if (fluid.is(CDPFluids.COMMON_TAGS.dragonBreath)) {
-                    var recipes = PotionMixingRecipes.sortRecipesByItem(level).get(Items.DRAGON_BREATH);
+                if (fluid.getFluid().is(CDPFluids.COMMON_TAGS.dragonBreath)) {
+                    var recipes = PotionMixingRecipes.BY_ITEM.get(Items.DRAGON_BREATH);
                     if (recipes == null)
                         return;
                     var matchingRecipes = cir.getReturnValue();
@@ -83,7 +83,9 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
 
         var basin = optionalBasin.get();
         var inputItems = basin.getInputInventory();
-        var inputFluids = basin.inputTank.getCapability();
+        var inputFluids = basin.inputTank.getCapability().orElse(null);
+        if (inputFluids == null)
+            return;
         var matchingRecipes = cir.getReturnValue();
         for (var variant : DyeVariantRegistry.all()) {
             var fluidTag = CDPFluids.COMMON_TAGS.dyesByVariant.get(variant.id());
@@ -91,7 +93,7 @@ public abstract class MechanicalMixerBlockEntityMixin extends BasinOperatingBloc
                 continue;
             boolean hasFluid = false;
             for (int tank = 0; tank < inputFluids.getTanks(); tank++) {
-                if (inputFluids.getFluidInTank(tank).is(fluidTag)) {
+                if (inputFluids.getFluidInTank(tank).getFluid().is(fluidTag)) {
                     hasFluid = true;
                     break;
                 }

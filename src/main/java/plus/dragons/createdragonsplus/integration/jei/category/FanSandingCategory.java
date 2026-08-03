@@ -24,6 +24,7 @@ import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.ProcessingViaFanCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe.SandPaperInv;
 import java.util.ArrayList;
 import java.util.List;
 import net.createmod.catnip.animation.AnimationTickHolder;
@@ -31,14 +32,12 @@ import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingRecipe;
@@ -52,7 +51,8 @@ import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
 public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<SandingRecipe> {
-    public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<SandingRecipe>> TYPE = mezz.jei.api.recipe.RecipeType.createRecipeHolderType(CDPRecipes.SANDING.getId());
+    public static final mezz.jei.api.recipe.RecipeType<SandingRecipe> TYPE = new mezz.jei.api.recipe.RecipeType<>(
+            CDPRecipes.SANDING.getId(), SandingRecipe.class);
     private HolderSet<Block> catalystBlocks;
     private BlockState[] catalystStates;
 
@@ -66,7 +66,8 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
         var background = new EmptyBackground(178, 72);
         var icon = new Icon();
         var catalyst = AllBlocks.ENCASED_FAN.asStack();
-        catalyst.set(DataComponents.CUSTOM_NAME, CDPLang.description("recipe", id, "fan").component().withStyle(style -> style.withItalic(false)));
+        catalyst.setHoverName(CDPLang.description("recipe", id, "fan").component()
+                .withStyle(style -> style.withItalic(false)));
         var info = new Info<>(TYPE, title, background, icon, FanSandingCategory::getAllRecipes, CDPIntegrationContributions.gatherFanCatalysts(catalyst));
         return new FanSandingCategory(info);
     }
@@ -93,16 +94,15 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
     }
 
     @Override
-    public boolean isHandled(RecipeHolder<SandingRecipe> recipe) {
+    public boolean isHandled(SandingRecipe recipe) {
         var tag = BuiltInRegistries.BLOCK.getTag(CDPBlocks.MOD_TAGS.fanSandingCatalysts);
         return (tag.isPresent() && tag.get().size() > 0) || !CDPIntegrationContributions.sandingCatalystTags().isEmpty();
     }
 
-    private static List<RecipeHolder<SandingRecipe>> getAllRecipes() {
-        var level = CDPJeiPlugin.getLevel();
+    private static List<SandingRecipe> getAllRecipes() {
         var manager = CDPJeiPlugin.getRecipeManager();
-        var recipes = new ArrayList<>(manager.getAllRecipesFor(CDPRecipes.SANDING.getType()));
-        manager.getAllRecipesFor(AllRecipeTypes.SANDPAPER_POLISHING.<SingleRecipeInput, SandPaperPolishingRecipe>getType())
+        var recipes = new ArrayList<>(manager.<RecipeWrapper, SandingRecipe>getAllRecipesFor(CDPRecipes.SANDING.getType()));
+        manager.<SandPaperInv, SandPaperPolishingRecipe>getAllRecipesFor(AllRecipeTypes.SANDPAPER_POLISHING.getType())
                 .stream()
                 .filter(AllRecipeTypes.CAN_BE_AUTOMATED)
                 .map(SandingRecipe::convertSandPaperPolishing)
@@ -113,31 +113,9 @@ public class FanSandingCategory extends ProcessingViaFanCategory.MultiOutput<San
     }
 
     protected static class Icon extends FanProcessingIcon {
-        private HolderSet<Block> catalystBlocks;
-        private ItemStack[] catalystStacks;
-
         @Override
         protected ItemStack getCatalyst() {
-            var optional = BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("quicksand", "quicksand_bucket"));
-            if (optional.isEmpty()) {
-                var optional2 = SandingCatalysts.findBlockTag();
-                if (optional2.isEmpty())
-                    return ItemStack.EMPTY;
-                if (catalystBlocks != optional2.get()) {
-                    catalystBlocks = optional2.get();
-                    catalystStacks = catalystBlocks.stream()
-                            .map(Holder::value)
-                            .map(ItemStack::new)
-                            .toArray(ItemStack[]::new);
-                }
-            } else {
-                catalystStacks = new ItemStack[1];
-                catalystStacks[0] = optional.get().getDefaultInstance();
-            }
-
-            if (catalystStacks.length == 0)
-                return ItemStack.EMPTY;
-            return catalystStacks[(AnimationTickHolder.getTicks() / 20) % catalystStacks.length];
+            return Blocks.SAND.asItem().getDefaultInstance();
         }
     }
 }

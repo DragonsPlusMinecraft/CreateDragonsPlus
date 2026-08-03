@@ -26,13 +26,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +45,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegisterEvent;
 import plus.dragons.createdragonsplus.common.advancements.criterion.BuiltinTrigger;
 import plus.dragons.createdragonsplus.common.advancements.criterion.StatTrigger;
 import plus.dragons.createdragonsplus.util.CodeReference;
@@ -58,7 +59,7 @@ public abstract class CDPAdvancement {
     private CDPAdvancement parent;
     private final CDPAdvancement.Builder createBuilder = new CDPAdvancement.Builder();
 
-    AdvancementHolder datagenResult;
+    Advancement datagenResult;
 
     private final String id;
     private String title;
@@ -71,7 +72,7 @@ public abstract class CDPAdvancement {
 
         if (!createBuilder.externalTrigger) {
             builtinTrigger = add(asResource(id));
-            mcBuilder.addCriterion("0", builtinTrigger.createCriterion(builtinTrigger));
+            mcBuilder.addCriterion("0", builtinTrigger);
         }
 
         if (createBuilder.type == CDPAdvancement.TaskType.SECRET)
@@ -107,9 +108,9 @@ public abstract class CDPAdvancement {
     public boolean isAlreadyAwardedTo(Player player) {
         if (!(player instanceof ServerPlayer sp))
             return true;
-        AdvancementHolder advancement = sp.getServer()
+        Advancement advancement = sp.getServer()
                 .getAdvancements()
-                .get(asResource(id));
+                .getAdvancement(asResource(id));
         if (advancement == null)
             return true;
         return sp.getAdvancements()
@@ -125,7 +126,7 @@ public abstract class CDPAdvancement {
     }
 
     private ResourceLocation asResource(String id) {
-        return ResourceLocation.fromNamespaceAndPath(namespace(), id);
+        return new ResourceLocation(namespace(), id);
     }
 
     public void awardTo(Player player) {
@@ -137,7 +138,7 @@ public abstract class CDPAdvancement {
         builtinTrigger.trigger(sp);
     }
 
-    public void save(Consumer<AdvancementHolder> t, HolderLookup.Provider registries) {
+    public void save(Consumer<Advancement> t, HolderLookup.Provider registries) {
         if (parent != null)
             mcBuilder.parent(parent.datagenResult);
 
@@ -159,18 +160,18 @@ public abstract class CDPAdvancement {
     }
 
     public enum TaskType {
-        SILENT(AdvancementType.TASK, false, false, false),
-        NORMAL(AdvancementType.TASK, true, false, false),
-        NOISY(AdvancementType.TASK, true, true, false),
-        EXPERT(AdvancementType.GOAL, true, true, false),
-        SECRET(AdvancementType.GOAL, true, true, true);
+        SILENT(FrameType.TASK, false, false, false),
+        NORMAL(FrameType.TASK, true, false, false),
+        NOISY(FrameType.TASK, true, true, false),
+        EXPERT(FrameType.GOAL, true, true, false),
+        SECRET(FrameType.GOAL, true, true, true);
 
-        private final AdvancementType advancementType;
+        private final FrameType advancementType;
         private final boolean toast;
         private final boolean announce;
         private final boolean hide;
 
-        TaskType(AdvancementType advancementType, boolean toast, boolean announce, boolean hide) {
+        TaskType(FrameType advancementType, boolean toast, boolean announce, boolean hide) {
             this.advancementType = advancementType;
             this.toast = toast;
             this.announce = announce;
@@ -195,7 +196,7 @@ public abstract class CDPAdvancement {
             return this;
         }
 
-        public CDPAdvancement.Builder icon(ItemProviderEntry<?, ?> item) {
+        public CDPAdvancement.Builder icon(ItemProviderEntry<?> item) {
             return icon(item.asStack());
         }
 
@@ -231,7 +232,7 @@ public abstract class CDPAdvancement {
             return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(icon.getItem()));
         }
 
-        public CDPAdvancement.Builder whenItemCollected(ItemProviderEntry<?, ?> item) {
+        public CDPAdvancement.Builder whenItemCollected(ItemProviderEntry<?> item) {
             return whenItemCollected(item.asStack()
                     .getItem());
         }
@@ -246,14 +247,15 @@ public abstract class CDPAdvancement {
 
         public CDPAdvancement.Builder whenItemCollected(TagKey<Item> tag) {
             return externalTrigger(InventoryChangeTrigger.TriggerInstance
-                    .hasItems(ItemPredicate.Builder.item().of(tag).build()));
+                    .hasItems(new ItemPredicate(tag, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY,
+                            EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY)));
         }
 
         public CDPAdvancement.Builder awardedForFree() {
             return externalTrigger(InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {}));
         }
 
-        public CDPAdvancement.Builder externalTrigger(Criterion<?> trigger) {
+        public CDPAdvancement.Builder externalTrigger(CriterionTriggerInstance trigger) {
             mcBuilder.addCriterion(String.valueOf(keyIndex), trigger);
             externalTrigger = true;
             keyIndex++;

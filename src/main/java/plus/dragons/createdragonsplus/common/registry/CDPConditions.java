@@ -18,21 +18,47 @@
 
 package plus.dragons.createdragonsplus.common.registry;
 
-import com.mojang.serialization.MapCodec;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.minecraftforge.eventbus.api.IEventBus;
 import plus.dragons.createdragonsplus.common.CDPCommon;
+import plus.dragons.createdragonsplus.config.FeaturesConfig;
 import plus.dragons.createdragonsplus.config.FeaturesConfig.ConfigFeature;
 
-public class CDPConditions {
-    private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.CONDITION_SERIALIZERS, CDPCommon.ID);
+public final class CDPConditions {
+    public static final ResourceLocation CONFIG_FEATURE_ID = CDPCommon.asResource("config_feature");
+    public static final IConditionSerializer<ConfigFeature> CONFIG_FEATURE = new IConditionSerializer<>() {
+        @Override
+        public void write(JsonObject json, ConfigFeature value) {
+            json.addProperty("feature", value.getFeatureId().toString());
+        }
 
-    public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigFeature>> CONFIG_FEATURE = CONDITION_CODECS.register("config_feature", () -> ConfigFeature.CODEC);
+        @Override
+        public ConfigFeature read(JsonObject json) {
+            ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "feature"));
+            ConfigFeature feature = FeaturesConfig.getFeatures().get(id);
+            if (feature == null)
+                throw new IllegalArgumentException("No config feature with id [" + id + "] exists");
+            return feature;
+        }
+
+        @Override
+        public ResourceLocation getID() {
+            return CONFIG_FEATURE_ID;
+        }
+    };
+
+    private static boolean registered;
 
     public static void register(IEventBus modBus) {
-        CONDITION_CODECS.register(modBus);
+        if (!registered) {
+            CraftingHelper.register(CONFIG_FEATURE);
+            registered = true;
+        }
     }
+
+    private CDPConditions() {}
 }

@@ -18,14 +18,15 @@
 
 package plus.dragons.createdragonsplus.common.kinetics.fan.ending;
 
-import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
-import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import plus.dragons.createdragonsplus.common.registry.CDPRecipes;
 
-public class EndingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
+public class EndingRecipe extends ProcessingRecipe<RecipeWrapper> {
     public EndingRecipe(ProcessingRecipeParams params) {
         super(CDPRecipes.ENDING, params);
     }
@@ -41,11 +42,11 @@ public class EndingRecipe extends StandardProcessingRecipe<SingleRecipeInput> {
     }
 
     @Override
-    public boolean matches(SingleRecipeInput input, Level level) {
-        return getIngredients().getFirst().test(input.item());
+    public boolean matches(RecipeWrapper input, Level level) {
+        return !input.isEmpty() && getIngredients().get(0).test(input.getItem(0));
     }
 
-    public static StandardProcessingRecipe.Builder<EndingRecipe> builder(ResourceLocation id) {
-        return new StandardProcessingRecipe.Builder<>(EndingRecipe::new, id);
+    public static ProcessingRecipeBuilder<EndingRecipe> builder(ResourceLocation id) {
+        return new ProcessingRecipeBuilder<>(EndingRecipe::new, id);
     }
 }
