@@ -36,7 +36,7 @@ import plus.dragons.createdragonsplus.common.registry.CDPCapabilities;
 public class BlockEntityBehaviourMixin {
     @Inject(method = "get(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lcom/simibubi/create/foundation/blockEntity/behaviour/BehaviourType;)Lcom/simibubi/create/foundation/blockEntity/behaviour/BlockEntityBehaviour;", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/blockEntity/behaviour/BlockEntityBehaviour;get(Lnet/minecraft/world/level/block/entity/BlockEntity;Lcom/simibubi/create/foundation/blockEntity/behaviour/BehaviourType;)Lcom/simibubi/create/foundation/blockEntity/behaviour/BlockEntityBehaviour;"), cancellable = true)
     private static <T extends BlockEntityBehaviour> void get$getSmartBlockEntityFromWrapper(BlockGetter blockGetter, BlockPos pos, BehaviourType<T> type, CallbackInfoReturnable<T> cir, @Local BlockEntity blockEntity) {
-        if (!(blockEntity instanceof SmartBlockEntity) && blockGetter instanceof Level)
+        if (blockEntity != null && !(blockEntity instanceof SmartBlockEntity) && blockGetter instanceof Level)
             blockEntity.getCapability(CDPCapabilities.BEHAVIOUR_PROVIDER)
                     .ifPresent(provider -> cir.setReturnValue(provider.getBehaviour(type)));
     }

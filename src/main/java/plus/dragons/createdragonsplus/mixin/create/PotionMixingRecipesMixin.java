@@ -47,14 +47,6 @@ import plus.dragons.createdragonsplus.config.CDPConfig;
 
 @Mixin(value = PotionMixingRecipes.class, remap = false)
 public class PotionMixingRecipesMixin {
-    @Unique
-    private static final List<MixingRecipe> FLUID_DRAGON_BREATH_RECIPES = new ArrayList<>();
-
-    @Inject(method = "createRecipes", at = @At("HEAD"), remap = false)
-    private static void createRecipes$clearDragonBreathFluidRecipes(CallbackInfoReturnable<List<MixingRecipe>> cir) {
-        FLUID_DRAGON_BREATH_RECIPES.clear();
-    }
-
     @WrapOperation(method = "createRecipes", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/potion/PotionMixingRecipes;createRecipe(Ljava/lang/String;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraftforge/fluids/FluidStack;Lnet/minecraftforge/fluids/FluidStack;)Lcom/simibubi/create/content/kinetics/mixer/MixingRecipe;", remap = false), remap = false)
     private static MixingRecipe createRecipes$createDragonBreathFluidRecipe(String id, Ingredient ingredient, FluidStack fromFluid,
             FluidStack toFluid, Operation<MixingRecipe> original, @Local(name = "mixingRecipes") List<MixingRecipe> mixingRecipes) {
@@ -67,7 +59,6 @@ public class PotionMixingRecipesMixin {
                         .output(toFluid)
                         .requiresHeat(HeatCondition.HEATED)
                         .build();
-                FLUID_DRAGON_BREATH_RECIPES.add(recipe);
                 mixingRecipes.add(recipe);
             }
         }
@@ -85,6 +76,16 @@ public class PotionMixingRecipesMixin {
     private static void sortRecipesByItem$sortDragonBreathFluidRecipes(List<MixingRecipe> all,
             CallbackInfoReturnable<Map<Item, List<MixingRecipe>>> cir) {
         var byItem = cir.getReturnValue();
-        byItem.computeIfAbsent(Items.DRAGON_BREATH, ignored -> new ArrayList<>()).addAll(FLUID_DRAGON_BREATH_RECIPES);
+        var dragonBreathRecipes = all.stream()
+                .filter(PotionMixingRecipesMixin::createDragonsPlus$isDragonBreathFluidRecipe)
+                .toList();
+        if (!dragonBreathRecipes.isEmpty())
+            byItem.computeIfAbsent(Items.DRAGON_BREATH, ignored -> new ArrayList<>()).addAll(dragonBreathRecipes);
+    }
+
+    @Unique
+    private static boolean createDragonsPlus$isDragonBreathFluidRecipe(MixingRecipe recipe) {
+        var id = recipe.getId();
+        return id.getNamespace().equals(CDPCommon.ID) && id.getPath().endsWith("_using_dragon_breath_fluid");
     }
 }
