@@ -77,6 +77,7 @@ public class CDPBlocks {
             provider.addTag(fanEndingCatalysts);
             DyeVariantRegistry.all().forEach(variant -> provider.addTag(variant.coloringCatalystBlockTag()));
             provider.addTag(AllBlockTags.FAN_TRANSPARENT.tag)
+                    .addTag(fanSandingCatalysts)
                     .add(Blocks.DRAGON_HEAD)
                     .add(Blocks.DRAGON_WALL_HEAD);
             provider.addTag(notApplicablePolishing);

@@ -169,7 +169,7 @@ public class CDPFanScenes {
             }
         });
         scene.idle(80);
-        scene.world().modifyEntity(sheep, Entity::discard);
+        scene.world().modifyEntity(armorStand, Entity::discard);
         scene.idle(20);
     }
 
@@ -207,7 +207,7 @@ public class CDPFanScenes {
         var belt = util.select().fromTo(0, 1, 2, 5, 1, 2).add(util.select().fromTo(4, 1, 1, 4, 1, 0));
         scene.world().setKineticSpeed(belt, -4);
         scene.world().showSection(belt, Direction.DOWN);
-        var transported = scene.world().createItemOnBelt(util.grid().at(1, 1, 2), Direction.DOWN, Items.BLAZE_ROD.getDefaultInstance());
+        var transported = scene.world().createItemOnBelt(util.grid().at(1, 1, 2), Direction.DOWN, Items.MAGMA_CREAM.getDefaultInstance());
         scene.idle(160);
         scene.world().changeBeltItemTo(transported, Items.SLIME_BALL.getDefaultInstance());
         scene.idle(30);

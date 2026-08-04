@@ -31,7 +31,6 @@ import plus.dragons.createdragonsplus.client.ponder.scenes.CDPFanScenes;
 import plus.dragons.createdragonsplus.client.ponder.scenes.CDPFluidScenes;
 import plus.dragons.createdragonsplus.client.ponder.scenes.SandingScenes;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariantRegistry;
-import plus.dragons.createdragonsplus.common.kinetics.fan.sanding.SandingCatalysts;
 import plus.dragons.createdragonsplus.common.registry.CDPCauldrons;
 import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 
@@ -41,12 +40,8 @@ public class CDPPonderScenes {
         registration.forComponents(AllBlocks.ENCASED_FAN)
                 .addStoryBoard("bulk_coloring", CDPFanScenes::bulkColoring)
                 .addStoryBoard("bulk_freezing", CDPFanScenes::bulkFreezing)
-                .addStoryBoard("bulk_ending", CDPFanScenes::bulkEnding);
-
-        if (SandingCatalysts.hasAnyCatalyst()) {
-            registration.forComponents(AllBlocks.ENCASED_FAN)
-                    .addStoryBoard("bulk_sanding", SandingScenes::bulkSanding);
-        }
+                .addStoryBoard("bulk_ending", CDPFanScenes::bulkEnding)
+                .addStoryBoard("bulk_sanding", SandingScenes::bulkSanding);
 
         var itemRegistration = helper.<ItemLike>withKeyFunction(CatnipServices.REGISTRIES::getKeyOrThrow);
         List<ItemLike> dyeBuckets = DyeVariantRegistry.all().stream()
