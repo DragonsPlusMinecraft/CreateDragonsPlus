@@ -38,7 +38,7 @@ import plus.dragons.createdragonsplus.common.fluids.WaterAndLavaLoggedBlock;
 
 @Mixin(value = Contraption.class, remap = false)
 public abstract class ContraptionMixin {
-    @Inject(method = "removeBlocksFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", shift = At.Shift.AFTER))
+    @Inject(method = "removeBlocksFromWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", shift = At.Shift.AFTER, remap = true))
     private void removeBlocksFromWorld$fixRemoveBlockLeaveNoFluid(Level world, BlockPos offset, CallbackInfo ci, @Local Block blockIn, @Local BlockState oldState, @Local(ordinal = 1) BlockPos add) {
         if (blockIn instanceof WaterAndLavaLoggedBlock && oldState.hasProperty(FLUID)
                 && oldState.getValue(FLUID) != WaterAndLavaLoggedBlock.ContainedFluid.EMPTY) {
@@ -51,7 +51,7 @@ public abstract class ContraptionMixin {
         }
     }
 
-    @ModifyArg(method = "addBlocksToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"), index = 1)
+    @ModifyArg(method = "addBlocksToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", remap = true), index = 1)
     private BlockState addBlocksToWorld$fixAddBlocksToWorldIgnoreFluid(BlockState state, @Local(ordinal = 0) BlockPos targetPos, @Local(ordinal = 0, argsOnly = true) Level world) {
         var result = state;
         if (state.getBlock() instanceof WaterAndLavaLoggedBlock

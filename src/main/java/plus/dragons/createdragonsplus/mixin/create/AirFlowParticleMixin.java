@@ -40,7 +40,7 @@ public class AirFlowParticleMixin {
     private IAirCurrentSource source;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;morphAirFlow(Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType$AirFlowParticleAccess;Lnet/minecraft/util/RandomSource;)V"))
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;morphAirFlow(Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType$AirFlowParticleAccess;Lnet/minecraft/util/RandomSource;)V", remap = false), remap = true)
     private void tick$morphAirFlowWithParticleData(FanProcessingType type, AirFlowParticleAccess particleAccess, RandomSource random, Operation<Void> original, @Local(name = "distance") double distance) {
         if (type instanceof DynamicParticleFanProcessingType dynamicType) {
             AirCurrentAccess airCurrent = (AirCurrentAccess) this.source.getAirCurrent();
