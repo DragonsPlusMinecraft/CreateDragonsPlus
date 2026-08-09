@@ -1,0 +1,50 @@
+name: Problem report
+description: Report a bug, crash, or mod compatibility problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve Create: Dragons Plus!
+        Before submitting, please confirm that you are using the latest version available for your build and check for an existing issue.
+
+  - type: dropdown
+    id: build
+    attributes:
+      label: Build
+      description: Choose the build that matches the mod you downloaded.
+      options:
+        - NeoForge · Minecraft 1.21.1
+        - Forge / NeoForge · Minecraft 1.20.1
+        - Fabric · Minecraft 1.20.1
+        - CreateFly · Minecraft 1.21.11
+    validations:
+      required: true
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Mod version (optional)
+      description: "Copy the Create: Dragons Plus version from the Mods screen or the jar filename if available."
+      placeholder: "Example: 1.11.4"
+
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened?
+      description: Tell us what happened, what you expected, and the shortest way to reproduce it. If another addon or mod is involved, include its name and version.
+      placeholder: |
+        What happened:
+        What you expected:
+        Steps to reproduce:
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: For a crash, drag the crash report or latest.log here. You may also paste an mclo.gs link. Screenshots and videos can be dragged here too.
+      placeholder: Drag files here or paste a link

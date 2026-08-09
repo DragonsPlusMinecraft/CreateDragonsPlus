@@ -1,0 +1,17 @@
+name: Feature request
+description: Suggest an API, feature, or compatibility improvement
+title: "[Suggestion]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for sharing your idea!
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What would you like us to add or change, and how would it help Create addons or players?
+    validations:
+      required: true
