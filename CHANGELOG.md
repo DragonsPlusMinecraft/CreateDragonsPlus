@@ -1,4 +1,4 @@
-## Create: Dragons Plus 1.11.5
+## Create: Dragons Plus 1.11.6
 
 ### Fix
-* Fixed the Minecraft 1.20.1 Forge release jar crashing during startup because several mixins were not remapped.
+* Fixed a server startup crash caused by duplicate automatically generated sandpaper polishing recipes, such as with Rechiseled: Applied Energistics 2.

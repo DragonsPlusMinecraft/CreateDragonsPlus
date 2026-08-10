@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.data.internal;
 
 import com.simibubi.create.AllRecipeTypes;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -57,6 +58,7 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
     }
 
     private static void buildPolishedBlockRecipes(Consumer<FinishedRecipe> output) {
+        var generatedRecipeIds = new HashSet<ResourceLocation>();
         BuiltInRegistries.BLOCK.holders()
                 .filter(holder -> holder.key().location().getPath().contains("polished_"))
                 .forEach(holder -> {
@@ -69,7 +71,10 @@ public class CDPRuntimeRecipeProvider extends RecipeProvider {
                     var baseItem = baseBlock.asItem();
                     if (polishedItem == Items.AIR || baseItem == Items.AIR)
                         return;
-                    CreateRecipeBuilders.polishing(automaticPolishingRecipeId(baseId))
+                    var recipeId = automaticPolishingRecipeId(baseId);
+                    if (!generatedRecipeIds.add(recipeId))
+                        return;
+                    CreateRecipeBuilders.polishing(recipeId)
                             .require(baseItem)
                             .output(polishedItem)
                             .build(output);
