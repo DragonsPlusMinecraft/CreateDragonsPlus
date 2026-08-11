@@ -30,6 +30,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -67,14 +68,19 @@ public class CDPItems {
                     .texture("2", prov.modLoc("item/package/rare_marble_gate")))
             .register();
     public static final ItemEntry<SmithingTemplateItem> BLAZE_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
-            .item("blaze_upgrade_smithing_template", prop -> new SmithingTemplateItem(
+            .<SmithingTemplateItem>item("blaze_upgrade_smithing_template", prop -> new SmithingTemplateItem(
                     Tooltips.BLAZE_UPGRADE_APPLIES_TO,
                     Tooltips.BLAZE_UPGRADE_INGREDIENTS,
                     Tooltips.BLAZE_UPGRADE,
                     Tooltips.BLAZE_UPGRADE_BASE_SLOT,
                     Tooltips.BLAZE_UPGRADE_ADDITIONS_SLOT,
                     CDPGuiTextures.BLAZE_UPGRADE_BASE_SLOT_ICONS,
-                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS))
+                    CDPGuiTextures.BLAZE_UPGRADE_ADDITIONS_SLOT_ICONS) {
+                @Override
+                public String getDescriptionId() {
+                    return Util.makeDescriptionId("item", CDPCommon.asResource("blaze_upgrade_smithing_template"));
+                }
+            })
             .lang("Smithing Template")
             .register();
 

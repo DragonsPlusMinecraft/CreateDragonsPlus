@@ -51,11 +51,17 @@ public abstract class OpenEndFluidHandlerMixin extends FluidTank {
         return original.call(resource, amount);
     }
 
-    @Inject(method = "fill", at = @At("TAIL"))
+    @Inject(method = "fill", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/OpenEndedPipe$OpenEndFluidHandler;getFluidAmount()I"))
     private void fill$applyConsumingEffect(FluidStack resource, FluidAction action, CallbackInfoReturnable<Integer> cir, @Local OpenPipeEffectHandler handler) {
-        if (handler instanceof ConsumingOpenPipeEffectHandler) {
-            FluidStack remainder = ConsumingOpenPipeEffectHandler.getRemainder((ConsumingOpenPipeEffectHandler) handler, this$0, this.getFluid());
+        if (handler instanceof ConsumingOpenPipeEffectHandler consumingHandler) {
+            FluidStack remainder = ConsumingOpenPipeEffectHandler.getRemainder(consumingHandler, this$0, this.getFluid());
             this.setFluid(remainder);
         }
+    }
+
+    @WrapOperation(method = "fill", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/fluids/OpenEndedPipe;provideFluidToSpace(Lnet/minecraftforge/fluids/FluidStack;Z)Z", ordinal = 1))
+    private boolean fill$preventConsumingEffectPlacement(OpenEndedPipe pipe, FluidStack fluid, boolean simulate, Operation<Boolean> original, @Local OpenPipeEffectHandler handler) {
+        if (handler instanceof ConsumingOpenPipeEffectHandler) return false;
+        return original.call(pipe, fluid, simulate);
     }
 }

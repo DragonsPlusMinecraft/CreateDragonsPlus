@@ -30,6 +30,7 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
 
     @Internal
     static FluidStack getRemainder(ConsumingOpenPipeEffectHandler handler, OpenEndedPipe pipe, FluidStack fluid) {
+        if (fluid.isEmpty()) return FluidStack.EMPTY;
         int contained = fluid.getAmount();
         int consumed = handler.consume(pipe.getWorld(), pipe.getAOE(), fluid.copy());
         if (consumed < 0) {
@@ -48,8 +49,10 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
                             "exceeding contained effect amount: %s"
                                     .formatted(contained));
         }
+        int remaining = contained - consumed;
+        if (remaining == 0) return FluidStack.EMPTY;
         FluidStack remainder = fluid.copy();
-        remainder.setAmount(contained - consumed);
+        remainder.setAmount(remaining);
         return remainder;
     }
 }
