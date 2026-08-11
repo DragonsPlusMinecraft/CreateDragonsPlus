@@ -73,6 +73,10 @@ public class CDPConfig {
         return SERVER_CONFIG.dyeFluid;
     }
 
+    public static CDPDragonBreathConfig dragonBreath() {
+        return SERVER_CONFIG.dragonBreath;
+    }
+
     @SubscribeEvent
     public void onLoad(ModConfigEvent.Loading event) {
         var spec = event.getConfig().getSpec();

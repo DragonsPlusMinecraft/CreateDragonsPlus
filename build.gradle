@@ -22,6 +22,7 @@ java {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 def allIntegrationSourceSets = [
+        "ars_nouveau",
         "sable",
         "dye_depot",
         "dyenamics",
@@ -168,6 +169,7 @@ enabledIntegrationSourceSets.each { name ->
 }
 
 repositories {
+    maven { url "https://maven.minecraftforge.net" } // TerraBlender
     maven { url "https://maven.createmod.net" } // Ponder, Flywheel
     maven { url "https://mvn.devos.one/snapshots" } // Registrate
     maven { url "https://maven.blamejared.com"       } // JEI
@@ -178,6 +180,13 @@ repositories {
     maven { url "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config api port, needed by ponder
     maven { url "https://maven.dragons.plus/releases" } // Dragons Plus Maven
     maven { url "https://maven.ryanhcode.dev/releases" } // RyanHCode Maven - Sable
+    maven {
+        name = "GeckoLib"
+        url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+        }
+    }
 }
 
 dependencies {
@@ -210,6 +219,10 @@ dependencies {
         sableLocalImplementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
         sableLocalImplementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
         sableLocalImplementation("dev.ryanhcode.offroad:offroad-neoforge-${minecraft_version}:${create_aeronautics_version}")  { transitive false }
+    }
+
+    if (hasIntegration("ars_nouveau")) {
+        ars_nouveauLocalImplementation("com.hollingsworth.ars_nouveau:ars_nouveau-${minecraft_version}:${ars_nouveau_version}")
     }
 
     localImplementation("plus.dragons.quicksand:quicksand-neoforge-${minecraft_version}:${quicksand_version}")

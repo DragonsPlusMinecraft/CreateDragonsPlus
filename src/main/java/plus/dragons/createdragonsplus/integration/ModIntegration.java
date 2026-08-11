@@ -30,6 +30,8 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public enum ModIntegration {
+    ARS_NOUVEAU(Constants.ARS_NOUVEAU),
+    STARBUNCLEMANIA(Constants.STARBUNCLEMANIA),
     //TODO: Keep an eye on Create Garnished 2. Wait it add back Fan Processing
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     CREATE_DND(Constants.CREATE_DND),
@@ -66,6 +68,8 @@ public enum ModIntegration {
     }
 
     public static class Constants {
+        public static final String ARS_NOUVEAU = "ars_nouveau";
+        public static final String STARBUNCLEMANIA = "starbunclemania";
         public static final String CREATE_GARNISHED = "garnished";
         public static final String CREATE_DND = "dndesires";
         public static final String IMMERSIVE_ENGINEERING = "immersiveengineering";
