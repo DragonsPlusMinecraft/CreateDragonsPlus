@@ -30,6 +30,7 @@ public interface ConsumingOpenPipeEffectHandler extends OpenPipeEffectHandler {
 
     @Internal
     static FluidStack getRemainder(ConsumingOpenPipeEffectHandler handler, OpenEndedPipe pipe, FluidStack fluid) {
+        if (fluid.isEmpty()) return FluidStack.EMPTY;
         int contained = fluid.getAmount();
         int consumed = handler.consume(pipe.getWorld(), pipe.getAOE(), fluid.copy());
         if (consumed < 0) {
