@@ -20,6 +20,7 @@ java {
 }
 
 def allIntegrationSourceSets = [
+        "ars_nouveau",
         "dye_depot",
         "dyenamics",
         "arts_and_crafts",
@@ -168,6 +169,14 @@ repositories {
     maven { url "https://www.cursemaven.com" }
     maven { url "https://api.modrinth.com/maven" }
     maven { url "https://maven.dragons.plus/releases" }
+    maven {
+        name = "GeckoLib"
+        url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+        content {
+            includeGroupByRegex("software\\.bernie.*")
+            includeGroup("com.eliotlash.mclib")
+        }
+    }
     mavenCentral()
 }
 
@@ -211,6 +220,12 @@ dependencies {
 
     if (hasIntegration("create_garnished")) {
         modImplementation("maven.modrinth:create-garnished:${create_garnished_version}")
+    }
+
+    if (hasIntegration("ars_nouveau")) {
+        modImplementation("com.hollingsworth.ars_nouveau:ars_nouveau-${minecraft_version}:${ars_nouveau_version}")
+        modImplementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+        implementation("com.eliotlash.mclib:mclib:20")
     }
 
     modCompileOnly("curse.maven:immersive-engineering-231951:${immersive_engineering_version}")

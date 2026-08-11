@@ -23,6 +23,8 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fml.ModList;
 
 public enum ModIntegration {
+    ARS_NOUVEAU(Constants.ARS_NOUVEAU),
+    STARBUNCLEMANIA(Constants.STARBUNCLEMANIA),
     CREATE_GARNISHED(Constants.CREATE_GARNISHED),
     IMMERSIVE_ENGINEERING(Constants.IMMERSIVE_ENGINEERING),
     DYE_DEPOT(Constants.DYE_DEPOT),
@@ -52,6 +54,8 @@ public enum ModIntegration {
     }
 
     public static class Constants {
+        public static final String ARS_NOUVEAU = "ars_nouveau";
+        public static final String STARBUNCLEMANIA = "starbunclemania";
         public static final String CREATE_GARNISHED = "garnished";
         public static final String IMMERSIVE_ENGINEERING = "immersiveengineering";
         public static final String DYE_DEPOT = "dye_depot";
