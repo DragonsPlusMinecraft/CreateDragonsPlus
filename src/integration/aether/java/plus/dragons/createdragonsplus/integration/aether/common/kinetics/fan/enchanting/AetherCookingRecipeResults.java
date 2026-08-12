@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.integration.aether.common.kinetics.fan.enchanting;
 
 import com.aetherteam.aether.AetherTags;
+import com.aetherteam.aether.blockentity.AbstractAetherFurnaceBlockEntity;
 import com.aetherteam.aether.recipe.recipes.item.AbstractAetherCookingRecipe;
 import com.simibubi.create.foundation.item.ItemHelper;
 import java.util.ArrayList;
@@ -27,7 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import plus.dragons.createdragonsplus.util.CodeReference;
 
+@CodeReference(value = AbstractAetherFurnaceBlockEntity.class, targets = "burn", source = "the_aether", license = "lgpl-3.0-or-later")
 public class AetherCookingRecipeResults {
     public static List<ItemStack> apply(AbstractAetherCookingRecipe recipe, ItemStack input, Level level) {
         var outputs = new ArrayList<ItemStack>();
@@ -57,7 +60,7 @@ public class AetherCookingRecipeResults {
         }
         if (!input.isEmpty() && input.hasCraftingRemainingItem()) {
             var remainder = input.getCraftingRemainingItem();
-            if (!remainder.isEmpty()) {
+            if (!remainder.isEmpty() && !remainder.is(result.getCraftingRemainingItem().getItem())) {
                 outputs.add(remainder.copy());
             }
         }

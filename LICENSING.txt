@@ -14,3 +14,9 @@ you may find relevant infomation from the annotations.
   Create is one of the upstream dependency of this software, licensed under MIT License.
 All code and assets copied from Create are licensed MIT License and GNU Lesser General
 Public License v3. You may find the full license file of Create in this program jar.
+
+2. The Aether
+
+  The Aether is an optional upstream dependency of this software, licensed under the GNU
+Lesser General Public License v3. All code adapted from The Aether is licensed under the
+GNU Lesser General Public License v3.
