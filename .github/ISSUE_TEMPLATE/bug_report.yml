@@ -20,6 +20,7 @@ body:
         - Forge / NeoForge · Minecraft 1.20.1
         - Fabric · Minecraft 1.20.1
         - CreateFly · Minecraft 1.21.11
+        - CreateFly · Minecraft 26.1.2
     validations:
       required: true
 
