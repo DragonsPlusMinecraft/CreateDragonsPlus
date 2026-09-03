@@ -223,6 +223,7 @@
   "itemGroup.create_dragons_plus.base": "机械动力：龙+",
   "pack.create_dragons_plus.runtime": "机械动力：龙+",
   "pack.create_dragons_plus.runtime.description": "机械动力：龙+ - 运行时资源",
+  "recipe.create_dragons_plus.automated_coloring": "自动染色",
   "recipe.create_dragons_plus.aether_fan_enchanting": "批量附神",
   "recipe.create_dragons_plus.aether_fan_enchanting.fan": "在金黄境云后放置鼓风机",
   "recipe.create_dragons_plus.aether_fan_enchanting.repairing": "修复物品耐久",

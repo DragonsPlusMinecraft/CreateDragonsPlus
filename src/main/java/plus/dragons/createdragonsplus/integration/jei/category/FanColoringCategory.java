@@ -89,6 +89,7 @@ public class FanColoringCategory extends ProcessingViaFanCategory<ColoringRecipe
                 .addIngredient(NeoForgeTypes.FLUID_STACK, new FluidStack((Fluid) dyeFluid.getSource(), 1000));
         dyeFluid.getBucket().ifPresent(bucket -> builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
                 .addItemStack(new ItemStack(bucket)));
+        DyeFluidCategoryHelper.addDyeItemLookupAlias(builder, recipe.getColor());
     }
 
     @Override

@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.common.kinetics.fan.coloring;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeParams;
 import com.simibubi.create.content.processing.recipe.StandardProcessingRecipe;
 import java.util.Optional;
 import net.minecraft.resources.ResourceLocation;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.fluids.dye.DyeVariant;
 import plus.dragons.createdragonsplus.common.registry.CDPFanProcessingTypes;
@@ -66,13 +68,21 @@ public final class DyeFluidMixingRecipes {
             return Optional.empty();
 
         var recipeId = jeiRecipeId(holder.id(), coloringRecipe.getColor());
-        var builder = new StandardProcessingRecipe.Builder<>(MixingRecipe::new, recipeId)
-                .withItemIngredients(coloringRecipe.getIngredients())
-                .withFluidIngredients(SizedFluidIngredient.of(fluidTag, coloringRecipe.getDyeFluidAmount()))
-                .withItemOutputs(coloringRecipe.getRollableResults()
-                        .toArray(ProcessingOutput[]::new));
+        var builder = new StandardProcessingRecipe.Builder<>(
+                params -> new JeiMixingRecipe(params, coloringRecipe.getColor()), recipeId)
+                        .withItemIngredients(coloringRecipe.getIngredients())
+                        .withFluidIngredients(SizedFluidIngredient.of(fluidTag, coloringRecipe.getDyeFluidAmount()))
+                        .withItemOutputs(coloringRecipe.getRollableResults()
+                                .toArray(ProcessingOutput[]::new));
         BasinRecipe recipe = builder.build();
         return Optional.of(new RecipeHolder<>(recipeId, recipe));
+    }
+
+    @Internal
+    public static Optional<ResourceLocation> getJeiRecipeColor(BasinRecipe recipe) {
+        return recipe instanceof JeiMixingRecipe jeiRecipe
+                ? Optional.of(jeiRecipe.color)
+                : Optional.empty();
     }
 
     private static ResourceLocation runtimeRecipeId(DyeVariant variant) {
@@ -88,5 +98,14 @@ public final class DyeFluidMixingRecipes {
                 + coloringRecipeId.getNamespace()
                 + "/"
                 + coloringRecipeId.getPath());
+    }
+
+    private static final class JeiMixingRecipe extends MixingRecipe {
+        private final ResourceLocation color;
+
+        private JeiMixingRecipe(ProcessingRecipeParams params, ResourceLocation color) {
+            super(params);
+            this.color = color;
+        }
     }
 }

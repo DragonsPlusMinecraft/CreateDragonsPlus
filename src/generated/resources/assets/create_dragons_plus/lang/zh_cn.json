@@ -229,6 +229,7 @@
   "recipe.create_dragons_plus.aether_fan_incubation": "批量附神孵化",
   "recipe.create_dragons_plus.aether_fan_incubation.entity": "生成：%s",
   "recipe.create_dragons_plus.aether_fan_incubation.fan": "在金黄境云后放置鼓风机",
+  "recipe.create_dragons_plus.automated_coloring": "自动染色",
   "recipe.create_dragons_plus.fan_coloring": "批量染色",
   "recipe.create_dragons_plus.fan_coloring.fan": "在液态染料后放置鼓风机",
   "recipe.create_dragons_plus.fan_ending": "批量终结",
