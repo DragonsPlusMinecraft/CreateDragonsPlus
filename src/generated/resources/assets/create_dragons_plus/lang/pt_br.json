@@ -199,6 +199,7 @@
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime.description": "Recursos Gerados em Tempo de Execução do Create: Dragons Plus",
+  "recipe.create_dragons_plus.automated_coloring": "Automated Coloring",
   "recipe.create_dragons_plus.fan_coloring": "Coloração em Massa",
   "recipe.create_dragons_plus.fan_coloring.fan": "Ventilador atrás da Tinta Líquida",
   "recipe.create_dragons_plus.fan_ending": "Finalização em Massa",

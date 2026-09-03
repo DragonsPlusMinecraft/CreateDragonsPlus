@@ -21,6 +21,7 @@ package plus.dragons.createdragonsplus.integration.jei.widget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import java.util.function.Supplier;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +30,16 @@ import plus.dragons.createdragonsplus.util.FieldsNullabilityUnknownByDefault;
 
 @FieldsNullabilityUnknownByDefault
 public abstract class FanProcessingIcon implements IDrawable {
+    private final Supplier<ItemStack> iconSupplier;
     private ItemStack stack;
+
+    protected FanProcessingIcon() {
+        this(AllItems.PROPELLER::asStack);
+    }
+
+    protected FanProcessingIcon(Supplier<ItemStack> iconSupplier) {
+        this.iconSupplier = iconSupplier;
+    }
 
     protected abstract ItemStack getCatalyst();
 
@@ -47,7 +57,7 @@ public abstract class FanProcessingIcon implements IDrawable {
     public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
         PoseStack matrixStack = graphics.pose();
         if (stack == null) {
-            stack = AllItems.PROPELLER.asStack();
+            stack = iconSupplier.get();
         }
 
         RenderSystem.enableDepthTest();

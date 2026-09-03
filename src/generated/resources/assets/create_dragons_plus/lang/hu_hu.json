@@ -199,6 +199,7 @@
   "itemGroup.create_dragons_plus.base": "Create: dragons plus",
   "pack.create_dragons_plus.runtime": "Create: dragons plus",
   "pack.create_dragons_plus.runtime.description": "Create: dragons plus runtime generated resources",
+  "recipe.create_dragons_plus.automated_coloring": "Automated Coloring",
   "recipe.create_dragons_plus.fan_coloring": "Nagyüzemi festés",
   "recipe.create_dragons_plus.fan_coloring.fan": "Folyékony festék mögötti ventilátor",
   "recipe.create_dragons_plus.fan_ending": "Nagyüzemi endezés",

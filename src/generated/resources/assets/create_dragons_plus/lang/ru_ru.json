@@ -199,6 +199,7 @@
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime.description": "Динамически сгенерированные ресурсы Create: Dragons Plus",
+  "recipe.create_dragons_plus.automated_coloring": "Automated Coloring",
   "recipe.create_dragons_plus.fan_coloring": "Массовая окраска",
   "recipe.create_dragons_plus.fan_coloring.fan": "Вентилятор за жидким красителем",
   "recipe.create_dragons_plus.fan_ending": "Массовое эндерирование",

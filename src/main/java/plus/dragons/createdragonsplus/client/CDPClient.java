@@ -29,9 +29,12 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 
 @Mod.EventBusSubscriber(modid = CDPCommon.ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class CDPClient {
+    static {
+        CDPPartialModels.register();
+    }
+
     @SubscribeEvent
     public static void setup(final FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new CDPPonderPlugin());
-        CDPPartialModels.register();
     }
 }

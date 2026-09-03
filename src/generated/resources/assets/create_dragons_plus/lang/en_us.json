@@ -198,6 +198,7 @@
   "itemGroup.create_dragons_plus.base": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime": "Create: Dragons Plus",
   "pack.create_dragons_plus.runtime.description": "Create: Dragons Plus Runtime Generated Resources",
+  "recipe.create_dragons_plus.automated_coloring": "Automated Coloring",
   "recipe.create_dragons_plus.fan_coloring": "Bulk Coloring",
   "recipe.create_dragons_plus.fan_coloring.fan": "Fan behind Liquid Dye",
   "recipe.create_dragons_plus.fan_ending": "Bulk Ending",

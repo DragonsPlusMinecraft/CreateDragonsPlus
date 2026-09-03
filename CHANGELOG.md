@@ -1,4 +1,7 @@
-## Create: Dragons Plus 1.11.7b
+## Create: Dragons Plus 1.11.8
 
-### Maintenance
-* Synchronized the Minecraft 1.20.1 artifact version with the current maintenance release.
+### Update
+* Added a dedicated Automated Coloring JEI category for Mechanical Mixer recipes using Dye Fluid. Dye items and every equivalent item in their dye item tags now link to both Automated Coloring and Bulk Coloring recipes, and the new tab uses a rotating dye bucket badge. (#120)
+
+### Fix
+* Fixed placing rare packages crashing the client because their package models were registered after model loading. (#126)
