@@ -19,7 +19,6 @@
 package plus.dragons.createdragonsplus.integration.jei.category;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.compat.jei.DoubleItemIcon;
 import com.simibubi.create.compat.jei.EmptyBackground;
 import com.simibubi.create.compat.jei.category.BasinCategory;
 import com.simibubi.create.compat.jei.category.MixingCategory;
@@ -31,20 +30,18 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import plus.dragons.createdragonsplus.common.CDPCommon;
 import plus.dragons.createdragonsplus.common.kinetics.fan.coloring.DyeFluidMixingRecipes;
-import plus.dragons.createdragonsplus.common.registry.CDPFluids;
 import plus.dragons.createdragonsplus.data.internal.CDPLang;
+import plus.dragons.createdragonsplus.integration.jei.widget.FanProcessingIcon;
 import plus.dragons.createdragonsplus.util.CodeReference;
 
 @CodeReference(value = MixingCategory.class, source = "create", license = "mit")
 public class AutomatedColoringCategory extends BasinCategory {
     public static final mezz.jei.api.recipe.RecipeType<RecipeHolder<BasinRecipe>> TYPE = mezz.jei.api.recipe.RecipeType
             .createRecipeHolderType(CDPCommon.asResource("automated_coloring"));
-    private static final ResourceLocation RED = ResourceLocation.withDefaultNamespace("red");
     private final AnimatedMixer mixer = new AnimatedMixer();
 
     private AutomatedColoringCategory(Info<BasinRecipe> info) {
@@ -55,7 +52,7 @@ public class AutomatedColoringCategory extends BasinCategory {
         var id = CDPCommon.asResource("automated_coloring");
         var title = CDPLang.description("recipe", id).component();
         var background = new EmptyBackground(177, 85);
-        var icon = new DoubleItemIcon(AllBlocks.MECHANICAL_MIXER::asStack, AutomatedColoringCategory::getIconDyeBucket);
+        var icon = new Icon();
         List<Supplier<? extends ItemStack>> catalysts = List.of(AllBlocks.MECHANICAL_MIXER::asStack, AllBlocks.BASIN::asStack);
         var info = new Info<>(TYPE, title, background, icon, AutomatedColoringCategory::getAllRecipes, catalysts);
         return new AutomatedColoringCategory(info);
@@ -81,10 +78,14 @@ public class AutomatedColoringCategory extends BasinCategory {
                 .toList();
     }
 
-    private static ItemStack getIconDyeBucket() {
-        var dyeFluid = CDPFluids.DYES_BY_VARIANT.get(RED);
-        if (dyeFluid == null)
-            return ItemStack.EMPTY;
-        return dyeFluid.getBucket().map(ItemStack::new).orElse(ItemStack.EMPTY);
+    private static class Icon extends FanProcessingIcon {
+        private Icon() {
+            super(AllBlocks.MECHANICAL_MIXER::asStack);
+        }
+
+        @Override
+        protected ItemStack getCatalyst() {
+            return DyeFluidCategoryHelper.getDyeBucketIcon();
+        }
     }
 }
