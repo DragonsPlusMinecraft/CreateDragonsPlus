@@ -31,11 +31,11 @@ import plus.dragons.createdragonsplus.common.CDPCommon;
 public class CDPClient {
     public CDPClient(IEventBus modBus) {
         modBus.register(this);
+        CDPPartialModels.register();
     }
 
     @SubscribeEvent
     public void setup(final FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new CDPPonderPlugin());
-        CDPPartialModels.register();
     }
 }

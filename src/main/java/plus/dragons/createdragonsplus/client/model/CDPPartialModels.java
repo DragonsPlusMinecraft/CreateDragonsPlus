@@ -22,12 +22,12 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
-import plus.dragons.createdragonsplus.common.registry.CDPItems;
+import plus.dragons.createdragonsplus.common.CDPCommon;
 
 public class CDPPartialModels {
     public static void register() {
-        registerRarePackageModel(CDPItems.RARE_BLAZE_PACKAGE.getId(), 12, 10);
-        registerRarePackageModel(CDPItems.RARE_MARBLE_GATE_PACKAGE.getId(), 12, 10);
+        registerRarePackageModel(CDPCommon.asResource("rare_blaze_package"), 12, 10);
+        registerRarePackageModel(CDPCommon.asResource("rare_marble_gate_package"), 12, 10);
     }
 
     public static void registerRarePackageModel(ResourceLocation id, int width, int height) {
