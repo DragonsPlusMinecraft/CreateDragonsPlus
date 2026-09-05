@@ -75,6 +75,19 @@ Create: Garnished mastic resin source and flowing fluids.
 built-in recipes include `ice -> packed_ice`, `packed_ice -> blue_ice`, and
 `magma_cream -> slime_ball`.
 
+When The Aether integration is enabled and The Aether is loaded, Bulk Freezing also processes
+`aether:freezing` recipes. The Aether Freezer is not a catalyst; these recipes use the normal CDP
+Bulk Freezing catalysts.
+
+### Bulk Enchanting
+
+When The Aether integration is enabled and The Aether is loaded, CDP registers the Aether-only fan
+processing type `create_dragons_plus:aether_enchanting`. An Encased Fan blowing through
+`aether:golden_aercloud` processes `aether:enchanting` Altar recipes, including equipment repair.
+The same airflow can process `aether:incubation` recipes: Moa Eggs are consumed and spawn the
+recipe's entity at the item or transported-stack position. Both operations have dedicated JEI
+displays, and Bulk Enchanting has a Ponder scene.
+
 ### Bulk Ending
 
 `Bulk Ending` uses `create_dragons_plus:ending`. Its catalysts are controlled by the block and fluid
@@ -117,6 +130,12 @@ freezing recipes. While the corresponding CDP feature is enabled, the equivalent
 processing type and duplicate JEI recipe supplier are disabled so only the CDP category processes
 those recipes. Garnished's own Dragon's Breath ending catalyst data is left untouched.
 
+### The Aether
+
+The Aether integration adds its Freezer recipes to Bulk Freezing and adds Bulk Enchanting for Altar
+and Moa incubation recipes. It is runtime-optional and can be omitted from a build with
+`-Penable_aether_integration=false`.
+
 ### Immersive Engineering
 
 The Fluid Hatch accepts Immersive Engineering potion fluid through Forge fluid capabilities. IE
@@ -155,3 +174,10 @@ The normal server config exposes:
 
 The condition serializer remains `create_dragons_plus:config_feature`; generated Forge 1.20.1
 conditional recipes use it to reference the feature IDs above.
+
+### The Aether Integration
+
+When The Aether is loaded, `create_dragons_plus-aether-integration-server.toml` exposes:
+
+* `enableBulkEnchanting`
+* `enableBulkMoaIncubation`

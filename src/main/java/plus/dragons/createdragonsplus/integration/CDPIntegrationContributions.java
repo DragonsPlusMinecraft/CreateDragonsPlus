@@ -49,6 +49,8 @@ public class CDPIntegrationContributions {
     private static final List<StandardFanProcessingCompat<EndingRecipe>> ENDING_COMPATS = new CopyOnWriteArrayList<>();
     private static final List<TagKey<Block>> SANDING_CATALYST_TAGS = new CopyOnWriteArrayList<>();
     private static final List<Consumer<List<Supplier<? extends ItemStack>>>> FAN_CATALYSTS = new CopyOnWriteArrayList<>();
+    private static final List<Runnable> FAN_PROCESSING_TYPE_REGISTRATIONS = new CopyOnWriteArrayList<>();
+    private static final List<Runnable> ITEM_ATTRIBUTE_REGISTRATIONS = new CopyOnWriteArrayList<>();
 
     public static void registerDyeVariants(Consumer<RegisterDyeVariantsEvent> consumer) {
         DYE_VARIANTS.add(consumer);
@@ -173,6 +175,22 @@ public class CDPIntegrationContributions {
         catalysts.add(() -> defaultFan);
         FAN_CATALYSTS.forEach(consumer -> consumer.accept(catalysts));
         return List.copyOf(catalysts);
+    }
+
+    public static void registerFanProcessingTypes(Runnable registration) {
+        FAN_PROCESSING_TYPE_REGISTRATIONS.add(registration);
+    }
+
+    public static void gatherFanProcessingTypes() {
+        FAN_PROCESSING_TYPE_REGISTRATIONS.forEach(Runnable::run);
+    }
+
+    public static void registerItemAttributes(Runnable registration) {
+        ITEM_ATTRIBUTE_REGISTRATIONS.add(registration);
+    }
+
+    public static void gatherItemAttributes() {
+        ITEM_ATTRIBUTE_REGISTRATIONS.forEach(Runnable::run);
     }
 
     private static <R extends ProcessingRecipe<? extends Container>> boolean isValidAt(

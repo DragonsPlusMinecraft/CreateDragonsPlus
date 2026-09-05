@@ -116,9 +116,15 @@ public class CDPCommon {
 
     private void registerCreateOwnedTypes() {
         populateFrozenRegistry(CreateBuiltInRegistries.FAN_PROCESSING_TYPE,
-                () -> CDPFanProcessingTypes.register(modBus));
+                () -> {
+                    CDPFanProcessingTypes.register(modBus);
+                    CDPIntegrationContributions.gatherFanProcessingTypes();
+                });
         populateFrozenRegistry(CreateBuiltInRegistries.ITEM_ATTRIBUTE_TYPE,
-                () -> CDPItemAttributes.register(modBus));
+                () -> {
+                    CDPItemAttributes.register(modBus);
+                    CDPIntegrationContributions.gatherItemAttributes();
+                });
     }
 
     @SuppressWarnings({ "deprecation", "unchecked" })
