@@ -1,8 +1,5 @@
-## Create: Dragons Plus 1.11.8
-
-### Update
-* Added a dedicated Automated Coloring JEI category for Mechanical Mixer recipes using Dye Fluid. Dye items and every equivalent item in their dye item tags now link to both Automated Coloring and Bulk Coloring recipes, and the new tab uses a rotating dye bucket badge. (#120)
+## Create: Dragons Plus 1.11.8b
 
 ### Fix
-* Fixed placing rare packages crashing the client because their package models were registered after model loading. (#126)
-* Fixed Aether fan processing duplicating buckets when transforming one filled bucket into another. (#114)
+* Fixed Aether Bulk Freezing JEI recipes displaying incorrect container remainders for different bucket inputs.
+* Corrected the Aether Bulk Enchanting Ponder tutorial to use valid Altar recipes and show Moa Eggs hatching directly into correctly colored babies.

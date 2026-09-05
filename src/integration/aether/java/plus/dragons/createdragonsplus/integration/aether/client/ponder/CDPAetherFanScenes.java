@@ -19,6 +19,7 @@
 package plus.dragons.createdragonsplus.integration.aether.client.ponder;
 
 import com.aetherteam.aether.block.AetherBlocks;
+import com.aetherteam.aether.data.resources.registries.AetherMoaTypes;
 import com.aetherteam.aether.entity.AetherEntityTypes;
 import com.aetherteam.aether.entity.passive.Moa;
 import com.aetherteam.aether.item.AetherItems;
@@ -28,9 +29,11 @@ import net.createmod.ponder.api.PonderPalette;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.WalkAnimationState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import plus.dragons.createdragonsplus.integration.aether.common.kinetics.fan.enchanting.AetherIncubationProcessing;
 
 public class CDPAetherFanScenes {
     public static void bulkEnchanting(SceneBuilder builder, SceneBuildingUtil util) {
@@ -72,23 +75,29 @@ public class CDPAetherFanScenes {
                 .attachKeyFrame()
                 .pointAt(util.vector().topOf(depot))
                 .placeNearTarget()
-                .text("Bulk Enchanting processes Aether Enchanter recipes with fan processing");
-        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.SKYROOT_PICKAXE.get().getDefaultInstance()));
+                .text("Bulk Enchanting processes Aether Altar recipes with fan processing");
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.BLUE_BERRY.get().getDefaultInstance()));
         scene.idle(60);
-        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.ZANITE_PICKAXE.get().getDefaultInstance()));
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.ENCHANTED_BERRY.get().getDefaultInstance()));
         scene.idle(25);
 
+        var damagedPickaxe = AetherItems.ZANITE_PICKAXE.get().getDefaultInstance();
+        damagedPickaxe.setDamageValue(damagedPickaxe.getMaxDamage() / 2);
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(damagedPickaxe.copy()));
         scene.overlay().showText(80)
                 .attachKeyFrame()
                 .pointAt(util.vector().topOf(depot))
                 .placeNearTarget()
                 .text("Some recipes repair equipment, so the input and output may be the same item type");
-        scene.idle(90);
+        scene.idle(60);
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.ZANITE_PICKAXE.get().getDefaultInstance()));
+        scene.idle(30);
 
         var incubator = util.grid().at(0, 1, 0);
         scene.world().setBlock(incubator, AetherBlocks.INCUBATOR.get().defaultBlockState(), false);
         scene.world().showSection(util.select().position(incubator), Direction.DOWN);
-        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(AetherItems.BLUE_MOA_EGG.get().getDefaultInstance()));
+        var moaEgg = AetherItems.BLUE_MOA_EGG.get().getDefaultInstance();
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(moaEgg.copy()));
         scene.overlay().showText(85)
                 .attachKeyFrame()
                 .pointAt(util.vector().topOf(depot))
@@ -96,11 +105,16 @@ public class CDPAetherFanScenes {
                 .text("The same airflow can incubate Moa Eggs as item processing");
         scene.idle(85);
 
-        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(new ItemStack(AetherItems.MOA_SPAWN_EGG.get())));
-        scene.idle(45);
-        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, DepotBlockEntity::clearContent);
+        scene.world().modifyBlockEntity(depot, DepotBlockEntity.class, it -> it.setHeldItem(ItemStack.EMPTY));
         scene.world().createEntity(level -> {
             Moa moa = new Moa(AetherEntityTypes.MOA.get(), level);
+            var moaData = new CompoundTag();
+            moaData.putString("MoaType", AetherMoaTypes.BLUE.location().toString());
+            moaData.putBoolean("IsBaby", true);
+            AetherIncubationProcessing.findRecipe(moaEgg, level)
+                    .flatMap(holder -> holder.value().getTag())
+                    .ifPresent(moaData::merge);
+            moa.readAdditionalSaveData(moaData);
             Vec3 p = util.vector().topOf(depot);
             moa.setPos(p.x, p.y, p.z);
             moa.xo = p.x;
@@ -115,6 +129,6 @@ public class CDPAetherFanScenes {
             moa.yHeadRot = 210;
             return moa;
         });
-        scene.idle(40);
+        scene.idle(85);
     }
 }
