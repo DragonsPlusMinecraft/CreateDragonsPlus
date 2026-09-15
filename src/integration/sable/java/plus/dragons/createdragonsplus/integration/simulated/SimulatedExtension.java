@@ -20,6 +20,7 @@ package plus.dragons.createdragonsplus.integration.simulated;
 
 import static plus.dragons.createdragonsplus.common.CDPCommon.REGISTRATE;
 
+import java.util.List;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -30,6 +31,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.common.conditions.ItemExistsCondition;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -98,6 +100,9 @@ public class SimulatedExtension {
             var lookupProvider = event.getLookupProvider();
             var output = generator.getPackOutput();
             var server = event.includeServer();
+            for (var block : List.of(CDPSEBlocks.FRAGILE_FLUID_TANK, CDPSEBlocks.LEVITITE_FRAGILE_FLUID_TANK)) {
+                REGISTRATE.addLootTableCondition(block.get().getLootTable(), new ItemExistsCondition(block.getId()));
+            }
             event.addProvider(new CDPSERecipeProvider(output, lookupProvider));
         }
     }

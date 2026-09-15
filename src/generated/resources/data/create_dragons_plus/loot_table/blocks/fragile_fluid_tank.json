@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "create_dragons_plus:fragile_fluid_tank"
+    }
+  ],
   "type": "minecraft:block",
   "pools": [
     {

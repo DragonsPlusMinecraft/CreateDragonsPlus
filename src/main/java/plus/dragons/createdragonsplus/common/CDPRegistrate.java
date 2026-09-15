@@ -40,6 +40,7 @@ import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
+import com.tterrag.registrate.providers.RegistrateProvider;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import com.tterrag.registrate.providers.RegistrateTagsProvider.IntrinsicImpl;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -48,9 +49,12 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -77,9 +81,11 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
@@ -90,6 +96,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import plus.dragons.createdragonsplus.common.registrate.builder.ArmInteractionPointBuilder;
 import plus.dragons.createdragonsplus.common.registrate.builder.CustomStatBuilder;
+import plus.dragons.createdragonsplus.data.internal.CDPRegistrateDataProvider;
 import plus.dragons.createdragonsplus.data.lang.ForeignLanguageProvider;
 import plus.dragons.createdragonsplus.data.tag.IntrinsicTagRegistry;
 import plus.dragons.createdragonsplus.data.tag.ItemTagRegistry;
@@ -105,6 +112,8 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     protected @Nullable Function<Item, TooltipModifier> tooltipModifier;
     protected @Nullable ExistingFileHelper existingFileHelper;
     protected @Nullable String templateLocale;
+    private final Map<ResourceKey<LootTable>, List<ICondition>> lootTableConditions = new HashMap<>();
+    private @Nullable CDPRegistrateDataProvider dataProvider;
 
     public CDPRegistrate(String modid) {
         super(modid);
@@ -152,6 +161,16 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
     }
 
     /* Datagen */
+
+    public CDPRegistrate addLootTableCondition(ResourceKey<LootTable> table, ICondition condition) {
+        this.lootTableConditions.computeIfAbsent(table, ignored -> new ArrayList<>()).add(condition);
+        return this;
+    }
+
+    @Override
+    public <P extends RegistrateProvider> Optional<P> getDataProvider(ProviderType<P> type) {
+        return this.dataProvider == null ? Optional.empty() : this.dataProvider.getSubProvider(type);
+    }
 
     public <T, P extends RegistrateTagsProvider<T>> CDPRegistrate registerTags(ProviderType<P> type, TagRegistry<T, P> registry) {
         this.addDataGenerator(type, registry::generate);
@@ -253,11 +272,12 @@ public class CDPRegistrate extends AbstractRegistrate<CDPRegistrate> {
 
     @Override
     protected void onData(GatherDataEvent event) {
-        super.onData(event);
         boolean client = event.includeClient();
         boolean server = event.includeServer();
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
+        this.dataProvider = new CDPRegistrateDataProvider(this, event, this.lootTableConditions);
+        generator.addProvider(true, this.dataProvider);
         this.existingFileHelper = event.getExistingFileHelper();
         if (this.templateLocale != null)
             generator.addProvider(client, new ForeignLanguageProvider(getModid(), this.templateLocale, output, this.existingFileHelper));
