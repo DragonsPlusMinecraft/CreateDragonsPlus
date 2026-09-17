@@ -70,6 +70,7 @@ tasks.named("jar", Jar) {
     from "LICENSING.txt"
     from "LICENSE.txt"
     from "LICENSE-CREATE.txt"
+    from "LICENSE-PONDER.txt"
     enabledIntegrationSourceSets.each { name ->
         from sourceSets[name].output
     }
@@ -169,6 +170,7 @@ enabledIntegrationSourceSets.each { name ->
 }
 
 repositories {
+    mavenCentral()
     maven { url "https://maven.minecraftforge.net" } // TerraBlender
     maven { url "https://maven.createmod.net" } // Ponder, Flywheel
     maven { url "https://mvn.devos.one/snapshots" } // Registrate
@@ -190,6 +192,9 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_version}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junit_version}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:${junit_platform_version}")
     jarJar(implementation("me.fallenbreath:conditional-mixin-neoforge")) {
         version {
             strictly "[${conditional_mixin_version},)"
@@ -317,6 +322,21 @@ spotless {
 }
 
 build.dependsOn(spotlessApply)
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+tasks.named('sourcesJar', Jar) {
+    from "LICENSE-PONDER.txt"
+}
+
+neoForge {
+    unitTest {
+        enable()
+        testedMod = mods.getByName(mod_id)
+    }
+}
 
 publishing {
     publications {

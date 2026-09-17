@@ -20,3 +20,14 @@ Public License v3. You may find the full license file of Create in this program 
   The Aether is an optional upstream dependency of this software, licensed under the GNU
 Lesser General Public License v3. All code adapted from The Aether is licensed under the
 GNU Lesser General Public License v3.
+
+3. Ponder
+
+  The Ponder tooltip rendering adaptation is licensed under the MIT License and
+GNU Lesser General Public License v3. The Ponder MIT notice is included in
+LICENSE-PONDER.txt and in the published jar.
+
+4. Create: Central Kitchen
+
+  The grouped Ponder button is adapted from Create: Central Kitchen, licensed
+under LGPL-3.0-or-later. Its attribution is recorded with @CodeReference.

@@ -1,4 +1,8 @@
 {
+  "create_dragons_plus.ponder.group.position": "%s / %s",
+  "create_dragons_plus.ponder.group.scroll": "滚动滚轮切换条目",
+  "create_dragons_plus.ponder.group.open": "左键点击查看当前条目的思索",
+  "create_dragons_plus.ponder.group.no_scene": "此条目没有思索场景",
   "block.create_dragons_plus.arts_and_crafts_bleached_dye": "漂色露",
   "block.create_dragons_plus.black_dye": "黑色染料",
   "block.create_dragons_plus.blue_dye": "蓝色染料",

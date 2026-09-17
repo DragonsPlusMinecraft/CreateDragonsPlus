@@ -22,7 +22,10 @@
     "neoforge.ExistingFileHelperAccessor"
   ],
   "client": [
-    "create.AirFlowParticleMixin"
+    "create.AirFlowParticleMixin",
+    "ponder.PonderIndexMixin",
+    "ponder.PonderTagScreenMixin",
+    "ponder.PonderUIAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
