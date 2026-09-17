@@ -1,5 +1,9 @@
-## Create: Dragons Plus 1.11.8b
+## Create: Dragons Plus 1.11.9
+
+### Update
+
+* Added grouped Ponder tag cards with animated cycling and scroll selection, plus a shared API for conditional contributions from multiple source sets.
 
 ### Fix
-* Fixed Aether Bulk Freezing JEI recipes displaying incorrect container remainders for different bucket inputs.
-* Corrected the Aether Bulk Enchanting Ponder tutorial to use valid Altar recipes and show Moa Eggs hatching directly into correctly colored babies.
+
+* Fixed loot table loading errors for Fragile Fluid Tanks and Levitite Fragile Fluid Tanks when Simulated is not installed. (#130)
